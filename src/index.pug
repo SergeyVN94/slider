@@ -5,4 +5,10 @@ html(lang="ru")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         meta(http-equiv="X-UA-Compatible", content="ie=edge")
         title Slider
-    body
+    body.demo-page
+        include ./demo-panel/demo-panel.pug
+        +demo-panel({
+            classes: [
+                'demo-page__demo-panel'
+            ]
+        })

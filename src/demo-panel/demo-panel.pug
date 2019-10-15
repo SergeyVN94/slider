@@ -1,0 +1,9 @@
+include ../slider/slider.pug
+
+mixin demo-panel(args={})
+    -const classes = (args.classes || []).join(',');
+    .demo-panel(class=classes)
+        .demo-panel__slider-container
+            +slider()
+        .demo-panel__setting
+            

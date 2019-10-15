@@ -1,0 +1,13 @@
+@import './colors.scss';
+
+$height: 6px;
+
+.slider {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: $height;
+    border: 1px solid $dark75;
+    border-radius: $height - 2px;
+    position: relative;
+}
