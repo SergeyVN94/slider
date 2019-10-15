@@ -1,0 +1,33 @@
+$triangle: $point-diameter / 2 * (2 / 3);
+$font-size: 14px;
+$line-height: 18px;
+$height: $line-height + 4px;
+
+.slider__value {
+    display: block;
+    width: auto;
+    height: $height;
+    background-color: $deepskyblue;
+    color: #fcfcfc;
+    position: relative;
+    top: -($height + $triangle + $value-margin);
+    left: 0;
+    text-align: center;
+    padding: 2px 3px;
+    font-size: $font-size;
+    line-height: $line-height;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: -$triangle * 2;
+        left: $triangle / 2; 
+        width: 0px;
+        height: 0px;
+        border: $triangle solid transparent;
+        border-top: $triangle solid $deepskyblue;
+    }
+}

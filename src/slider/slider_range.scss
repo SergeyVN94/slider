@@ -1,0 +1,13 @@
+@import './slider-config.scss';
+
+.slider_range {
+    &.slider_vertical {
+        .slider__point_value_max,
+        .slider__point_value_min {
+            left: -$point-offset;
+            right: auto;
+            top: auto;
+           
+        }
+    }
+}

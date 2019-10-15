@@ -4,6 +4,6 @@ mixin demo-panel(args={})
     -const classes = (args.classes || []).join(',');
     .demo-panel(class=classes)
         .demo-panel__slider-container
-            +slider()
+            +slider(args.slider || {})
         .demo-panel__setting
             

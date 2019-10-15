@@ -1,0 +1,15 @@
+.slider_vertical {
+    width: $slider-size;
+    height: 100%;
+    min-width: 0;
+
+    .slider__bg-line {
+        width: 100%;
+        bottom: 0px;
+    }
+
+    .slider__point {
+        top: auto;
+        bottom: -($point-diameter / 2);
+    }
+}

@@ -1,13 +1,19 @@
-@import './colors.scss';
-
-$height: 6px;
+@import './slider-colors.scss';
+@import './slider-config.scss';
+@import './slider__container.scss';
+@import './slider__point.scss';
+@import './slider__bg-line.scss';
+@import './slider__value.scss';
 
 .slider {
     display: block;
     box-sizing: border-box;
     width: 100%;
-    height: $height;
-    border: 1px solid $dark75;
-    border-radius: $height - 2px;
-    position: relative;
+    height: $slider-size;
+    border: $slider-border solid $dark75;
+    border-radius: $slider-size - 2px;
+    min-width: $point-diameter * 4;
 }
+
+@import './slider_vertical.scss';
+@import './slider_range.scss';

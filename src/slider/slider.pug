@@ -1,4 +1,15 @@
 mixin slider(args={})
-    -const classes = (args.classes || []).join(',');
-    .slider(class=classes)
-        .slider__point
+    -const classes = (args.classes || []);
+    -const modifiers = args.modifiers || {};
+    -if(modifiers.range) classes.push('slider_range');
+    -if(modifiers.vertical) classes.push('slider_vertical');
+    -const classesStr = classes.join(' ');
+
+    .slider(class=classesStr)
+        .slider__container
+            .slider__bg-line
+            if modifiers.range
+                .slider__point.slider__point_value_min
+                    .slider__value   
+            .slider__point.slider__point_value_max
+                .slider__value 30
