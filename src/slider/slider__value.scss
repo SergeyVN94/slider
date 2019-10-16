@@ -1,33 +1,37 @@
 $triangle: $point-diameter / 2 * (2 / 3);
 $font-size: 14px;
 $line-height: 18px;
-$height: $line-height + 4px;
+$height: $line-height + 6px;
 
 .slider__value {
-    display: block;
+    display: inline-block;
     width: auto;
     height: $height;
-    background-color: $deepskyblue;
+    background-color: $steelblue;
     color: #fcfcfc;
     position: relative;
-    top: -($height + $triangle + $value-margin);
-    left: 0;
     text-align: center;
-    padding: 2px 3px;
+    padding: 3px 4px;
     font-size: $font-size;
     line-height: $line-height;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     box-sizing: border-box;
+    border-radius: 6px;
+
+    top: -($height + $triangle + $value-margin + ($point-diameter / 2));
+    left: 0;
 
     &::after {
         content: '';
         display: block;
-        position: absolute;
-        bottom: -$triangle * 2;
-        left: $triangle / 2; 
         width: 0px;
         height: 0px;
+        position: absolute;
+        bottom: -$triangle * 2 + 1;
+        left: 0; 
+        right: 0;
+        margin: 0 auto;
         border: $triangle solid transparent;
-        border-top: $triangle solid $deepskyblue;
+        border-top: $triangle solid $steelblue;
     }
 }
