@@ -7,5 +7,7 @@ import * as jQuery from 'jquery';
     jQuery(fun(jQuery, window, document));
 }(function($: JQueryStatic, window: Window, document: Document) {
     const slider: JQuery = $('#slider1');
-    slider.slider('Hello, World!');
+    slider.slider('init', {
+
+    } as SliderConfig);
 }));

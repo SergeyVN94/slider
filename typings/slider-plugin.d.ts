@@ -2,13 +2,14 @@
  * @selector css selector
  * @orientation slider orientation 'horizontal' (default) or 'vertical'
  */
-interface SliderOptions {
+interface SliderConfig {
+    readonly slider?: JQuery;
     readonly selector: string;
     readonly orientation: string;
 }
 
 interface SliderPluginFunctionInit {
-    (this: JQuery, command: string, params: SliderOptions): any;
+    (this: JQuery, params: SliderConfig): void;
 }
 
 interface SliderPluginFunctionSingle {

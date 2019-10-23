@@ -1,3 +1,6 @@
-export const initSlider: SliderPluginFunctionInit = function(this: JQuery, command: string, params: SliderOptions) {
+import {Slider} from '../slider';
+
+export const initSlider: SliderPluginFunctionInit = function(this: JQuery, params: SliderConfig): void {
+    const slider: ISlider = new Slider(params);
     
 }
