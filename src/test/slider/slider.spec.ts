@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import {Slider} from '../../slider/slider';
 
 let i: number = 10;
 while(i--) {

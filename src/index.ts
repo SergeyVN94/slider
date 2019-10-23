@@ -1,6 +1,6 @@
 import './index.scss';
 import './demo-panel/demo-panel';
-import './slider/plugin/slider-plugin';
+import './slider/slider';
 import * as jQuery from 'jquery';
 
 (function (fun: Function) {
@@ -9,5 +9,5 @@ import * as jQuery from 'jquery';
     const slider: JQuery = $('#slider1');
     slider.slider('init', {
 
-    } as SliderConfig);
+    } as SliderConfig);    
 }));

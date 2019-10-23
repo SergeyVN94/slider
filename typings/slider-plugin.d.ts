@@ -27,3 +27,7 @@ interface SliderPluginFunctionGlobal {
 interface JQuery {
     slider: SliderPluginFunctionGlobal;
 }
+
+interface Element {
+    slider: ISlider;
+}
