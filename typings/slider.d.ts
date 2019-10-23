@@ -1,9 +1,22 @@
+/**
+ * @selector css selector
+ * @orientation slider orientation 'horizontal' (default) or 'vertical'
+ * @param selectMode
+ */
+interface SliderConfig {
+    readonly slider?: JQuery;
+    readonly selector?: string;
+    readonly orientation?: 'horizontal' | 'vertical';
+    readonly selectMode?: 'single' | 'range';
+    readonly showValue?: boolean;
+}
+
 interface SliderSetting {
     readonly selector: string;
-    orientation: string;
 }
 
 interface ISlider {
     readonly _slider: JQuery;
-    _config: SliderSetting;
+    _setting: SliderSetting;
+    readonly _presenter: ISliderPresenter;
 }

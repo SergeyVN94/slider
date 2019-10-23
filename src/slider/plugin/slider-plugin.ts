@@ -10,7 +10,7 @@ import { isNull } from 'util';
         if (command === 'init') {
             params = params as SliderConfig;
             params.slider = this;
-            initSlider.call(this, params);
+            initSlider.call(this, params as SliderConfig);
             return this;
         }
 

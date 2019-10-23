@@ -8,6 +8,7 @@ import * as jQuery from 'jquery';
 }(function($: JQueryStatic, window: Window, document: Document) {
     const slider: JQuery = $('#slider1');
     slider.slider('init', {
-
+        orientation: 'horizontal',
+        selectMode: 'single'
     } as SliderConfig);    
 }));
