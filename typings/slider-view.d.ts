@@ -9,8 +9,10 @@ interface SliderViewConfig {
     readonly showValue?: boolean;
 }
 
+type sliderMode = 'single' | 'range';
+
 interface SliderViewSetting {
     orientation: 'horizontal' | 'vertical';
-    selectMode: 'single' | 'range';
+    selectMode: sliderMode;
     showValue: boolean;
 }

@@ -6,7 +6,7 @@ import { isNull } from 'util';
 
 
 (function ($: JQueryStatic) {
-    $.fn.slider = function(this: JQuery, command: string, params: any = null): any {
+    $.fn.slider = function(this: JQuery, command: Command, params: any = null): any {
         if (command === 'init') {
             params = params as SliderConfig;
             params.slider = this;

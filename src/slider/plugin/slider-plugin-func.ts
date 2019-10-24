@@ -1,3 +1,3 @@
-export const sliderPluginFunction: SliderPluginFunction = function(command: string, params: any) {
+export const sliderPluginFunction: SliderPluginFunction = function(command: Command, params: any) {
         
 }

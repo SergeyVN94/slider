@@ -1,3 +1,10 @@
+type SliderPointPosition = {
+    value: number;
+} | {
+    valueMin: number;
+    valueMax: number;
+}
+
 /**
  * @selector css selector
  * @orientation slider orientation 'horizontal' (default) or 'vertical'

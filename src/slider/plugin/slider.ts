@@ -15,9 +15,9 @@ export class Slider implements ISlider {
         this._slider = config.slider ? config.slider : $(config.selector);
         
         const view: ISliderView = new SliderView(this._slider, {
-            orientation: config.orientation || 'horizontal',
-            selectMode: config.selectMode || 'single',
-            showValue: config.showValue || true
+            orientation: config.orientation,
+            selectMode: config.selectMode,
+            showValue: config.showValue
         });
         
         this._presenter = new SliderPresenter(view);
