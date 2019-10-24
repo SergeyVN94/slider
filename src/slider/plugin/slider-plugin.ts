@@ -8,8 +8,6 @@ import { isNull } from 'util';
 (function ($: JQueryStatic) {
     $.fn.slider = function(this: JQuery, command: Command, params: any = null): any {
         if (command === 'init') {
-            params = params as SliderConfig;
-            params.slider = this;
             initSlider.call(this, params as SliderConfig);
             return this;
         }

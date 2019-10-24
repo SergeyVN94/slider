@@ -3,18 +3,13 @@ import {SliderView} from './slider-view';
 import {SliderPresenter} from './slider-presenter';
 
 export class Slider implements ISlider {
-    readonly _slider: JQuery;
     _setting: SliderSetting;
     readonly _presenter: ISliderPresenter;
 
-    constructor(config: SliderConfig) {
-        this._setting = {
-            selector: config.selector || ''
-        };
-
-        this._slider = config.slider ? config.slider : $(config.selector);
+    constructor(slider: JQuery, config: SliderConfig) {
+        this._setting = {};
         
-        const view: ISliderView = new SliderView(this._slider, {
+        const view: ISliderView = new SliderView(slider, {
             orientation: config.orientation,
             selectMode: config.selectMode,
             showValue: config.showValue

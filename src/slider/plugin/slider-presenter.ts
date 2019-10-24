@@ -3,5 +3,9 @@ export class SliderPresenter implements ISliderPresenter {
 
     constructor(view: ISliderView) {
         this._view = view;
+
+        view.onMouseMove(function(stateData: SliderStateData): void {
+            console.log(stateData);
+        });
     }
 }

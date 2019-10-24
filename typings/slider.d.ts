@@ -14,7 +14,6 @@ type SliderOrientation = 'horizontal' | 'vertical';
  * @param selectMode
  */
 interface SliderConfig {
-    readonly slider?: JQuery;
     readonly selector?: string;
     readonly orientation?: SliderOrientation;
     readonly selectMode?: SliderMode;
@@ -22,11 +21,9 @@ interface SliderConfig {
 }
 
 interface SliderSetting {
-    readonly selector: string;
+
 }
 
 interface ISlider {
-    readonly _slider: JQuery;
-    _setting: SliderSetting;
-    readonly _presenter: ISliderPresenter;
+    
 }
