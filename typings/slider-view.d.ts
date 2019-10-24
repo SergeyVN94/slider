@@ -17,8 +17,10 @@ interface ISliderView {
     onMouseMove(callback: SliderCallbackMouseEvent): void;
 }
 
+type SliderViewName = 'horizontal' | 'vertical';
+
 interface SliderViewConfig {
-    readonly orientation?: SliderOrientation;
+    readonly viewName?: SliderViewName;
     readonly selectMode?: SliderMode;
     readonly showValue?: boolean;
 }

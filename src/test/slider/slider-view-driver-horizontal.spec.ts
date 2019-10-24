@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import {
     createPoint
-} from '../../slider/plugin/slider-view';
+} from '../../slider/plugin/view/slider-view';
 
 describe('slider-view', () => {
     it('no argument', () => {

@@ -6,7 +6,6 @@ type SliderPointPosition = {
 }
 
 type SliderMode = 'single' | 'range';
-type SliderOrientation = 'horizontal' | 'vertical';
 
 /**
  * @selector css selector
@@ -14,8 +13,7 @@ type SliderOrientation = 'horizontal' | 'vertical';
  * @param selectMode
  */
 interface SliderConfig {
-    readonly selector?: string;
-    readonly orientation?: SliderOrientation;
+    readonly viewName?: SliderViewName;
     readonly selectMode?: SliderMode;
     readonly showValue?: boolean;
 }

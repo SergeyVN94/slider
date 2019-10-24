@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { createPoint } from './slider-view';
+import { createPoint } from '../slider-view';
 
 export class DriverHorizontal implements SliderViewDriver {
     _callback: SliderCallbackMouseEvent;
@@ -38,16 +38,16 @@ export class DriverHorizontal implements SliderViewDriver {
         this._callback = callback;
 
         const MouseHandler = (event: JQuery.Event): boolean => {
-            if (event.button !== 0) {
-                return false;
-            }
+            // if (event.button !== 0) {
+            //     return false;
+            // }
 
             this._callback(this._getSliderState(event.pageX));
 
             return true;
         }
 
-        this._slider.mousedown((event: JQuery.Event) => {
+        this._sliderContainer.mousedown((event: JQuery.MouseDownEvent) => {
             // if (event.button !== 0) {
             //     return false;
             // }
@@ -65,11 +65,11 @@ export class DriverHorizontal implements SliderViewDriver {
         //     this._sliderContainer.mousemove(MouseHandler);
         // });
 
-        this._slider.mouseup(() => {
+        this._sliderContainer.mouseup(() => {
             this._sliderContainer.off('mousemove', MouseHandler);
         });
 
-        this._slider.mouseleave(() => {
+        this._sliderContainer.mouseleave(() => {
             this._sliderContainer.off('mousemove', MouseHandler);
         });
     }
@@ -83,20 +83,21 @@ export class DriverHorizontal implements SliderViewDriver {
     }
 
     _getSliderState(mousePosition: number): SliderStateData {
-        const targetValue: number = mousePosition - this._slider.offset().left;
+        const sliderWidth: number = this._sliderContainer.outerWidth();
+        const targetValue: number = (mousePosition - this._slider.offset().left);
 
         if (this._setting.selectMode === 'single') {
             return {
                 mode: this._setting.selectMode,
-                position: this._getPointPosition(this._point),
-                targetValue: targetValue
+                position: this._getPointPosition(this._point) / sliderWidth,
+                targetValue: targetValue / sliderWidth
             };
         }
 
         return {
             mode: this._setting.selectMode,
-            positionMin: this._getPointPosition(this._points.min),
-            positionMax: this._getPointPosition(this._points.max),
+            positionMin: this._getPointPosition(this._points.min) / sliderWidth,
+            positionMax: this._getPointPosition(this._points.max) / sliderWidth,
             targetValue: targetValue
         };
     }

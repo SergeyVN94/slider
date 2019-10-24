@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import {SliderView} from './slider-view';
-import {SliderPresenter} from './slider-presenter';
+import {SliderView} from './view/slider-view';
+import {SliderPresenter} from './view/slider-presenter';
 
 export class Slider implements ISlider {
     _setting: SliderSetting;
@@ -10,11 +10,10 @@ export class Slider implements ISlider {
         this._setting = {};
         
         const view: ISliderView = new SliderView(slider, {
-            orientation: config.orientation,
             selectMode: config.selectMode,
-            showValue: config.showValue
+            showValue: config.showValue,
+            viewName: config.viewName
         });
-        
         this._presenter = new SliderPresenter(view);
     }
 }
