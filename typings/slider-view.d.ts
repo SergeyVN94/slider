@@ -4,15 +4,13 @@ interface ISliderView {
 }
 
 interface SliderViewConfig {
-    readonly orientation?: 'horizontal' | 'vertical';
-    readonly selectMode?: 'single' | 'range';
+    readonly orientation?: SliderOrientation;
+    readonly selectMode?: SliderMode;
     readonly showValue?: boolean;
 }
 
-type sliderMode = 'single' | 'range';
-
 interface SliderViewSetting {
-    orientation: 'horizontal' | 'vertical';
-    selectMode: sliderMode;
+    orientation: SliderOrientation;
+    selectMode: SliderMode;
     showValue: boolean;
 }

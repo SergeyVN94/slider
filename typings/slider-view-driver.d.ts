@@ -20,3 +20,7 @@ interface SliderViewDriver {
     onMouseEvent: OnMouseEvent;
     readonly _slider: JQuery;
 }
+
+interface SliderViewDriverConfig {
+    readonly mode: SliderMode;
+}
