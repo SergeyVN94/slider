@@ -12,7 +12,12 @@ export class Slider implements ISlider {
             viewName: config.viewName
         });
 
-        const model: ISliderModel = new SliderModel();
+        const model: ISliderModel = new SliderModel({
+            selectMode: config.selectMode,
+            minMax: config.minMax,
+            step: config.step,
+            customValues: config.customValues
+        });
 
         this._presenter = new SliderPresenter(view, model);
     }

@@ -15,7 +15,7 @@ interface ISliderView {
 type SliderViewName = 'horizontal' | 'vertical';
 
 interface SliderViewConfig {
-    readonly viewName?: SliderViewName;
-    readonly selectMode?: SliderMode;
-    readonly showValue?: boolean;
+    readonly viewName: SliderViewName;
+    readonly selectMode: SliderMode;
+    readonly showValue: boolean;
 }

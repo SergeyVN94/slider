@@ -5,10 +5,11 @@ type SliderModelStateData = {
 }
 
 interface SliderModelConfig {
-    readonly mode: SliderMode;
-    readonly minMax: [number, number] | [string, string];
+    readonly selectMode: SliderMode;
+    readonly minMax?: [number, number];
     readonly step?: number;
     readonly customValues?: number[] | string[];
+    readonly value?: number | [number, number];
 }
 
 interface ISliderModel {
