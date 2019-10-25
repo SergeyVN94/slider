@@ -1,10 +1,3 @@
-type SliderPointPosition = {
-    value: number;
-} | {
-    valueMin: number;
-    valueMax: number;
-}
-
 type SliderMode = 'single' | 'range';
 
 /**
@@ -16,10 +9,6 @@ interface SliderConfig {
     readonly viewName?: SliderViewName;
     readonly selectMode?: SliderMode;
     readonly showValue?: boolean;
-}
-
-interface SliderSetting {
-
 }
 
 interface ISlider {

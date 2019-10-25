@@ -1,12 +1,7 @@
 type SliderStateData = {
-    mode: 'single';
-    targetValue: number;
-    position: number;
-} | {
-    mode: 'range';
-    targetValue: number;
-    positionMin: number; 
-    positionMax: number;
+    readonly mode: SliderMode;
+    readonly targetValue: number;
+    readonly position: number | [number, number];
 }
 
 interface SliderCallbackMouseEvent {

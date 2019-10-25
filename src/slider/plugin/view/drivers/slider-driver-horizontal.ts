@@ -1,4 +1,3 @@
-import * as $ from 'jquery';
 import { createPoint } from '../slider-view';
 
 export class DriverHorizontal implements SliderViewDriver {
@@ -86,19 +85,20 @@ export class DriverHorizontal implements SliderViewDriver {
         const sliderWidth: number = this._sliderContainer.outerWidth();
         const targetValue: number = (mousePosition - this._slider.offset().left);
 
+        let position: number | [number, number];
         if (this._setting.selectMode === 'single') {
-            return {
-                mode: this._setting.selectMode,
-                position: this._getPointPosition(this._point) / sliderWidth,
-                targetValue: targetValue / sliderWidth
-            };
+            position = this._getPointPosition(this._point) / sliderWidth;
+        } else {
+            position = [
+                this._getPointPosition(this._points.min) / sliderWidth,
+                this._getPointPosition(this._points.max) / sliderWidth,
+            ];
         }
 
         return {
             mode: this._setting.selectMode,
-            positionMin: this._getPointPosition(this._points.min) / sliderWidth,
-            positionMax: this._getPointPosition(this._points.max) / sliderWidth,
-            targetValue: targetValue
+            targetValue: targetValue / sliderWidth,
+            position: position
         };
     }
 }

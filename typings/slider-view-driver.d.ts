@@ -1,9 +1,9 @@
-interface OnMouseEvent {
+interface OnSliderMouseEvent {
     (callback: SliderCallbackMouseEvent): void;
 }
 
 interface SliderViewDriver {
-    onMouseMove: OnMouseEvent;
+    onMouseMove: OnSliderMouseEvent;
 }
 
 interface SliderViewDriverConfig {
