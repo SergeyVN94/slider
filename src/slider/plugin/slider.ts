@@ -12,11 +12,20 @@ export class Slider implements ISlider {
             viewName: config.viewName
         });
 
+        let scale: SliderScale;
+        if (!config.scale) {
+            scale = {
+                type: 'range',
+                value: [0, 100]
+            }
+        } else {
+            scale = config.scale;
+        }
+
         const model: ISliderModel = new SliderModel({
-            selectMode: config.selectMode,
-            minMax: config.minMax,
-            step: config.step,
-            customValues: config.customValues
+            selectMode: config.selectMode || 'single',
+            scale: scale,
+            step: config.step || 1
         });
 
         this._presenter = new SliderPresenter(view, model);

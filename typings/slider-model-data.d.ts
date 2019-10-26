@@ -1,9 +1,6 @@
 interface ISliderModelData {
-    getMinMax?(): [number, number];
-    setMinMax?(minMax: [number, number]): void;
-
-    getCustomValues?(): number[] | string[];
-    setCustomValues?(values: number[] | string[]): void;
+    getScale(): SliderScale;
+    setScale(scale: SliderScale): void;
 
     getValue(): number | [number, number];
     setValue(value: number | [number, number]): void;
@@ -11,15 +8,14 @@ interface ISliderModelData {
     getStep(): number;
     setStep(step: number): void;
 
-    getLengthValues(): number;
-    setLengthValues(length: number): void;
+    getRangeOfValues(): number;
+    setRangeOfValues(rangeOfValues: number): void;
 }
 
 
 interface SliderModelDataConfig {
-    minMax?: [number, number];
-    step: number;
-    customValues?: number[] | string[];
-    value?: number | [number, number];
-    lengthValues: number;
+    readonly scale: SliderScale;
+    readonly rangeOfValues: number;
+    readonly step: number;
+    readonly start?: number | [number, number];
 }

@@ -1,20 +1,14 @@
 export class SliderModelData implements ISliderModelData {
+    private _rangeOfValues: number;
+    private _scale: SliderScale;
     private _step: number;
     private _value: number | [number, number];
-    private _minMax: [number, number];
-    private _customValues: number[] | string[];
-    private _lengthValues: number;
-    
-    constructor(config: SliderModelDataConfig) {
-        if (config.step <= 0) {
-            throw "The step must be greater than zero";
-        }
 
+    constructor(config: SliderModelDataConfig) {
+        this._scale = config.scale;
+        this._rangeOfValues = config.rangeOfValues;
         this._step = config.step;
-        this._value = config.value;
-        this._minMax = config.minMax;
-        this._customValues = config.customValues;
-        this._lengthValues = config.lengthValues;
+        this._value = config.start ? config.start : 0;
     }
 
     public getStep(): number {
@@ -22,10 +16,6 @@ export class SliderModelData implements ISliderModelData {
     }
 
     public setStep(step: number): void {
-        if (step <= 0) {
-            throw "The step must be greater than zero";
-        }
-        
         this._step = step;
     }
 
@@ -37,27 +27,19 @@ export class SliderModelData implements ISliderModelData {
         this._value = value;
     }
 
-    public getMinMax(): [number, number] {
-        return this._minMax;
+    public getScale(): SliderScale {
+        return this._scale;
     }
 
-    public setMinMax(minMax: [number, number]): void {
-        this._minMax = minMax;
+    public setScale(scale: SliderScale): void {
+        this._scale = scale;
     }
 
-    public getCustomValues(): number[] | string[] {
-        return this._customValues;
+    public getRangeOfValues(): number {
+        return this._rangeOfValues;
     }
 
-    public setCustomValues(customValues: number[] | string[]): void {
-        this._customValues = customValues;
-    }
-
-    public getLengthValues(): number {
-        return this._lengthValues;
-    }
-
-    public setLengthValues(length: number): void {
-        this._lengthValues = length;
+    public setRangeOfValues(rangeOfValues: number): void {
+        this._rangeOfValues = rangeOfValues;
     }
 }
