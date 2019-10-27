@@ -1,10 +1,15 @@
 import {DriverHorizontal} from './drivers/slider-driver-horizontal';
 import * as $ from 'jquery';
 
-export function createPoint(type?: 'min' | 'max'): JQuery {
+export function createPoint(): JQuery {
     return $('<div/>', {
-        "data-type": type === undefined ? '' : type,
         class: 'slider__point'
+    });
+}
+
+export function createPointDisplay(): JQuery {
+    return $('<div/>', {
+        class: 'slider__value'
     });
 }
 

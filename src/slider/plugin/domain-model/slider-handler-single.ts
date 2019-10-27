@@ -4,8 +4,8 @@ export class SliderSingleStateHandler implements ISliderModelStateHandler {
     }
 
     public updateModelState(state: SliderStateData, dataManager: ISliderModelDataManager): void {
-        const range: number = dataManager.getRangeOfValues();
-        const newPointPosition = Math.round(state.targetPosition * range) / range;
+        const range: number = dataManager.getRangeOfValues();        
+        const newPointPosition = Math.round(state.targetPosition * range);
         dataManager.setPointPosition(newPointPosition);
     }
 
@@ -16,13 +16,13 @@ export class SliderSingleStateHandler implements ISliderModelStateHandler {
         let pointValue: number | string;
 
         if (scale.type === 'array') {
-            pointValue = scale.value[Math.round(pointPosition * range)];
+            pointValue = scale.value[pointPosition];
         } else {
-            pointValue = Math.round(pointPosition * range) + scale.value[0];
+            pointValue = pointPosition + scale.value[0];
         }
 
         return {
-            pointPosition: pointPosition,
+            pointPosition: pointPosition / range,
             pointValue: pointValue
         };
     }
