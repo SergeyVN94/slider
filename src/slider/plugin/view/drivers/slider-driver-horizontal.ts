@@ -33,47 +33,18 @@ export class DriverHorizontal implements SliderViewDriver {
         }
     }
 
-    onMouseMove(callback: SliderCallbackMouseEvent) {
+    public onMouseMove(callback: SliderCallbackMouseEvent) {
         this._callback = callback;
 
-        const MouseHandler = (event: JQuery.Event): boolean => {
-            // if (event.button !== 0) {
-            //     return false;
-            // }
-
+        const mouseHandler = (event: JQuery.Event): boolean => {
             this._callback(this._getSliderState(event.pageX));
-
             return true;
         }
 
-        this._sliderContainer.mousedown((event: JQuery.MouseDownEvent) => {
-            // if (event.button !== 0) {
-            //     return false;
-            // }
-
-            this._callback(this._getSliderState(event.pageX));
-            this._sliderContainer.mousemove(MouseHandler);
-        });
-
-        // this._slider.mouseover((event: JQuery.Event) => {
-        //     if (event.button !== 1) {
-        //         return false;
-        //     }
-
-        //     this._callback(this._getSliderState(event.pageX));
-        //     this._sliderContainer.mousemove(MouseHandler);
-        // });
-
-        this._sliderContainer.mouseup(() => {
-            this._sliderContainer.off('mousemove', MouseHandler);
-        });
-
-        this._sliderContainer.mouseleave(() => {
-            this._sliderContainer.off('mousemove', MouseHandler);
-        });
+        this._sliderContainer.mousedown(mouseHandler);
     }
 
-    _getPointPosition(point: JQuery): number {
+    private _getPointPosition(point: JQuery): number {
         const sliderLeft: number = this._slider.offset().left;
         let pointLeft: number = point.offset().left + (point.outerWidth() / 2);
         pointLeft -= Number.parseInt(this._slider.css('border-left-width'));
@@ -81,9 +52,9 @@ export class DriverHorizontal implements SliderViewDriver {
         return pointLeft - sliderLeft;
     }
 
-    _getSliderState(mousePosition: number): SliderStateData {
+    private _getSliderState(globalMousePosition: number): SliderStateData {
         const sliderWidth: number = this._sliderContainer.outerWidth();
-        const targetValue: number = (mousePosition - this._slider.offset().left);
+        const mousePosition: number = (globalMousePosition - this._slider.offset().left);
 
         let position: number | [number, number];
         if (this._setting.selectMode === 'single') {
@@ -96,9 +67,23 @@ export class DriverHorizontal implements SliderViewDriver {
         }
 
         return {
-            mode: this._setting.selectMode,
-            targetValue: targetValue / sliderWidth,
-            position: position
+            targetPosition: mousePosition / sliderWidth,
+            pointPosition: position
         };
+    }
+
+    public update(state: SliderModelStateData): void {
+        this._updatePointPosition(state.pointPosition);
+    }
+
+    private _updatePointPosition(position: number | [number, number]): void {
+        const sliderWidth: number = this._sliderContainer.outerWidth();
+        
+        if (this._setting.selectMode === 'single') {
+            const pointWidth: number = this._point.outerWidth();
+            let marginLeft: number = (position as number) * sliderWidth;
+            marginLeft -= (pointWidth / 2);
+            this._point.css('left', `${marginLeft}px`);
+        }
     }
 }

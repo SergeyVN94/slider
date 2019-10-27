@@ -1,9 +1,9 @@
-interface ISliderModelData {
+interface ISliderModelDataManager {
     getScale(): SliderScale;
     setScale(scale: SliderScale): void;
 
-    getValue(): number | [number, number];
-    setValue(value: number | [number, number]): void;
+    getPointPosition(): number | [number, number];
+    setPointPosition(position: number | [number, number]): void;
 
     getStep(): number;
     setStep(step: number): void;

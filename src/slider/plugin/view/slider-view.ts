@@ -26,7 +26,11 @@ export class SliderView implements ISliderView {
         }
     }
 
-    onMouseMove(callback: SliderCallbackMouseEvent): void {
+    public onMouseMove(callback: SliderCallbackMouseEvent): void {
         this._driver.onMouseMove(callback);
+    }
+
+    public update(state: SliderModelStateData): void {
+        this._driver.update(state);
     }
 }

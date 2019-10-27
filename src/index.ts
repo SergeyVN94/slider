@@ -9,6 +9,16 @@ import * as jQuery from 'jquery';
     const slider: JQuery = $('#slider1');
     slider.slider('init', {
         viewName: 'horizontal',
-        selectMode: 'single'
+        selectMode: 'single',
+        scale: {
+            type: 'array',
+            value: [
+                'январь',
+                'февраль',
+                'март',
+                'апрель',
+                'май'
+            ]
+        }
     } as SliderConfig);    
 }));

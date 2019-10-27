@@ -1,7 +1,6 @@
 type SliderStateData = {
-    readonly mode: SliderMode;
-    readonly targetValue: number;
-    readonly position: number | [number, number];
+    readonly targetPosition: number;
+    readonly pointPosition: number | [number, number];
 }
 
 interface SliderCallbackMouseEvent {
@@ -10,6 +9,7 @@ interface SliderCallbackMouseEvent {
 
 interface ISliderView {
     onMouseMove(callback: SliderCallbackMouseEvent): void;
+    update(state: SliderModelStateData): void;
 }
 
 type SliderViewName = 'horizontal' | 'vertical';

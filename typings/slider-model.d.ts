@@ -1,7 +1,6 @@
 type SliderModelStateData = {
-    readonly mode: SliderMode;
-    readonly position: number | [number, number];
-    readonly value: number | [number, number] | string | [string, string];
+    readonly pointPosition: number | [number, number];
+    readonly pointValue: number | [number, number] | string | [string, string];
 }
 
 interface SliderModelConfig {
@@ -15,5 +14,4 @@ interface ISliderModel {
     setState(state: SliderStateData): void;
     getState(): SliderModelStateData;
     setStateThroughValue(value: number | [number, number]): void;
-    setStateThroughIndex(index: number | [number, number]): void;
 }

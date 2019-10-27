@@ -1,8 +1,10 @@
-import {SliderModelData} from './slider-model-data';
+import {SliderModelDataManager} from './slider-model-data';
 import {calcRangeOfValues} from './slider-model-lib';
+import { SliderSingleStateHandler } from './slider-handler-single';
 
 export class SliderModel implements ISliderModel {
-    private readonly _data: ISliderModelData;
+    private readonly _dataManager: ISliderModelDataManager;
+    private readonly _sliderStateHandler: ISliderModelStateHandler;
     
     constructor(config: SliderModelConfig) {
         const dataConfig: SliderModelDataConfig = {
@@ -11,24 +13,22 @@ export class SliderModel implements ISliderModel {
             step: config.step
         };
 
-        this._data = new SliderModelData(dataConfig);
+        this._dataManager = new SliderModelDataManager(dataConfig);
+
+        if (config.selectMode === 'single') {
+            this._sliderStateHandler = new SliderSingleStateHandler();
+        }
     }
 
-    setState(state: SliderStateData): void {
-
+    public setState(state: SliderStateData): void {
+        this._sliderStateHandler.updateModelState(state, this._dataManager);
     }
 
-    getState(): SliderModelStateData {
-        return {
-
-        } as SliderModelStateData;
+    public getState(): SliderModelStateData {        
+        return this._sliderStateHandler.getModelState(this._dataManager);
     }
 
-    setStateThroughValue(value: number | [number, number]): void {
-
-    }
-
-    setStateThroughIndex(index: number | [number, number]): void {
+    public setStateThroughValue(value: number | [number, number]): void {
 
     }
 }

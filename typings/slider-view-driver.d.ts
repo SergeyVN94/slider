@@ -4,6 +4,7 @@ interface OnSliderMouseEvent {
 
 interface SliderViewDriver {
     onMouseMove: OnSliderMouseEvent;
+    update(state: SliderModelStateData): void;
 }
 
 interface SliderViewDriverConfig {
