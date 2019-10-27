@@ -17,13 +17,15 @@ export class SliderView implements ISliderView {
     readonly _driver: SliderViewDriver;
     _dataStateCallback: SliderCallbackMouseEvent;
     readonly _sliderContainer: JQuery;
+    readonly _sliderPoint: JQuery;
 
     constructor(slider: JQuery, config: SliderViewConfig) {
         const driverConfig: SliderViewDriverConfig = {
             selectMode: config.selectMode || 'single',
-            showValue: config.showValue === undefined ? true : config.showValue
+            showValue: config.showValue === undefined ? true : config.showValue,
+            prettify: config.prettify
         }
-        this._sliderContainer = slider.find('.slider__container');
+        this._sliderContainer = slider.find('.slider__container');        
 
         switch (config.viewName) {
             // default - 'horizontal'
@@ -31,6 +33,8 @@ export class SliderView implements ISliderView {
                 this._driver = new DriverHorizontal(slider, driverConfig);
                 break;
         }
+
+        this._sliderPoint = slider.find('.slider__point');
     }
 
     public onMouseMove(callback: SliderCallbackMouseEvent): void {
@@ -43,7 +47,7 @@ export class SliderView implements ISliderView {
         }
 
         this._sliderContainer.mousedown(mouseHandler);
-        this._sliderContainer.mousedown(() => {
+        this._sliderPoint.mousedown(() => {
             $(document).mousemove(mouseHandler);
             $(document).one('mouseup', () => {
                 $(document).off('mousemove', mouseHandler);

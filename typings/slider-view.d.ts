@@ -18,4 +18,5 @@ interface SliderViewConfig {
     readonly viewName: SliderViewName;
     readonly selectMode: SliderMode;
     readonly showValue: boolean;
+    readonly prettify?: PrettifyFunc;
 }

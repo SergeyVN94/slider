@@ -9,7 +9,8 @@ export class Slider implements ISlider {
         const view: ISliderView = new SliderView(slider, {
             selectMode: config.selectMode,
             showValue: config.showValue,
-            viewName: config.viewName
+            viewName: config.viewName,
+            prettify: config.prettify
         });
 
         let scale: SliderScale;

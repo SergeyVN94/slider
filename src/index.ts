@@ -26,6 +26,9 @@ import * as jQuery from 'jquery';
                 'Ноябрь',
                 'Декабрь'
             ]
+        },
+        prettify: (value: string) => {
+            return value.slice(0, 3);
         }
     } as SliderConfig);    
 }));

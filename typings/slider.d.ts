@@ -7,6 +7,10 @@ type SliderScale = {
     value: number[] | string[]
 }
 
+interface PrettifyFunc {
+    (value: string): string;
+}
+
 /**
  * @param selector css selector
  * @param viewName Slider appearance name 'horizontal' (default) | 'vertical'
@@ -19,6 +23,7 @@ interface SliderConfig {
     readonly showValue?: boolean;
     readonly scale?: SliderScale;
     readonly step?: number;
+    readonly prettify?: PrettifyFunc;
 }
 
 interface ISlider {

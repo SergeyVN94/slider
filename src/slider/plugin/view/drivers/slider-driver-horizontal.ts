@@ -20,6 +20,7 @@ export class DriverHorizontal implements SliderViewDriver {
         max: JQuery;
     };
     readonly _sliderContainer: JQuery;
+    readonly _prettify: PrettifyFunc;
 
     constructor(slider: JQuery, config: SliderViewDriverConfig) {
         this._slider = slider;
@@ -28,6 +29,7 @@ export class DriverHorizontal implements SliderViewDriver {
             showValue: config.showValue
         };
         this._sliderContainer = this._slider.find('.slider__container');
+        this._prettify = config.prettify || null;
 
         if (config.selectMode === 'single') {
             this._point = createPoint();
@@ -119,6 +121,9 @@ export class DriverHorizontal implements SliderViewDriver {
 
     private _updateDisplay(position: number, value: string, display: JQuery): void {
         const sliderWidth: number = this._sliderContainer.outerWidth();
+        if (this._prettify) {
+            value = this._prettify(value);
+        }
         display.html(value);
         const offset: number = position * sliderWidth - (display.outerWidth() / 2);
         this._valueDisplay.css('left', `${offset}px`);

@@ -10,6 +10,7 @@ interface SliderViewDriver {
 interface SliderViewDriverConfig {
     readonly selectMode: SliderMode;
     readonly showValue: boolean;
+    readonly prettify?: PrettifyFunc;
 }
 
 interface SliderViewDriverSetting {

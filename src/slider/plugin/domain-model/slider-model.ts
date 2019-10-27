@@ -1,5 +1,5 @@
 import {SliderModelDataManager} from './slider-model-data';
-import {calcRangeOfValues} from './slider-model-lib';
+import {calcSliderRange} from './slider-model-lib';
 import { SliderSingleStateHandler } from './slider-handler-single';
 
 export class SliderModel implements ISliderModel {
@@ -9,7 +9,7 @@ export class SliderModel implements ISliderModel {
     constructor(config: SliderModelConfig) {
         const dataConfig: SliderModelDataConfig = {
             scale: config.scale,
-            rangeOfValues: calcRangeOfValues(config.scale, config.step),
+            rangeOfValues: calcSliderRange(config.scale, config.step),
             step: config.step
         };
 

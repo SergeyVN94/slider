@@ -1,5 +1,5 @@
 $triangle: $point-diameter / 2 * (2 / 3);
-$font-size: 14px;
+$font-size: 12px;
 $line-height: 18px;
 $height: $line-height + 6px;
 
@@ -11,14 +11,14 @@ $height: $line-height + 6px;
     color: #fcfcfc;
     position: relative;
     text-align: center;
-    padding: 3px 6px;
+    padding: 2px 6px;
     font-size: $font-size;
     line-height: $line-height;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     box-sizing: border-box;
     border-radius: 6px;
 
-    top: -($height + $triangle + $value-margin + ($point-diameter / 2));
+    top: -($height + $triangle + $point-offset + $display-value-margin);
     left: 0;
     user-select: none;
     -moz-user-select: none;
