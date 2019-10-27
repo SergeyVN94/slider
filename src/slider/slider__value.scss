@@ -20,6 +20,9 @@ $height: $line-height + 6px;
 
     top: -($height + $triangle + $value-margin + ($point-diameter / 2));
     left: 0;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 
     &::after {
         content: '';

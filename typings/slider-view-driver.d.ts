@@ -3,7 +3,7 @@ interface OnSliderMouseEvent {
 }
 
 interface SliderViewDriver {
-    onMouseMove: OnSliderMouseEvent;
+    getState(event: JQuery.Event): SliderStateData;
     update(state: SliderModelStateData): void;
 }
 

@@ -1,3 +1,5 @@
+import * as $ from 'jquery';
+
 import { 
     createPoint,
     createPointDisplay
@@ -55,17 +57,6 @@ export class DriverHorizontal implements SliderViewDriver {
         }
     }
 
-    public onMouseMove(callback: SliderCallbackMouseEvent) {
-        this._callback = callback;
-
-        const mouseHandler = (event: JQuery.Event): boolean => {
-            this._callback(this._getSliderState(event.pageX));
-            return true;
-        }
-
-        this._sliderContainer.mousedown(mouseHandler);
-    }
-
     private _getPointPosition(point: JQuery): number {
         const sliderLeft: number = this._sliderContainer.offset().left;
         const pointLeft: number = point.offset().left + (point.outerWidth() / 2);
@@ -73,8 +64,9 @@ export class DriverHorizontal implements SliderViewDriver {
         return pointLeft - sliderLeft;
     }
 
-    private _getSliderState(globalMousePosition: number): SliderStateData {
+    public getState(event: JQuery.Event): SliderStateData {
         const sliderWidth: number = this._sliderContainer.width();
+        const globalMousePosition: number = event.pageX;
         const mousePosition: number = (globalMousePosition - this._sliderContainer.offset().left);        
 
         let position: number | [number, number];
@@ -87,15 +79,16 @@ export class DriverHorizontal implements SliderViewDriver {
             ];
         }
 
+        let targetPosition: number = mousePosition / sliderWidth;
+        if (targetPosition < 0) targetPosition = 0;
+        if (targetPosition > 1) targetPosition = 1;
         return {
-            targetPosition: mousePosition / sliderWidth,
+            targetPosition: targetPosition,
             pointPosition: position
         };
     }
 
-    public update(state: SliderModelStateData): void {
-        console.log(state);
-        
+    public update(state: SliderModelStateData): void {        
         if (this._setting.selectMode === 'single') {
             this._updatePointPosition(state.pointPosition as number, this._point);
         } else {
