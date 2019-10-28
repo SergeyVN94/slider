@@ -10,9 +10,13 @@ interface SliderModelConfig {
     readonly step: number;
 }
 
+interface SliderModelCallback {
+    (state: SliderModelStateData): void;
+}
+
 interface ISliderModel {
     setState(state: SliderStateData): void;
-    getState(): SliderModelStateData;
+    onChangeState(callback: SliderModelCallback): void;
     setStateThroughValue(value: number | string): void;
     setStateThroughValues(value: [number, number] | [string, string]): void;
 }

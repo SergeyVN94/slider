@@ -21,8 +21,8 @@ export class SliderView implements ISliderView {
 
     constructor(slider: JQuery, config: SliderViewConfig) {
         const driverConfig: SliderViewDriverConfig = {
-            selectMode: config.selectMode || 'single',
-            showValue: config.showValue === undefined ? true : config.showValue,
+            selectMode: config.selectMode,
+            showValue: config.showValue,
             prettify: config.prettify
         }
         this._sliderContainer = slider.find('.slider__container');        

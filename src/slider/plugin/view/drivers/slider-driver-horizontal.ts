@@ -122,7 +122,7 @@ export class DriverHorizontal implements SliderViewDriver {
     private _updateDisplay(position: number, value: string, display: JQuery): void {
         const sliderWidth: number = this._sliderContainer.outerWidth();
         if (this._prettify) {
-            value = this._prettify(value);
+            value = this._prettify(<string>value);
         }
         display.html(value);
         const offset: number = position * sliderWidth - (display.outerWidth() / 2);

@@ -13,12 +13,13 @@ export class SliderSingleStateHandler implements ISliderModelStateHandler {
         const pointPosition: number = dataManager.getPointPosition() as number;
         const range: number = dataManager.getRangeOfValues();
         const scale: SliderScale = dataManager.getScale();
+        const step: number = dataManager.getStep();
         let pointValue: number | string;
 
         if (scale.type === 'array') {
             pointValue = scale.value[pointPosition];
         } else {
-            pointValue = pointPosition + scale.value[0];
+            pointValue = (pointPosition * step) + scale.value[0];
         }
 
         return {

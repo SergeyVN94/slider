@@ -8,7 +8,7 @@ export class SliderModelDataManager implements ISliderModelDataManager {
         this._scale = config.scale;
         this._rangeOfValues = config.rangeOfValues;
         this._step = config.step;
-        this._pointPosition = config.start ? config.start : 0;
+        this._pointPosition = 0;
     }
 
     public getStep(): number {

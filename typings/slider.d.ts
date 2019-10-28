@@ -11,7 +11,8 @@ interface PrettifyFunc {
     (value: string): string;
 }
 
-type Couple = [number, number] | [string, string];
+type CoupleStr = [string, string];
+type CoupleNum = [number, number]
 
 /**
  * @param viewName Slider appearance name 'horizontal' (default) | 'vertical'
@@ -29,7 +30,7 @@ interface SliderConfig {
     readonly scale?: SliderScale;
     readonly step?: number;
     readonly prettify?: PrettifyFunc;
-    readonly start?: number | string | Couple;
+    readonly start?: number | string | CoupleStr | CoupleNum;
 }
 
 interface ISlider {

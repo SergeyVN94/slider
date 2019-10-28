@@ -1,6 +1,6 @@
 export function calcSliderRange(scale: SliderScale, step?: number): number {
     if (scale.type === 'array') {
-        return Math.floor((scale.value.length - 1) / (step || 1));
+        return Math.floor(scale.value.length - 1);
     }
 
     const minMax: [number, number] = scale.value;
@@ -24,11 +24,11 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
         }
 
         if (value > minMax[1]) {
-            return dataManager.getRangeOfValues() + minMax[0];
+            return dataManager.getRangeOfValues();
         }
 
-        const stepInValue: number = Math.round((value - minMax[0]) / step);        
-        return stepInValue * step;
+        const stepsInValue: number = (value - minMax[0]) / step;        
+        return Math.round(stepsInValue);
     } else {
         let result = -1;
         scale.value.forEach((item: number | string, index: number) => {

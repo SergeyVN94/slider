@@ -9,6 +9,7 @@ export class SliderModel implements ISliderModel {
     private readonly _dataManager: ISliderModelDataManager;
     private readonly _sliderStateHandler: ISliderModelStateHandler;
     private readonly _selectMode: SliderMode;
+    private readonly _callbackList: SliderModelCallback[];
     
     constructor(config: SliderModelConfig) {
         const dataConfig: SliderModelDataConfig = {
@@ -23,14 +24,17 @@ export class SliderModel implements ISliderModel {
         if (config.selectMode === 'single') {
             this._sliderStateHandler = new SliderSingleStateHandler();
         }
+        
+        this._callbackList = [];
     }
 
     public setState(state: SliderStateData): void {
         this._sliderStateHandler.updateModelState(state, this._dataManager);
+        this._eventUpdateState();
     }
 
-    public getState(): SliderModelStateData {        
-        return this._sliderStateHandler.getModelState(this._dataManager);
+    public onChangeState(callback: SliderModelCallback): void {
+        this._callbackList.push(callback);  
     }
 
     public setStateThroughValue(value: number | string): void {
@@ -40,6 +44,7 @@ export class SliderModel implements ISliderModel {
         } else {
             this._dataManager.setPointPosition([pointPosition, this._dataManager.getRangeOfValues()]);
         }
+        this._eventUpdateState();
     }
 
     public setStateThroughValues(value: [number, number] | [string, string]): void {
@@ -48,5 +53,12 @@ export class SliderModel implements ISliderModel {
             valueToPointPosition(value[1], this._dataManager)
         ];
         this._dataManager.setPointPosition(pointPosition);
+        this._eventUpdateState();
+    }
+
+    private _eventUpdateState(): void {
+        this._callbackList.forEach((callback: SliderModelCallback) => {
+            callback(this._sliderStateHandler.getModelState(this._dataManager));
+        });
     }
 }

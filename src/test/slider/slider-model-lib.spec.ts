@@ -50,66 +50,82 @@ describe('SliderModelLib', () => {
 // valueToPointPosition
 
 describe('SliderModelLib', () => {
-    it('valueToPointPosition - convert value to standard range', () => {
+    it('valueToPointPosition - convert value to standard range 1', () => {
+        const scale: SliderScale = {
+            type: 'range',
+            value: [-1000, 1000]
+        };
+        const step: number = 1;
+
         const manager: ISliderModelDataManager = new SliderModelDataManager({
-            scale: {
-                type: 'range',
-                value: [-100, 100]
-            },
-            rangeOfValues: 200,
-            step: 1
+            scale: scale,
+            rangeOfValues: calcSliderRange(scale, step),
+            step: step
         });
+
         expect(
-            valueToPointPosition(55, manager)
-        ).to.equal(155);
+            valueToPointPosition(654, manager)
+        ).to.equal(1654);
     });
 });
 
 describe('SliderModelLib', () => {
-    it('valueToPointPosition - convert value to standard range', () => {
+    it('valueToPointPosition - convert value to standard range 2', () => {
+        const scale: SliderScale = {
+            type: 'range',
+            value: [-100, 1100]
+        };
+        const step: number = 100;
+
         const manager: ISliderModelDataManager = new SliderModelDataManager({
-            scale: {
-                type: 'range',
-                value: [-100, 1100]
-            },
-            rangeOfValues: 200,
-            step: 1
+            scale: scale,
+            rangeOfValues: calcSliderRange(scale, step),
+            step: step
         });
+
         expect(
             valueToPointPosition(255, manager)
-        ).to.equal(355);
+        ).to.equal(4);
     });
 });
 
 describe('SliderModelLib', () => {
     it('valueToPointPosition - convert value to standard range in large increments', () => {
+        const scale: SliderScale = {
+            type: 'range',
+            value: [0, 10000]
+        };
+        const step: number = 250;
+
         const manager: ISliderModelDataManager = new SliderModelDataManager({
-            scale: {
-                type: 'range',
-                value: [0, 1000]
-            },
-            rangeOfValues: 200,
-            step: 250
+            scale: scale,
+            rangeOfValues: calcSliderRange(scale, step),
+            step: step
         });
+
         expect(
-            valueToPointPosition(255, manager)
-        ).to.equal(250);
+            valueToPointPosition(2550, manager)
+        ).to.equal(10);
     });
 });
 
 describe('SliderModelLib', () => {
     it('valueToPointPosition - convert non-integer value to standard range in large increments', () => {
+        const scale: SliderScale = {
+            type: 'range',
+            value: [-1000, 1000]
+        };
+        const step: number = 350;
+
         const manager: ISliderModelDataManager = new SliderModelDataManager({
-            scale: {
-                type: 'range',
-                value: [0, 1000]
-            },
-            rangeOfValues: 200,
-            step: 250
+            scale: scale,
+            rangeOfValues: calcSliderRange(scale, step),
+            step: step
         });
+
         expect(
             valueToPointPosition(623.43, manager)
-        ).to.equal(500);
+        ).to.equal(5);
     });
 });
 
