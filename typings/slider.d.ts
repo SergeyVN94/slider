@@ -11,11 +11,16 @@ interface PrettifyFunc {
     (value: string): string;
 }
 
+type Couple = [number, number] | [string, string];
+
 /**
- * @param selector css selector
  * @param viewName Slider appearance name 'horizontal' (default) | 'vertical'
  * @param selectMode Type of selected value: range or single value ('range' | 'single')
+ * @param showValue
+ * @param scale
  * @param step Slider step size. The value must be greater than zero.
+ * @param prettify
+ * @param start
  */
 interface SliderConfig {
     readonly viewName?: SliderViewName;
@@ -24,6 +29,7 @@ interface SliderConfig {
     readonly scale?: SliderScale;
     readonly step?: number;
     readonly prettify?: PrettifyFunc;
+    readonly start?: number | string | Couple;
 }
 
 interface ISlider {

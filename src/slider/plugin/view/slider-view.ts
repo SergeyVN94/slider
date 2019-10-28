@@ -9,7 +9,7 @@ export function createPoint(): JQuery {
 
 export function createPointDisplay(): JQuery {
     return $('<div/>', {
-        class: 'slider__value'
+        class: 'slider__display'
     });
 }
 

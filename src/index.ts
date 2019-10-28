@@ -10,6 +10,7 @@ import * as jQuery from 'jquery';
     slider.slider('init', {
         viewName: 'horizontal',
         selectMode: 'single',
+        start: 'Июль',
         scale: {
             type: 'array',
             value: [
@@ -30,5 +31,5 @@ import * as jQuery from 'jquery';
         prettify: (value: string) => {
             return value.slice(0, 3);
         }
-    } as SliderConfig);    
+    } as SliderConfig);      
 }));

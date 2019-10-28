@@ -4,6 +4,7 @@ import {SliderModel} from './domain-model/slider-model';
 
 export class Slider implements ISlider {
     readonly _presenter: ISliderPresenter;
+    readonly _model: ISliderModel;
 
     constructor(slider: JQuery, config: SliderConfig) {        
         const view: ISliderView = new SliderView(slider, {
@@ -23,12 +24,24 @@ export class Slider implements ISlider {
             scale = config.scale;
         }
 
-        const model: ISliderModel = new SliderModel({
+        this._model = new SliderModel({
             selectMode: config.selectMode || 'single',
             scale: scale,
             step: !isNaN(config.step) ? Math.round(config.step) : 1
         });
 
-        this._presenter = new SliderPresenter(view, model);
+        if (config.start) {
+            if (typeof config.start === 'string' || typeof config.start === 'number') {
+                this._model.setStateThroughValue(config.start);
+            } else {
+                if (config.selectMode === 'single') {
+                    throw "The slider in single mode cannot be initialized with a pair of values";
+                }
+                const t: Couple =  config.start as Couple;
+                this._model.setStateThroughValues(config.start);
+            }
+        }
+
+        this._presenter = new SliderPresenter(view, this._model);
     }
 }

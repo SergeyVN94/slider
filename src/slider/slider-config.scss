@@ -1,5 +1,8 @@
 $slider-size: 12px;
 $slider-border: 1px;
 $point-diameter: 25px;
-$point-offset: (($point-diameter / 2) - ($slider-size / 2) + $slider-border);
-$display-value-margin: 3px;
+$point-offset: (($point-diameter / 2) - ($slider-size / 2));
+$display-display-margin: 3px;
+$slider-bg: #d4d4e1;
+$point-color: #B44650;
+$display-bg: $point-color;

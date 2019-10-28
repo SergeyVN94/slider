@@ -3,11 +3,11 @@ $font-size: 12px;
 $line-height: 18px;
 $height: $line-height + 6px;
 
-.slider__value {
+.slider__display {
     display: inline-block;
     width: auto;
     height: $height;
-    background-color: $steelblue;
+    background-color: $display-bg;
     color: #fcfcfc;
     position: relative;
     text-align: center;
@@ -18,7 +18,7 @@ $height: $line-height + 6px;
     box-sizing: border-box;
     border-radius: 6px;
 
-    top: -($height + $triangle + $point-offset + $display-value-margin);
+    top: -($height + $triangle + $point-offset + $display-display-margin);
     left: 0;
     user-select: none;
     -moz-user-select: none;
@@ -35,6 +35,6 @@ $height: $line-height + 6px;
         right: 0;
         margin: 0 auto;
         border: $triangle solid transparent;
-        border-top: $triangle solid $steelblue;
+        border-top: $triangle solid $display-bg;
     }
 }

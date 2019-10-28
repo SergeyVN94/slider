@@ -13,5 +13,6 @@ interface SliderModelConfig {
 interface ISliderModel {
     setState(state: SliderStateData): void;
     getState(): SliderModelStateData;
-    setStateThroughValue(value: number | [number, number]): void;
+    setStateThroughValue(value: number | string): void;
+    setStateThroughValues(value: [number, number] | [string, string]): void;
 }
