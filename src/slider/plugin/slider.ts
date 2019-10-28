@@ -26,7 +26,7 @@ export class Slider implements ISlider {
         const model: ISliderModel = new SliderModel({
             selectMode: config.selectMode || 'single',
             scale: scale,
-            step: config.step || 1
+            step: !isNaN(config.step) ? Math.round(config.step) : 1
         });
 
         this._presenter = new SliderPresenter(view, model);

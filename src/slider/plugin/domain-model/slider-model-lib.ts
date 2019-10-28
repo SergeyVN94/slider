@@ -9,7 +9,37 @@ export function calcSliderRange(scale: SliderScale, step?: number): number {
 
 export function valueToPointPosition(value: number | string, dataManager: ISliderModelDataManager): number {
     const scale = dataManager.getScale();
-    const range = dataManager.getRangeOfValues();
+    const step = dataManager.getStep();
 
-    return 0;
+    if (scale.type === 'range' && typeof value === 'string') {
+        throw 'A range of numbers can only be initialized with a number';
+    }
+
+    if (scale.type === 'range') {
+        value = value as number;
+        const minMax: [number, number] = scale.value;  
+        
+        if (value < minMax[0]) {
+            return 0;
+        }
+
+        if (value > minMax[1]) {
+            return dataManager.getRangeOfValues() + minMax[0];
+        }
+
+        const stepInValue: number = Math.round((value - minMax[0]) / step);        
+        return stepInValue * step;
+    } else {
+        let result = -1;
+        scale.value.forEach((item: number | string, index: number) => {
+            if (item === value) {
+                result = index;
+            }
+        });
+        if (result < 0) {
+            throw `The value "${value}" does not exist in the array of values.`;
+        }
+
+        return result;
+    }
 }
