@@ -8,7 +8,7 @@ type SliderScale = {
 }
 
 interface PrettifyFunc {
-    (value: string): string;
+    (value: string | number): string;
 }
 
 type CoupleStr = [string, string];
@@ -33,6 +33,10 @@ interface SliderConfig {
     readonly start?: number | string | CoupleStr | CoupleNum;
 }
 
+interface SliderValueCallback {
+    (value: number | string | CoupleStr | CoupleNum): void;
+}
+
 interface ISlider {
-    
+    onStateChange(callback: SliderValueCallback): void;
 }

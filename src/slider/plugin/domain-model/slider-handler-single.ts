@@ -3,7 +3,7 @@ export class SliderSingleStateHandler implements ISliderModelStateHandler {
         
     }
 
-    public updateModelState(state: SliderStateData, dataManager: ISliderModelDataManager): void {
+    public updateModelState(state: SliderViewStateData, dataManager: ISliderModelDataManager): void {
         const range: number = dataManager.getRangeOfValues();        
         const newPointPosition = Math.round(state.targetPosition * range);
         dataManager.setPointPosition(newPointPosition);
@@ -23,6 +23,7 @@ export class SliderSingleStateHandler implements ISliderModelStateHandler {
         }
 
         return {
+            mode: 'single',
             pointPosition: pointPosition / range,
             pointValue: pointValue
         };

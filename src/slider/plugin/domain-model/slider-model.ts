@@ -28,7 +28,7 @@ export class SliderModel implements ISliderModel {
         this._callbackList = [];
     }
 
-    public setState(state: SliderStateData): void {
+    public setState(state: SliderViewStateData): void {
         this._sliderStateHandler.updateModelState(state, this._dataManager);
         this._eventUpdateState();
     }

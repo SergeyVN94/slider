@@ -66,48 +66,47 @@ export class DriverHorizontal implements SliderViewDriver {
         return pointLeft - sliderLeft;
     }
 
-    public getState(event: JQuery.Event): SliderStateData {
+    public getState(event: JQuery.Event): SliderViewStateData {
         const sliderWidth: number = this._sliderContainer.width();
         const globalMousePosition: number = event.pageX;
         const mousePosition: number = (globalMousePosition - this._sliderContainer.offset().left);        
-
-        let position: number | [number, number];
-        if (this._setting.selectMode === 'single') {
-            position = this._getPointPosition(this._point) / sliderWidth;
-        } else {
-            position = [
-                this._getPointPosition(this._points.min) / sliderWidth,
-                this._getPointPosition(this._points.max) / sliderWidth,
-            ];
-        }
-
         let targetPosition: number = mousePosition / sliderWidth;
         if (targetPosition < 0) targetPosition = 0;
         if (targetPosition > 1) targetPosition = 1;
-        return {
-            targetPosition: targetPosition,
-            pointPosition: position
-        };
+
+        if (this._setting.selectMode === 'single') {
+            return {
+                mode: 'single',
+                targetPosition: targetPosition,
+                pointPosition: this._getPointPosition(this._point) / sliderWidth
+            }
+        } else {
+            return {
+                mode: 'range',
+                targetPosition: targetPosition,
+                pointPosition:  [
+                    this._getPointPosition(this._points.min) / sliderWidth,
+                    this._getPointPosition(this._points.max) / sliderWidth,
+                ]
+            }
+        }
     }
 
     public update(state: SliderModelStateData): void {        
-        if (this._setting.selectMode === 'single') {
-            this._updatePointPosition(state.pointPosition as number, this._point);
+        if (state.mode === 'single') {
+            this._updatePointPosition(state.pointPosition, this._point);
         } else {
-            const position: [number, number] = state.pointPosition as [number, number];
-            this._updatePointPosition(position[0], this._points.min);
-            this._updatePointPosition(position[1], this._points.max);
+            this._updatePointPosition(state.pointPosition[0], this._points.min);
+            this._updatePointPosition(state.pointPosition[1], this._points.max);
         }
 
         
         if (this._setting.showValue) {
-            if (this._setting.selectMode === 'single') {
-                this._updateDisplay(state.pointPosition as number, state.pointValue as string, this._valueDisplay);
+            if (state.mode === 'single') {
+                this._updateDisplay(state.pointPosition, state.pointValue, this._valueDisplay);
             } else {
-                const position: [number, number] = state.pointPosition as [number, number];
-                const value: [string, string] = state.pointValue as [string, string];
-                this._updateDisplay(position[0], value[0], this._valueDisplays.min);
-                this._updateDisplay(position[1], value[0], this._valueDisplays.max);
+                this._updateDisplay(state.pointPosition[0], state.pointValue[0], this._valueDisplays.min);
+                this._updateDisplay(state.pointPosition[1], state.pointValue[0], this._valueDisplays.max);
             }
         }
     }
@@ -119,12 +118,12 @@ export class DriverHorizontal implements SliderViewDriver {
         point.css('left', `${marginLeft}px`);
     }
 
-    private _updateDisplay(position: number, value: string, display: JQuery): void {
+    private _updateDisplay(position: number, value: string | number, display: JQuery): void {
         const sliderWidth: number = this._sliderContainer.outerWidth();
         if (this._prettify) {
-            value = this._prettify(<string>value);
+            value = this._prettify(value);
         }
-        display.html(value);
+        display.html(String(value).toString());
         const offset: number = position * sliderWidth - (display.outerWidth() / 2);
         this._valueDisplay.css('left', `${offset}px`);
     }

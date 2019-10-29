@@ -5,6 +5,7 @@ import {SliderModel} from './domain-model/slider-model';
 export class Slider implements ISlider {
     readonly _presenter: ISliderPresenter;
     readonly _model: ISliderModel;
+    readonly _callbackList: SliderValueCallback[];
 
     constructor(slider: JQuery, config: SliderConfig) {
         const defaultConfig: SliderConfig = {
@@ -34,13 +35,28 @@ export class Slider implements ISlider {
         this._presenter = new SliderPresenter(view, this._model);
         
         if (!config.start) {
-            this._model.setState({
-                targetPosition: 0,
-                pointPosition: config.selectMode === 'single' ? 0 : [0, 1]
-            });
+            if (config.selectMode === 'single') {
+                this._model.setState({
+                    mode: 'single',
+                    targetPosition: 0,
+                    pointPosition: 0
+                });
+            } else {
+                this._model.setState({
+                    mode: 'range',
+                    targetPosition: 0,
+                    pointPosition: [0, 1]
+                });
+            }
         } else {
             this._setStartPointPosition(config.selectMode, config.start);
         }
+
+        this._callbackList = [];
+
+        this._model.onChangeState((state: SliderModelStateData): void => {
+            this._eventUpdateValue(state.pointValue);
+        });
     }
 
     private _setStartPointPosition(mode: SliderMode, start: number | string | CoupleStr | CoupleNum): void {
@@ -52,5 +68,15 @@ export class Slider implements ISlider {
             }
             this._model.setStateThroughValues(start as CoupleStr | CoupleNum);
         }
+    }
+
+    public onStateChange(callback: SliderValueCallback): void {
+        this._callbackList.push(callback);
+    }
+
+    private _eventUpdateValue(value: number | string | CoupleStr | CoupleNum): void {
+        this._callbackList.forEach((callback: SliderValueCallback): void => {
+            callback(value);
+        });
     }
 }

@@ -1,10 +1,15 @@
-type SliderStateData = {
+type SliderViewStateData = {
+    readonly mode: 'single';
     readonly targetPosition: number;
-    readonly pointPosition: number | [number, number];
+    readonly pointPosition: number;
+} | {
+    readonly mode: 'range';
+    readonly targetPosition: number;
+    readonly pointPosition: CoupleNum;
 }
 
 interface SliderCallbackMouseEvent {
-    (stateData: SliderStateData): void;
+    (stateData: SliderViewStateData): void;
 }
 
 interface ISliderView {

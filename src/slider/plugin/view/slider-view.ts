@@ -41,7 +41,7 @@ export class SliderView implements ISliderView {
         this._dataStateCallback = callback;
 
         const mouseHandler = (event: JQuery.Event): boolean => {
-            const state: SliderStateData = this._driver.getState(event);
+            const state: SliderViewStateData = this._driver.getState(event);
             this._dataStateCallback(state);
             return true;
         }

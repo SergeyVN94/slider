@@ -32,8 +32,8 @@ import * as jQuery from 'jquery';
     slider.slider('init', {
         viewName: 'horizontal',
         selectMode: 'single',
-        scale: scale1,
-        step: 2,
-        start: scale1.value[0]
+        scale: scale2,
+        step: 200,
+        start: 456
     } as SliderConfig);      
 }));
