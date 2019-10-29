@@ -2,4 +2,8 @@ export const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(t
     if (command === 'showValue') {
         return this.get()[0].slider.showValue();
     }
+
+    if (command === 'value') {
+        return this.get()[0].slider.value();
+    }
 }

@@ -5,12 +5,13 @@
 @import './slider__bg-line.scss';
 @import './slider__display.scss';
 @import './slider__display_hide.scss';
+@import './slider__display-container.scss';
 
 .slider {
     display: block;
     box-sizing: border-box;
     width: 100%;
-    height: $slider-size;
+    height: $slider-height;
     min-width: $point-diameter * 4;
 }
 

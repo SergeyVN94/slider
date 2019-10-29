@@ -1,4 +1,3 @@
-$triangle: $point-diameter / 2 * (2 / 3);
 $font-size: 12px;
 $line-height: 18px;
 $height: $line-height + 6px;
@@ -18,7 +17,7 @@ $height: $line-height + 6px;
     box-sizing: border-box;
     border-radius: 6px;
 
-    top: -($height + $triangle + $point-offset + $display-display-margin);
+    top: -($height + $triangle + $point-offset + $display-margin);
     left: 0;
     user-select: none;
     -moz-user-select: none;

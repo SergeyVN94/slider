@@ -24,4 +24,5 @@ interface ISliderModel {
     onChangeState(callback: SliderModelCallback): void;
     setStateThroughValue(value: number | string): void;
     setStateThroughValues(value: [number, number] | [string, string]): void;
+    getValue(): number | string | CoupleNum | CoupleStr;
 }

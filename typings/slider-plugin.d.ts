@@ -1,7 +1,7 @@
 type Command = 
     'init' | 
     'onInput' | 
-    'setValue' | 
+    'value' | 
     'showValue'
 ;
 

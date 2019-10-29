@@ -22,7 +22,7 @@ export class Slider implements ISlider {
         
         this._view = new SliderView(slider, {
             selectMode: config.selectMode || defaultConfig.selectMode,
-            showValue: config.showValue || defaultConfig.showValue,
+            showValue: config.showValue === undefined ? defaultConfig.showValue : config.showValue,
             viewName: config.viewName || defaultConfig.viewName,
             prettify: config.prettify
         });
@@ -81,11 +81,15 @@ export class Slider implements ISlider {
         });
     }
 
-    public setValue(value: string | number | CoupleNum | CoupleStr): void {
-        if (typeof value === 'string' || typeof value === "number") {
-            this._model.setStateThroughValue(value);
+    public value(value?: number | string | CoupleNum | CoupleStr): number | string | CoupleNum | CoupleStr | void {
+        if (value === undefined) {
+           return this._model.getValue();
         } else {
-            this._model.setStateThroughValues(value);
+            if (typeof value === 'string' || typeof value === "number") {
+                this._model.setStateThroughValue(value);
+            } else {
+                this._model.setStateThroughValues(value);
+            }
         }
     }
 

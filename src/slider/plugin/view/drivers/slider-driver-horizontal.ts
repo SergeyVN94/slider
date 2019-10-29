@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import { 
+import {
     createPoint,
     createPointDisplay
 } from '../slider-view';
@@ -73,7 +73,7 @@ export class DriverHorizontal implements SliderViewDriver {
     public getState(event: JQuery.Event): SliderViewStateData {
         const sliderWidth: number = this._sliderContainer.width();
         const globalMousePosition: number = event.pageX;
-        const mousePosition: number = (globalMousePosition - this._sliderContainer.offset().left);        
+        const mousePosition: number = (globalMousePosition - this._sliderContainer.offset().left);
         let targetPosition: number = mousePosition / sliderWidth;
         if (targetPosition < 0) targetPosition = 0;
         if (targetPosition > 1) targetPosition = 1;
@@ -88,7 +88,7 @@ export class DriverHorizontal implements SliderViewDriver {
             return {
                 mode: 'range',
                 targetPosition: targetPosition,
-                pointPosition:  [
+                pointPosition: [
                     this._getPointPosition(this._points.min) / sliderWidth,
                     this._getPointPosition(this._points.max) / sliderWidth,
                 ]
@@ -111,9 +111,11 @@ export class DriverHorizontal implements SliderViewDriver {
                 this._updateDisplay(state.pointPosition, state.pointValue, this._valueDisplay);
             } else {
                 this._updateDisplay(state.pointPosition[0], state.pointValue[0], this._valueDisplays.min);
-                this._updateDisplay(state.pointPosition[1], state.pointValue[0], this._valueDisplays.max);
+                this._updateDisplay(state.pointPosition[1], state.pointValue[1], this._valueDisplays.max);
             }
         }
+        console.log(this._valueDisplays);
+        
     }
 
     private _updatePointPosition(position: number, point: JQuery): void {
@@ -130,11 +132,15 @@ export class DriverHorizontal implements SliderViewDriver {
         }
         display.html(String(value).toString());
         const offset: number = position * sliderWidth - (display.outerWidth() / 2);
-        this._valueDisplay.css('left', `${offset}px`);
+        display.css('left', `${offset}px`);
     }
 
-    public showValue(state?: boolean): void | boolean {
-        this._setting.showValue = state;
+    public showValue(state?: boolean): boolean | void {
+        if (state === undefined) {
+            return this._setting.showValue;
+        } else {
+            this._setting.showValue = state;
+        }
 
         if (state) {
             if (this._setting.selectMode === 'single') {

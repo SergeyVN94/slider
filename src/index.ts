@@ -30,28 +30,24 @@ import { DemoPanel } from './demo-panel/demo-panel';
         value: [-1000, 1000]
     };
     
-    const slider1: JQuery = $('#slider1');
-    const panel1: DemoPanel = new DemoPanel($('#panel1'));    
+    // slider 1
 
+    const slider1: JQuery = $('#slider1');
+       
     slider1.slider('init', {
         viewName: 'horizontal',
         selectMode: 'single',
-        scale: {
-            type: 'range',
-            value: [-10000, 10000]
-        },
-        step: 500
+        scale: scale1
     } as SliderConfig);
 
-    slider1.slider('onInput', (value: string | number | CoupleNum | CoupleStr) => {
-        panel1.setValue(value);
-    });
+    const panel1: DemoPanel = new DemoPanel($('#panel1'), slider1); 
 
-    panel1.onChangeValue((value: string | CoupleStr | number | CoupleNum): void => {
-        slider1.slider('setValue', value);
-    });
+    // slider 2
 
-    panel1.onShowValue((state: boolean): void => {
-        slider1.slider('showValue', state);
-    });
+    const slider2: JQuery = $('#slider2');
+    slider2.slider('init', {
+        selectMode: 'range',
+        scale: scale2
+    } as SliderConfig);
+    const panel2: DemoPanel = new DemoPanel($('#panel2'), slider2);
 }));

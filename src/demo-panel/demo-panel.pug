@@ -14,5 +14,5 @@ mixin demo-panel(args={})
                 label max:
                     input(type="text", class="demo-panel__input-value", data-type="max")
             label
-                input(type="checkbox", class="demo-panel__show-value", checked=args.showValue)
+                input(type="checkbox", class="demo-panel__show-value", checked=args.showValue, autocomplete="off")
                 | show / hide value 

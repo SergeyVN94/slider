@@ -7,8 +7,8 @@ export const sliderPluginFunction: SliderPluginFunction = function(this: JQuery,
         this.get()[0].slider.onStateChange(params);        
     }
 
-    if (command === 'setValue') {
-        this.get()[0].slider.setValue(params);
+    if (command === 'value') {
+        this.get()[0].slider.value(params);
     }
 
     if (command === 'showValue') {

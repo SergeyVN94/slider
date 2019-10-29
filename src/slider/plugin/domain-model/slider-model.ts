@@ -4,6 +4,7 @@ import {
     valueToPointPosition
 } from './slider-model-lib';
 import { SliderSingleStateHandler } from './slider-handler-single';
+import { SliderRangeStateHandler } from './slider-handler-range';
 
 export class SliderModel implements ISliderModel {
     private readonly _dataManager: ISliderModelDataManager;
@@ -23,6 +24,8 @@ export class SliderModel implements ISliderModel {
 
         if (config.selectMode === 'single') {
             this._sliderStateHandler = new SliderSingleStateHandler();
+        } else {
+            this._sliderStateHandler = new SliderRangeStateHandler();
         }
         
         this._callbackList = [];
@@ -64,5 +67,9 @@ export class SliderModel implements ISliderModel {
         this._callbackList.forEach((callback: SliderModelCallback) => {
             callback(this._sliderStateHandler.getModelState(this._dataManager));
         });
+    }
+
+    public getValue(): number | string | CoupleNum | CoupleStr {
+        return this._sliderStateHandler.getModelState(this._dataManager).pointValue;
     }
 }

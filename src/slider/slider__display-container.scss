@@ -1,0 +1,6 @@
+.slider__display-container {
+    position: relative;
+    width: 100%;
+    height: $display-height;
+    top: -($display-margin + $point-offset + $slider-height + $display-height + $triangle);
+}
