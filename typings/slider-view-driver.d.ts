@@ -3,13 +3,14 @@ interface OnSliderMouseEvent {
 }
 
 interface SliderViewDriver {
-    getState(event: JQuery.Event): SliderStateData;
+    getState(event: JQuery.Event): SliderViewStateData;
     update(state: SliderModelStateData): void;
+    showValue(state?: boolean): boolean | void;
 }
 
 interface SliderViewDriverConfig {
     readonly selectMode: SliderMode;
-    readonly showValue: boolean;
+    showValue: boolean;
     readonly prettify?: PrettifyFunc;
 }
 

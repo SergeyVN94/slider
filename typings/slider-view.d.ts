@@ -15,6 +15,7 @@ interface SliderCallbackMouseEvent {
 interface ISliderView {
     onMouseMove(callback: SliderCallbackMouseEvent): void;
     update(state: SliderModelStateData): void;
+    showValue(state?: boolean): boolean | void;
 }
 
 type SliderViewName = 'horizontal' | 'vertical';

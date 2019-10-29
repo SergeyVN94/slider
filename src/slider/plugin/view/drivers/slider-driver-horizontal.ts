@@ -21,6 +21,7 @@ export class DriverHorizontal implements SliderViewDriver {
     };
     readonly _sliderContainer: JQuery;
     readonly _prettify: PrettifyFunc;
+    _lastModelState: SliderModelStateData;
 
     constructor(slider: JQuery, config: SliderViewDriverConfig) {
         this._slider = slider;
@@ -35,9 +36,10 @@ export class DriverHorizontal implements SliderViewDriver {
             this._point = createPoint();
             this._sliderContainer.append(this._point);
 
-            if (config.showValue) {
-                this._valueDisplay = createPointDisplay();
-                this._sliderContainer.append(this._valueDisplay);
+            this._valueDisplay = createPointDisplay();
+            this._sliderContainer.append(this._valueDisplay);
+            if (!config.showValue) {
+                this._valueDisplay.addClass('slider__display_hide');
             }
         } else {
             slider.addClass('slider_range');
@@ -48,13 +50,15 @@ export class DriverHorizontal implements SliderViewDriver {
             this._sliderContainer.append(this._points.min);
             this._sliderContainer.append(this._points.max);
 
-            if (config.showValue) {
-                this._valueDisplays = {
-                    min: createPointDisplay(),
-                    max: createPointDisplay()
-                };
-                this._sliderContainer.append(this._valueDisplays.min);
-                this._sliderContainer.append(this._valueDisplays.max);
+            this._valueDisplays = {
+                min: createPointDisplay(),
+                max: createPointDisplay()
+            };
+            this._sliderContainer.append(this._valueDisplays.min);
+            this._sliderContainer.append(this._valueDisplays.max);
+            if (!config.showValue) {
+                this._valueDisplays.min.addClass('slider__display_hide');
+                this._valueDisplays.max.addClass('slider__display_hide');
             }
         }
     }
@@ -92,7 +96,9 @@ export class DriverHorizontal implements SliderViewDriver {
         }
     }
 
-    public update(state: SliderModelStateData): void {        
+    public update(state: SliderModelStateData): void {
+        this._lastModelState = state;
+
         if (state.mode === 'single') {
             this._updatePointPosition(state.pointPosition, this._point);
         } else {
@@ -100,7 +106,6 @@ export class DriverHorizontal implements SliderViewDriver {
             this._updatePointPosition(state.pointPosition[1], this._points.max);
         }
 
-        
         if (this._setting.showValue) {
             if (state.mode === 'single') {
                 this._updateDisplay(state.pointPosition, state.pointValue, this._valueDisplay);
@@ -126,5 +131,26 @@ export class DriverHorizontal implements SliderViewDriver {
         display.html(String(value).toString());
         const offset: number = position * sliderWidth - (display.outerWidth() / 2);
         this._valueDisplay.css('left', `${offset}px`);
+    }
+
+    public showValue(state?: boolean): void | boolean {
+        this._setting.showValue = state;
+
+        if (state) {
+            if (this._setting.selectMode === 'single') {
+                this._valueDisplay.removeClass('slider__display_hide');
+            } else {
+                this._valueDisplays.min.removeClass('slider__display_hide');
+                this._valueDisplays.max.removeClass('slider__display_hide');
+            }
+            this.update(this._lastModelState);
+        } else {
+            if (this._setting.selectMode === 'single') {
+                this._valueDisplay.addClass('slider__display_hide');
+            } else {
+                this._valueDisplays.min.addClass('slider__display_hide');
+                this._valueDisplays.max.addClass('slider__display_hide');
+            }
+        }
     }
 }

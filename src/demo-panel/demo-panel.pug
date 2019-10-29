@@ -2,8 +2,17 @@ include ../slider/slider.pug
 
 mixin demo-panel(args={})
     -const classes = (args.classes || []).join(',');
-    .demo-panel(class=classes)
+    .demo-panel(class=classes, id=args.id, data-mode=(args.mode || 'single'))
         .demo-panel__slider-container
             +slider(args.slider || {})
         .demo-panel__setting
-            
+            if args.mode === 'single'
+                input(type="text", class="demo-panel__input-value")
+            else
+                label min:
+                    input(type="text", class="demo-panel__input-value", data-type="min")
+                label max:
+                    input(type="text", class="demo-panel__input-value", data-type="max")
+            label
+                input(type="checkbox", class="demo-panel__show-value", checked=args.showValue)
+                | show / hide value 

@@ -12,7 +12,11 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
     const step = dataManager.getStep();
 
     if (scale.type === 'range' && typeof value === 'string') {
-        throw 'A range of numbers can only be initialized with a number';
+        try {
+            value = parseInt(value, 10);
+        } catch (error) {
+            console.error('A range of numbers can only be initialized with a number');
+        }
     }
 
     if (scale.type === 'range') {
@@ -20,11 +24,11 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
         const minMax: [number, number] = scale.value;  
         
         if (value < minMax[0]) {
-            return 0;
+            return -1;
         }
 
         if (value > minMax[1]) {
-            return dataManager.getRangeOfValues();
+            return -1;
         }
 
         const stepsInValue: number = (value - minMax[0]) / step;        
@@ -32,13 +36,10 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
     } else {
         let result = -1;
         scale.value.forEach((item: number | string, index: number) => {
-            if (item === value) {
+            if (item == value) {
                 result = index;
             }
         });
-        if (result < 0) {
-            throw `The value "${value}" does not exist in the array of values.`;
-        }
 
         return result;
     }

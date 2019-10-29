@@ -5,6 +5,7 @@ import {SliderModel} from './domain-model/slider-model';
 export class Slider implements ISlider {
     readonly _presenter: ISliderPresenter;
     readonly _model: ISliderModel;
+    readonly _view: ISliderView;
     readonly _callbackList: SliderValueCallback[];
 
     constructor(slider: JQuery, config: SliderConfig) {
@@ -19,7 +20,7 @@ export class Slider implements ISlider {
             step: 1
         };
         
-        const view: ISliderView = new SliderView(slider, {
+        this._view = new SliderView(slider, {
             selectMode: config.selectMode || defaultConfig.selectMode,
             showValue: config.showValue || defaultConfig.showValue,
             viewName: config.viewName || defaultConfig.viewName,
@@ -32,7 +33,7 @@ export class Slider implements ISlider {
             step: !isNaN(config.step) ? Math.round(config.step) : defaultConfig.step
         });
 
-        this._presenter = new SliderPresenter(view, this._model);
+        this._presenter = new SliderPresenter(this._view, this._model);
         
         if (!config.start) {
             if (config.selectMode === 'single') {
@@ -78,5 +79,21 @@ export class Slider implements ISlider {
         this._callbackList.forEach((callback: SliderValueCallback): void => {
             callback(value);
         });
+    }
+
+    public setValue(value: string | number | CoupleNum | CoupleStr): void {
+        if (typeof value === 'string' || typeof value === "number") {
+            this._model.setStateThroughValue(value);
+        } else {
+            this._model.setStateThroughValues(value);
+        }
+    }
+
+    public showValue(state?: boolean): boolean | void {
+        if (state === undefined) {
+            return this._view.showValue();
+        } else {
+            this._view.showValue(state);
+        }
     }
 }

@@ -39,12 +39,14 @@ export class SliderModel implements ISliderModel {
 
     public setStateThroughValue(value: number | string): void {
         const pointPosition: number = valueToPointPosition(value, this._dataManager);
-        if (this._selectMode === 'single') {
-            this._dataManager.setPointPosition(pointPosition);
-        } else {
-            this._dataManager.setPointPosition([pointPosition, this._dataManager.getRangeOfValues()]);
+        if (pointPosition >= 0) {
+            if (this._selectMode === 'single') {
+                this._dataManager.setPointPosition(pointPosition);
+            } else {
+                this._dataManager.setPointPosition([pointPosition, this._dataManager.getRangeOfValues()]);
+            }
+            this._eventUpdateState();
         }
-        this._eventUpdateState();
     }
 
     public setStateThroughValues(value: [number, number] | [string, string]): void {
@@ -52,8 +54,10 @@ export class SliderModel implements ISliderModel {
             valueToPointPosition(value[0], this._dataManager),
             valueToPointPosition(value[1], this._dataManager)
         ];
-        this._dataManager.setPointPosition(pointPosition);
-        this._eventUpdateState();
+        if (pointPosition[0] >= 0 && pointPosition[1] >= 0 ) {
+            this._dataManager.setPointPosition(pointPosition);
+            this._eventUpdateState();
+        }
     }
 
     private _eventUpdateState(): void {

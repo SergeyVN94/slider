@@ -58,4 +58,12 @@ export class SliderView implements ISliderView {
     public update(state: SliderModelStateData): void {
         this._driver.update(state);
     }
+
+    public showValue(state?: boolean): void | boolean {
+        if (state === undefined) {
+            return this._driver.showValue();
+        }
+
+        this._driver.showValue(state);
+    }
 }

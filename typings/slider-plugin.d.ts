@@ -1,4 +1,9 @@
-type Command = 'init';
+type Command = 
+    'init' | 
+    'onInput' | 
+    'setValue' | 
+    'showValue'
+;
 
 interface SliderPluginFunctionInit {
     (this: JQuery, params: SliderConfig): void;
