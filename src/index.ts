@@ -37,7 +37,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
     slider1.slider('init', {
         viewName: 'horizontal',
         selectMode: 'single',
-        scale: scale2
+        scale: scale1
     } as SliderConfig);
 
     const panel1: DemoPanel = new DemoPanel($('#panel1'), slider1); 

@@ -7,9 +7,9 @@ export function createPoint(): JQuery {
     });
 }
 
-export function createPointDisplay(): JQuery {
+export function createTooltip(): JQuery {
     return $('<div/>', {
-        class: 'slider__display'
+        class: 'slider__tooltip'
     });
 }
 
@@ -19,7 +19,7 @@ export class SliderView implements ISliderView {
     private readonly _pointContainer: JQuery;
     private _dataStateCallback: SliderCallbackMouseEvent;
     private _points: [JQuery] | [JQuery, JQuery];
-    private _displays: [JQuery] | [JQuery, JQuery];
+    private _tooltips: [JQuery] | [JQuery, JQuery];
     private _isShowValue: boolean;
     private _mode: SliderMode;
 
@@ -31,14 +31,15 @@ export class SliderView implements ISliderView {
         
         if (config.selectMode === 'single') {
             this._points = [createPoint()];
-            this._displays = [createPointDisplay()];
+            this._tooltips = [createTooltip()];
         } else {
             this._points = [createPoint(), createPoint()];
-            this._displays = [createPointDisplay(), createPointDisplay()];
+            this._tooltips = [createTooltip(), createTooltip()];
         }
 
-        this._showDisplays(this._isShowValue);
-        this._pointContainer.append(this._points, this._displays);
+        this._showTooltips(this._isShowValue);
+        this._pointContainer.append(this._points);
+        this._slider.find('.slider__tooltips-container').append(this._tooltips );
 
         switch (config.viewName) {
             // default - 'horizontal'
@@ -92,17 +93,17 @@ export class SliderView implements ISliderView {
         if (state.mode === 'single') {
             this._driver.setPointPosition(this._points[0], this._pointContainer, state.pointPosition);
             if (this._isShowValue) {
-                this._driver.updateDisplay(
-                    this._displays[0], this._pointContainer, state.pointPosition, state.pointValue);
+                this._driver.updateTooltip(
+                    this._tooltips[0], this._pointContainer, state.pointPosition, state.pointValue);
             }
         } else {
             this._driver.setPointPosition(this._points[0], this._pointContainer, state.pointPosition[0]);
             this._driver.setPointPosition(this._points[1], this._pointContainer, state.pointPosition[1]);
             if (this._isShowValue) {
-                this._driver.updateDisplay(
-                    this._displays[0], this._pointContainer, state.pointPosition[0], state.pointValue[1]);
-                this._driver.updateDisplay(
-                    this._displays[1], this._pointContainer, state.pointPosition[1], state.pointValue[1]);
+                this._driver.updateTooltip(
+                    this._tooltips[0], this._pointContainer, state.pointPosition[0], state.pointValue[0]);
+                this._driver.updateTooltip(
+                    this._tooltips[1], this._pointContainer, state.pointPosition[1], state.pointValue[1]);
             }
         }
     }
@@ -113,11 +114,11 @@ export class SliderView implements ISliderView {
         }
 
         this._isShowValue = state;
-        this._showDisplays(this._isShowValue);
+        this._showTooltips(this._isShowValue);
     }
 
-    private _showDisplays(state?: boolean): void {
-        this._displays.forEach((item: JQuery): void => {
+    private _showTooltips(state?: boolean): void {
+        this._tooltips.forEach((item: JQuery): void => {
             item.toggleClass('slider__display_hide', !state);
         });
     }

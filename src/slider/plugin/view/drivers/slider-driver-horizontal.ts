@@ -26,10 +26,10 @@ export class DriverHorizontal implements SliderViewDriver {
         point.css('left', `${marginLeft}px`);
     }
 
-    public updateDisplay(display: JQuery, pointContainer: JQuery, position: number, value: string): void {
+    public updateTooltip(tooltip: JQuery, pointContainer: JQuery, position: number, value: string): void {
         const sliderWidth: number = pointContainer.outerWidth();
-        display.html(value);
-        const offset: number = position * sliderWidth - (display.outerWidth() / 2);
-        display.css('left', `${offset}px`);
+        tooltip.html(value);
+        const offset: number = position * sliderWidth - (tooltip.outerWidth() / 2);
+        tooltip.css('left', `${offset}px`);
     }
 }
