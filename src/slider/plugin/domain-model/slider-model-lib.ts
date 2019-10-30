@@ -1,5 +1,5 @@
 export function calcSliderRange(scale: SliderScale, step?: number): number {
-    if (scale.type === 'array') {
+    if (scale.type === 'custom') {
         return Math.floor(scale.value.length - 1);
     }
 

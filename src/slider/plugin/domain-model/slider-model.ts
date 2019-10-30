@@ -69,7 +69,7 @@ export class SliderModel implements ISliderModel {
         });
     }
 
-    public getValue(): number | string | CoupleNum | CoupleStr {
+    public getValue(): string | CoupleStr {
         return this._sliderStateHandler.getModelState(this._dataManager).pointValue;
     }
 
@@ -79,14 +79,15 @@ export class SliderModel implements ISliderModel {
         }
 
         const scale: SliderScale = this._dataManager.getScale();
-        if (scale.type === 'array') {
+        if (scale.type === 'custom') {
             console.error('Cannot set step for array.');
         } else {
-            const values: number | string | CoupleNum | CoupleStr = this.getValue();
+            const values: string | CoupleStr = this.getValue();
+            if (value <= 0) value = 1;
             this._dataManager.setStep(value);
             this._dataManager.setRangeOfValues(calcSliderRange(scale, value));
 
-            if (typeof values === 'number' || typeof values === 'string') {
+            if (typeof values === 'string') {
                 this.setStateThroughValue(values);
             } else {
                 this.setStateThroughValues(values);

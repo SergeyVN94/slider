@@ -81,7 +81,7 @@ export class Slider implements ISlider {
         });
     }
 
-    public value(value?: number | string | CoupleNum | CoupleStr): number | string | CoupleNum | CoupleStr | void {
+    public value(value?: number | string | CoupleNum | CoupleStr): string | CoupleStr | void {
         if (value === undefined) {
            return this._model.getValue();
         } else {

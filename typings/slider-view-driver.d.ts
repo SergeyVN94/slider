@@ -3,18 +3,8 @@ interface OnSliderMouseEvent {
 }
 
 interface SliderViewDriver {
-    getState(event: JQuery.Event): SliderViewStateData;
-    update(state: SliderModelStateData): void;
-    showValue(state?: boolean): boolean | void;
-}
-
-interface SliderViewDriverConfig {
-    readonly selectMode: SliderMode;
-    showValue: boolean;
-    readonly prettify?: PrettifyFunc;
-}
-
-interface SliderViewDriverSetting {
-    selectMode: SliderMode;
-    showValue: boolean;
+    getTargetPosition(event: JQuery.Event, pointContainer: JQuery): number;
+    setPointPosition(point: JQuery, pointContainer: JQuery, position: number): void;
+    getPointPosition(point: JQuery, pointContainer: JQuery): number;
+    updateDisplay(display: JQuery, pointContainer: JQuery, position: number, value: string): void;
 }

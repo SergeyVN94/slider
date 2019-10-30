@@ -1,11 +1,11 @@
 type SliderModelStateData = {
     readonly mode: 'single',
     readonly pointPosition: number;
-    readonly pointValue: number | string;
+    readonly pointValue: string;
 } | {
     readonly mode: 'range',
     readonly pointPosition: CoupleNum;
-    readonly pointValue: CoupleNum | CoupleStr;
+    readonly pointValue: CoupleStr;
 }
 
 interface SliderModelConfig {
@@ -24,6 +24,6 @@ interface ISliderModel {
     onChangeState(callback: SliderModelCallback): void;
     setStateThroughValue(value: number | string): void;
     setStateThroughValues(value: [number, number] | [string, string]): void;
-    getValue(): number | string | CoupleNum | CoupleStr;
+    getValue(): string | CoupleStr;
     step(value?: number): number | void;
 }

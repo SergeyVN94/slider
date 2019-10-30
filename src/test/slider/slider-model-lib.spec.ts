@@ -10,7 +10,7 @@ import {SliderModelDataManager} from '../../slider/plugin/domain-model/slider-mo
 describe('SliderModelLib', () => {
     it('calcSliderRange with array', () => {
         const scale: SliderScale = {
-            type: 'array',
+            type: 'custom',
             value: ['a', 'b', 'c', 'd', 'e']
         };
         expect(calcSliderRange(scale)).to.equal(4);
@@ -20,7 +20,7 @@ describe('SliderModelLib', () => {
 describe('SliderModelLib', () => {
     it('calcSliderRange with array and step', () => {
         const scale: SliderScale = {
-            type: 'array',
+            type: 'custom',
             value: ['a', 'b', 'c', 'd', 'e']
         };
         expect(calcSliderRange(scale, 2)).to.equal(2);
@@ -133,7 +133,7 @@ describe('SliderModelLib', () => {
     it('valueToPointPosition - convert non-integer value to standard range in large increments', () => {
         const manager: ISliderModelDataManager = new SliderModelDataManager({
             scale: {
-                type: 'array',
+                type: 'custom',
                 value: [
                     'Январь',
                     'Февраль',

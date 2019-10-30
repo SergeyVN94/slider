@@ -16,8 +16,8 @@ export class SliderSingleStateHandler implements ISliderModelStateHandler {
         const step: number = dataManager.getStep();
         let pointValue: string;
 
-        if (scale.type === 'array') {
-            pointValue = String(scale.value[pointPosition]);
+        if (scale.type === 'custom') {
+            pointValue = scale.value[pointPosition];
         } else {
             pointValue = String((pointPosition * step) + scale.value[0]);
         }

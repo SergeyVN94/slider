@@ -3,12 +3,12 @@ type SliderScale = {
     type: 'range',
     value: [number, number];
 } | {
-    type: 'array',
-    value: number[] | string[]
+    type: 'custom',
+    value: string[]
 }
 
 interface PrettifyFunc {
-    (value: string | number): string;
+    (value: string): string;
 }
 
 type CoupleStr = [string, string];
@@ -39,7 +39,7 @@ interface SliderValueCallback {
 
 interface ISlider {
     onStateChange(callback: SliderValueCallback): void;
-    value(value?: number | string | CoupleNum | CoupleStr): number | string | CoupleNum | CoupleStr | void;
+    value(value?: number | string | CoupleNum | CoupleStr): string | CoupleStr | void;
     showValue(state?: boolean): boolean | void;
     step(value?: number): number | void;
 }

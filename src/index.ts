@@ -8,7 +8,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
     jQuery(fun(jQuery, window, document));
 }(function($: JQueryStatic, window: Window, document: Document) {
     const scale1: SliderScale = {
-        type: 'array',
+        type: 'custom',
         value: [
             'Январь',
             'Февраль',

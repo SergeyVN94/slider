@@ -47,26 +47,17 @@ export class SliderRangeStateHandler implements ISliderModelStateHandler {
         const scale: SliderScale = dataManager.getScale();
         const step: number = dataManager.getStep();
 
-        let pointValue: CoupleNum | CoupleStr;
+        let pointValue: CoupleStr;
 
-        if (scale.type === 'array') {
-            if (typeof scale.value[0] === 'string') {
-                const tmp: string[] = scale.value as string[];
-                pointValue = [
-                    tmp[pointPosition[0]],
-                    tmp[pointPosition[1]]
-                ];
-            } else {
-                const tmp: number[] = scale.value as number[];
-                pointValue = [
-                    tmp[pointPosition[0]],
-                    tmp[pointPosition[1]]
-                ];
-            }
+        if (scale.type === 'custom') {
+            pointValue = [
+                scale.value[pointPosition[0]],
+                scale.value[pointPosition[1]]
+            ];
         } else {
             pointValue = [
-                (pointPosition[0] * step) + scale.value[0],
-                (pointPosition[1] * step) + scale.value[0]
+                String((pointPosition[0] * step) + scale.value[0]),
+                String((pointPosition[1] * step) + scale.value[0])
             ];
         }
 
