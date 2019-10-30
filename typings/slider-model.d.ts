@@ -25,4 +25,5 @@ interface ISliderModel {
     setStateThroughValue(value: number | string): void;
     setStateThroughValues(value: [number, number] | [string, string]): void;
     getValue(): number | string | CoupleNum | CoupleStr;
+    step(value?: number): number | void;
 }

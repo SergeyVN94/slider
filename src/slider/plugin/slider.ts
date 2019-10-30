@@ -100,4 +100,12 @@ export class Slider implements ISlider {
             this._view.showValue(state);
         }
     }
+
+    public step(value?: number): number | void {
+        if (value === undefined) {
+            return this._model.step();
+        }
+
+        this._model.step(value)
+    }
 }

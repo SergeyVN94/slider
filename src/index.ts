@@ -37,7 +37,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
     slider1.slider('init', {
         viewName: 'horizontal',
         selectMode: 'single',
-        scale: scale1
+        scale: scale2
     } as SliderConfig);
 
     const panel1: DemoPanel = new DemoPanel($('#panel1'), slider1); 
@@ -45,9 +45,11 @@ import { DemoPanel } from './demo-panel/demo-panel';
     // slider 2
 
     const slider2: JQuery = $('#slider2');
+
     slider2.slider('init', {
         selectMode: 'range',
-        scale: scale2
+        scale: scale1
     } as SliderConfig);
+
     const panel2: DemoPanel = new DemoPanel($('#panel2'), slider2);
 }));

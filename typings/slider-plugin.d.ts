@@ -2,7 +2,8 @@ type Command =
     'init' | 
     'onInput' | 
     'value' | 
-    'showValue'
+    'showValue' |
+    'step'
 ;
 
 interface SliderPluginFunctionInit {

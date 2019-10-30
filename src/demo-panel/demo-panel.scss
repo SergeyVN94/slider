@@ -15,3 +15,9 @@ $max-size: 700px;
     justify-content: flex-start;
     align-items: center;
 }
+
+input[type="number"] {
+    margin: 3px;
+    padding: 3px;
+    box-sizing: border-box;
+}

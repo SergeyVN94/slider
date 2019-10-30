@@ -6,4 +6,8 @@ export const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(t
     if (command === 'value') {
         return this.get()[0].slider.value();
     }
+
+    if (command === 'step') {
+        return this.get()[0].slider.step();
+    }
 }

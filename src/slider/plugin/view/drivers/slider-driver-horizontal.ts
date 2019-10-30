@@ -113,9 +113,7 @@ export class DriverHorizontal implements SliderViewDriver {
                 this._updateDisplay(state.pointPosition[0], state.pointValue[0], this._valueDisplays.min);
                 this._updateDisplay(state.pointPosition[1], state.pointValue[1], this._valueDisplays.max);
             }
-        }
-        console.log(this._valueDisplays);
-        
+        }        
     }
 
     private _updatePointPosition(position: number, point: JQuery): void {

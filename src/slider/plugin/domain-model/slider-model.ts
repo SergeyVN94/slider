@@ -72,4 +72,25 @@ export class SliderModel implements ISliderModel {
     public getValue(): number | string | CoupleNum | CoupleStr {
         return this._sliderStateHandler.getModelState(this._dataManager).pointValue;
     }
+
+    public step(value?: number): number | void {
+        if (value === undefined) {
+            return this._dataManager.getStep();
+        }
+
+        const scale: SliderScale = this._dataManager.getScale();
+        if (scale.type === 'array') {
+            console.error('Cannot set step for array.');
+        } else {
+            const values: number | string | CoupleNum | CoupleStr = this.getValue();
+            this._dataManager.setStep(value);
+            this._dataManager.setRangeOfValues(calcSliderRange(scale, value));
+
+            if (typeof values === 'number' || typeof values === 'string') {
+                this.setStateThroughValue(values);
+            } else {
+                this.setStateThroughValues(values);
+            }
+        }        
+    }
 }

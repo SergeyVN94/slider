@@ -41,4 +41,5 @@ interface ISlider {
     onStateChange(callback: SliderValueCallback): void;
     value(value?: number | string | CoupleNum | CoupleStr): number | string | CoupleNum | CoupleStr | void;
     showValue(state?: boolean): boolean | void;
+    step(value?: number): number | void;
 }

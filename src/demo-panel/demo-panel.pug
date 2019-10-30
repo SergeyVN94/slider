@@ -13,6 +13,8 @@ mixin demo-panel(args={})
                     input(type="text", class="demo-panel__input-value", data-type="min")
                 label max:
                     input(type="text", class="demo-panel__input-value", data-type="max")
+            label step:
+                input(type="number", class="demo-panel__input-step", autocomplete="off")
             label
                 input(type="checkbox", class="demo-panel__show-value", checked=args.showValue, autocomplete="off")
                 | show / hide value 

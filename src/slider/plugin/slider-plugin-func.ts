@@ -15,5 +15,9 @@ export const sliderPluginFunction: SliderPluginFunction = function(this: JQuery,
         this.get()[0].slider.showValue(params);
     }
 
+    if (command === 'step') {
+        return this.get()[0].slider.step(Number(params));
+    }
+
     return this;
 }
