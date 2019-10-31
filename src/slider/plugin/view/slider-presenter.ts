@@ -7,12 +7,12 @@ export class SliderPresenter implements ISliderPresenter {
         this._model = model;
 
         this._view.onMouseMove((viewState: SliderViewStateData): void => {
-            // console.log(viewState);
+            console.log(viewState);
             this._model.setState(viewState);
         });
 
         this._model.onChangeState((modelState: SliderModelStateData) => {
-            // console.log(modelState);
+            console.log(modelState);
             this._view.update(modelState);
         });
     }

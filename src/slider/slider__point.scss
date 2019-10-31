@@ -7,4 +7,7 @@
     position: absolute;
     top: -$point-offset;
     left: -($point-diameter / 2);
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }

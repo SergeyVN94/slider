@@ -58,8 +58,13 @@ export class SliderModel implements ISliderModel {
             valueToPointPosition(value[1], this._dataManager)
         ];
         if (pointPosition[0] >= 0 && pointPosition[1] >= 0 ) {
-            this._dataManager.setPointPosition(pointPosition);
-            this._eventUpdateState();
+            if (
+                pointPosition[0] <= pointPosition[1] &&
+                pointPosition[1] >= pointPosition[0]
+            ) {
+                this._dataManager.setPointPosition(pointPosition); 
+                this._eventUpdateState();
+            }
         }
     }
 

@@ -1,43 +1,55 @@
 export class SliderRangeStateHandler implements ISliderModelStateHandler {
     constructor() {
-        
+
     }
 
     public updateModelState(state: SliderViewStateData, dataManager: ISliderModelDataManager): void {
         const range: number = dataManager.getRangeOfValues();
-
-        const viewPositions: CoupleNum = state.pointPosition as CoupleNum;
-
-        let positionsMin: number = Math.round(viewPositions[0] * range);
-        let positionsMax: number = Math.round(viewPositions[1] * range);
-
         const targetPosition: number = Math.round(state.targetPosition * range);
+        const oldPositions: CoupleNum = state.pointPosition as CoupleNum;
 
-        const distanceToMin: number = Math.abs(positionsMin - targetPosition);
-        const distanceToMax: number = Math.abs(positionsMax - targetPosition);
+        let positionMin: number = Math.round(oldPositions[0] * range);
+        let positionMax: number = Math.round(oldPositions[1] * range);
 
-        
-        if (distanceToMin < distanceToMax) {
-            positionsMin = targetPosition; 
+        if (state.pointSelected === 'min') {
+            if (targetPosition > positionMax) {
+                positionMin = positionMax;
+            } else {
+                positionMin = targetPosition;
+            }  
         }
 
-        if (distanceToMin > distanceToMax) {
-            positionsMax = targetPosition; 
-        }
-
-        if (distanceToMin === distanceToMax) {
-            if (targetPosition < positionsMin) {
-                positionsMin = targetPosition;
-            }
-
-            if (targetPosition > positionsMin) {
-                positionsMax = targetPosition;
+        if (state.pointSelected === 'max') {
+            if (targetPosition < positionMin) {
+                positionMax = positionMin;
+            } else {
+                positionMax = targetPosition;
             }
         }
+
+        if (state.pointSelected === null) {
+            const distanceToMin: number = Math.abs(positionMin - targetPosition);
+            const distanceToMax: number = Math.abs(positionMax - targetPosition);
+
+            if (distanceToMin < distanceToMax) {
+                positionMin = targetPosition;
+            } else if (distanceToMax < distanceToMin) {
+                positionMax = targetPosition;
+            } else if (targetPosition !== distanceToMin) {
+                if (targetPosition < positionMin) {
+                    positionMin = targetPosition;
+                }
+
+                if (targetPosition > positionMin) {
+                    positionMax = targetPosition;
+                }
+            }
+        }
+
 
         dataManager.setPointPosition([
-            positionsMin,
-            positionsMax
+            positionMin,
+            positionMax
         ]);
     }
 

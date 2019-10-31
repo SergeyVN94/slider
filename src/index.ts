@@ -48,7 +48,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
 
     slider2.slider('init', {
         selectMode: 'range',
-        scale: scale1
+        scale: scale2
     } as SliderConfig);
 
     const panel2: DemoPanel = new DemoPanel($('#panel2'), slider2);

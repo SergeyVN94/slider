@@ -46,7 +46,8 @@ export class Slider implements ISlider {
                 this._model.setState({
                     mode: 'range',
                     targetPosition: 0,
-                    pointPosition: [0, 1]
+                    pointPosition: [0, 1],
+                    pointSelected: null
                 });
             }
         } else {

@@ -2,10 +2,12 @@ type SliderViewStateData = {
     readonly mode: 'single';
     readonly targetPosition: number;
     readonly pointPosition: number;
+    readonly pointSelected?: 'min' | 'max' | null;
 } | {
     readonly mode: 'range';
     readonly targetPosition: number;
     readonly pointPosition: CoupleNum;
+    readonly pointSelected: 'min' | 'max' | null;
 }
 
 interface SliderCallbackMouseEvent {

@@ -3,12 +3,12 @@ $line-height: 18px;
 $height: $line-height + 6px;
 
 .slider__tooltip {
-    display: inline-block;
+    display: block;
     width: auto;
     height: $height;
     background-color: $tooltip-bg;
     color: #fcfcfc;
-    position: relative;
+    position: absolute;
     text-align: center;
     padding: 2px 8px;
     font-size: $font-size;
