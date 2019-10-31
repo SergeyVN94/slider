@@ -11,5 +11,28 @@
     .slider__point {
         top: auto;
         bottom: -($point-diameter / 2);
+        left: -$point-offset;
+    }
+
+    .slider__tooltips-container {
+        height: 100%;
+        width: $tooltip-height;
+        top: -100%;
+        left: -$tooltip-container-offset;
+    }
+
+    .slider__tooltip {
+        left: auto;
+        right: 0;
+        padding: 3px 8px;
+
+        &::after {
+            left: auto;
+            right: -$triangle * 2 + 1;
+            margin: 0;
+            top: ($tooltip-height - ($triangle * 2)) / 2;
+            border-top: $triangle solid transparent;
+            border-left: $triangle solid $tooltip-bg;
+        }
     }
 }

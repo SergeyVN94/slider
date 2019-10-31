@@ -1,18 +1,14 @@
-$font-size: 12px;
-$line-height: 18px;
-$height: $line-height + 6px;
-
 .slider__tooltip {
     display: block;
     width: auto;
-    height: $height;
+    height: $tooltip-height;
     background-color: $tooltip-bg;
     color: #fcfcfc;
     position: absolute;
     text-align: center;
     padding: 2px 8px;
-    font-size: $font-size;
-    line-height: $line-height;
+    font-size: $tooltip-font-size;
+    line-height: $tooltip-line-height;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     box-sizing: border-box;
     border-radius: 6px;

@@ -1,5 +1,6 @@
 import {DriverHorizontal} from './drivers/slider-driver-horizontal';
 import * as $ from 'jquery';
+import { DriverVertical } from './drivers/slider-driver-vertical';
 
 export function createPoint(type?: 'min' | 'max'): JQuery {
     return $('<div/>', {
@@ -25,6 +26,7 @@ export class SliderView implements ISliderView {
     private _mode: SliderMode;
     private _pointSelected: 'min' | 'max' | null;
     private _lastModelState: SliderModelStateData;
+    private _prettify: PrettifyFunc;
 
     constructor(slider: JQuery, config: SliderViewConfig) {        
         this._slider = slider;
@@ -32,6 +34,9 @@ export class SliderView implements ISliderView {
         this._mode = config.selectMode;
         this._pointContainer = slider.find('.slider__container');
         this._pointSelected = null;
+        this._prettify = config.prettify || ((value: string): string => {
+            return value;
+        });
         
         if (config.selectMode === 'single') {
             this._points = [createPoint()];
@@ -48,6 +53,10 @@ export class SliderView implements ISliderView {
 
 
         switch (config.viewName) {
+            case 'vertical':
+                this._driver = new DriverVertical();
+                this._slider.addClass('slider_vertical');
+                break;
             // default - 'horizontal'
             default:
                 this._driver = new DriverHorizontal();
@@ -126,12 +135,21 @@ export class SliderView implements ISliderView {
     private _updateTooltips(state: SliderModelStateData): void {
         if (state.mode === 'single') {
             this._driver.updateTooltip(
-                this._tooltips[0], this._pointContainer, state.pointPosition, state.pointValue);
+                this._tooltips[0], 
+                this._pointContainer, 
+                state.pointPosition, 
+                this._prettify(state.pointValue));
         } else {
             this._driver.updateTooltip(
-                this._tooltips[0], this._pointContainer, state.pointPosition[0], state.pointValue[0]);
+                this._tooltips[0], 
+                this._pointContainer, 
+                state.pointPosition[0], 
+                this._prettify(state.pointValue[0]));
             this._driver.updateTooltip(
-                this._tooltips[1], this._pointContainer, state.pointPosition[1], state.pointValue[1]);
+                this._tooltips[1], 
+                this._pointContainer, 
+                state.pointPosition[1], 
+                this._prettify(state.pointValue[1]));
         }
     }
 

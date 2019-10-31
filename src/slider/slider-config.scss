@@ -7,4 +7,9 @@ $tooltip-height: 24px;
 $slider-bg: #d4d4e1;
 $point-color: #B44650;
 $tooltip-bg: $point-color;
-$triangle: $point-diameter / 2 * (2 / 3);
+$triangle: $point-diameter / 3;
+// tooltip
+$tooltip-font-size: 12px;
+$tooltip-line-height: 18px;
+$tooltip-height: $tooltip-line-height + 6px;
+$tooltip-container-offset: ($tooltip-margin + $point-offset + $slider-height + $tooltip-height + $triangle);

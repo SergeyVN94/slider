@@ -3,10 +3,10 @@ import {SliderPresenter} from './view/slider-presenter';
 import {SliderModel} from './domain-model/slider-model';
 
 export class Slider implements ISlider {
-    readonly _presenter: ISliderPresenter;
-    readonly _model: ISliderModel;
-    readonly _view: ISliderView;
-    readonly _callbackList: SliderValueCallback[];
+    private readonly _presenter: ISliderPresenter;
+    private readonly _model: ISliderModel;
+    private readonly _view: ISliderView;
+    private readonly _callbackList: SliderValueCallback[];
 
     constructor(slider: JQuery, config: SliderConfig) {
         const defaultConfig: SliderConfig = {
