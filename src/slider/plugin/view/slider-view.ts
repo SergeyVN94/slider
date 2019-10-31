@@ -27,6 +27,8 @@ export class SliderView implements ISliderView {
     private _pointSelected: 'min' | 'max' | null;
     private _lastModelState: SliderModelStateData;
     private _prettify: PrettifyFunc;
+    private _showBgLine: boolean;
+    private _bgLine: JQuery;
 
     constructor(slider: JQuery, config: SliderViewConfig) {        
         this._slider = slider;
@@ -37,6 +39,7 @@ export class SliderView implements ISliderView {
         this._prettify = config.prettify || ((value: string): string => {
             return value;
         });
+        this._showBgLine = config.showBgLine;
         
         if (config.selectMode === 'single') {
             this._points = [createPoint()];
@@ -51,6 +54,12 @@ export class SliderView implements ISliderView {
         this._pointContainer.append(this._points);
         this._slider.find('.slider__tooltips-container').append(this._tooltips);
 
+        if (this._showBgLine) {
+            this._bgLine = $('<div/>', {
+                class: 'slider__bg-line'
+            });
+            this._pointContainer.append(this._bgLine);
+        }
 
         switch (config.viewName) {
             case 'vertical':
@@ -129,6 +138,10 @@ export class SliderView implements ISliderView {
 
         if (this._isShowValue) {
             this._updateTooltips(state);
+        }
+
+        if (this._showBgLine) {
+            this._driver.updateBgLine(this._bgLine, this._pointContainer, state.pointPosition);
         }
     }
 

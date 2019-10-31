@@ -31,6 +31,7 @@ interface SliderConfig {
     readonly step?: number;
     readonly prettify?: PrettifyFunc;
     readonly start?: number | string | CoupleStr | CoupleNum;
+    readonly showBgLine?: boolean;
 }
 
 interface SliderValueCallback {

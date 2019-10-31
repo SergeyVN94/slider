@@ -17,14 +17,16 @@ export class Slider implements ISlider {
                 type: 'range',
                 value: [0, 100]
             },
-            step: 1
+            step: 1,
+            showBgLine: true
         };
         
         this._view = new SliderView(slider, {
             selectMode: config.selectMode || defaultConfig.selectMode,
             showValue: config.showValue === undefined ? defaultConfig.showValue : config.showValue,
             viewName: config.viewName || defaultConfig.viewName,
-            prettify: config.prettify
+            prettify: config.prettify,
+            showBgLine: config.showBgLine === undefined ? defaultConfig.showBgLine : config.showBgLine
         });
 
         this._model = new SliderModel({

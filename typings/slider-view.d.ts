@@ -27,4 +27,5 @@ interface SliderViewConfig {
     readonly selectMode: SliderMode;
     readonly showValue: boolean;
     readonly prettify?: PrettifyFunc;
+    readonly showBgLine?: boolean;
 }
