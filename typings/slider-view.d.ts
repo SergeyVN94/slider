@@ -1,12 +1,12 @@
+type SliderPointState = {
+    readonly position: number;
+    readonly value?: string;
+    readonly name?: string;
+};
+
 type SliderViewStateData = {
-    readonly mode: 'single';
     readonly targetPosition: number;
-    readonly pointPosition: number;
-    readonly pointSelected?: 'min' | 'max' | null;
-} | {
-    readonly mode: 'range';
-    readonly targetPosition: number;
-    readonly pointPosition: CoupleNum;
+    readonly points: SliderPointState[];
     readonly pointSelected: 'min' | 'max' | null;
 }
 
@@ -16,7 +16,7 @@ interface SliderCallbackMouseEvent {
 
 interface ISliderView {
     onMouseMove(callback: SliderCallbackMouseEvent): void;
-    update(state: SliderModelStateData): void;
+    update(points: SliderModelPointsState): void;
     showValue(state?: boolean): boolean | void;
 }
 
@@ -27,5 +27,7 @@ interface SliderViewConfig {
     readonly selectMode: SliderMode;
     readonly showValue: boolean;
     readonly prettify?: PrettifyFunc;
-    readonly showBgLine?: boolean;
+    readonly showBgLine: boolean;
+    readonly showScale: boolean;
+    readonly scale: SliderScale;
 }

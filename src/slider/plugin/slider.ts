@@ -13,12 +13,10 @@ export class Slider implements ISlider {
             selectMode: 'single',
             showValue: true,
             viewName: 'horizontal',
-            scale: {
-                type: 'range',
-                value: [0, 100]
-            },
+            scale: [0, 100],
             step: 1,
-            showBgLine: true
+            showBgLine: true,
+            showScale: true
         };
         
         this._view = new SliderView(slider, {
@@ -26,7 +24,9 @@ export class Slider implements ISlider {
             showValue: config.showValue === undefined ? defaultConfig.showValue : config.showValue,
             viewName: config.viewName || defaultConfig.viewName,
             prettify: config.prettify,
-            showBgLine: config.showBgLine === undefined ? defaultConfig.showBgLine : config.showBgLine
+            showBgLine: config.showBgLine === undefined ? defaultConfig.showBgLine : config.showBgLine,
+            showScale: config.showScale === undefined ? defaultConfig.showScale : config.showScale,
+            scale: config.scale || defaultConfig.scale
         });
 
         this._model = new SliderModel({
@@ -38,61 +38,44 @@ export class Slider implements ISlider {
         this._presenter = new SliderPresenter(this._view, this._model);
         
         if (!config.start) {
-            if (config.selectMode === 'single') {
-                this._model.setState({
-                    mode: 'single',
-                    targetPosition: 0,
-                    pointPosition: 0
-                });
-            } else {
-                this._model.setState({
-                    mode: 'range',
-                    targetPosition: 0,
-                    pointPosition: [0, 1],
-                    pointSelected: null
-                });
-            }
+            const points: SliderPointState[] = [{
+                position: 0
+            }];
+            if (config.selectMode === 'range') points.push({
+                position: 1
+            });
+
+            this._model.setState({
+                targetPosition: 0,
+                points: points,
+                pointSelected: 'min'
+            });
         } else {
-            this._setStartPointPosition(config.selectMode, config.start);
+            this._model.setStateThroughValue(config.start);
         }
 
         this._callbackList = [];
 
-        this._model.onChangeState((state: SliderModelStateData): void => {
-            this._eventUpdateValue(state.pointValue);
-        });
-    }
-
-    private _setStartPointPosition(mode: SliderMode, start: number | string | CoupleStr | CoupleNum): void {
-        if (typeof start === 'string' || typeof start === 'number') {
-            this._model.setStateThroughValue(start);
-        } else {
-            if (mode === 'single') {
-                throw "The slider in single mode cannot be initialized with a pair of values";
+        this._model.onChangeState((points: SliderModelPointsState): void => {
+            const values: string[] = [];
+            for (let i = 0; i < points.length; i++) {
+                values[i] = points[i].value;
             }
-            this._model.setStateThroughValues(start as CoupleStr | CoupleNum);
-        }
+            this._callbackList.forEach((callback: SliderValueCallback): void => {
+                callback(values);
+            });
+        });
     }
 
     public onStateChange(callback: SliderValueCallback): void {
         this._callbackList.push(callback);
     }
 
-    private _eventUpdateValue(value: number | string | CoupleStr | CoupleNum): void {
-        this._callbackList.forEach((callback: SliderValueCallback): void => {
-            callback(value);
-        });
-    }
-
-    public value(value?: number | string | CoupleNum | CoupleStr): string | CoupleStr | void {
+    public value(value?: number[] | string[]): string[] | void {
         if (value === undefined) {
            return this._model.getValue();
         } else {
-            if (typeof value === 'string' || typeof value === "number") {
-                this._model.setStateThroughValue(value);
-            } else {
-                this._model.setStateThroughValues(value);
-            }
+            this._model.setStateThroughValue(value);
         }
     }
 
@@ -109,6 +92,6 @@ export class Slider implements ISlider {
             return this._model.step();
         }
 
-        this._model.step(value)
+        this._model.step(value);
     }
 }

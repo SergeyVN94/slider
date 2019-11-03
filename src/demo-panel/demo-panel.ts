@@ -31,9 +31,9 @@ export class DemoPanel {
             }
         });
 
-        this._slider.slider('onInput', (value: string | CoupleStr | number | CoupleNum): void => {
-            if (typeof value === 'string' || typeof value === 'number') {
-                this._inputs.val(value);
+        this._slider.slider('onInput', (value: string[]): void => {
+            if (value.length === 1) {
+                this._inputs.val(value[0]);
             } else {
                 this._inputMin.val(value[0]);
                 this._inputMax.val(value[1]);
@@ -46,12 +46,12 @@ export class DemoPanel {
 
         this._showValue.attr('checked', this._slider.slider('showValue'));
 
-        if (this._mode === 'single') {
-            this._inputs.val(this._slider.slider('value'));
+        const sliderValues: string[] = this._slider.slider('value');
+        if (sliderValues.length === 1) {
+            this._inputs.val(sliderValues[0]);
         } else {
-            const value: CoupleNum | CoupleStr = this._slider.slider('value');
-            this._inputMin.val(value[0]);
-            this._inputMax.val(value[1]);
+            this._inputMin.val(sliderValues[0]);
+            this._inputMax.val(sliderValues[1]);
         }
 
         this._inputStep.on('input', (): void => {

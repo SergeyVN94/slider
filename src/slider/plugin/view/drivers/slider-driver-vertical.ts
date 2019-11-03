@@ -36,17 +36,21 @@ export class DriverVertical implements SliderViewDriver {
         tooltip.css('bottom', `${offset}px`);
     }
 
-    public updateBgLine(bgLine: JQuery, pointContainer: JQuery, position: number | CoupleNum): void {
+    public updateBgLine(bgLine: JQuery, pointContainer: JQuery, points: SliderModelPointsState): void {
         const sliderHeight: number = pointContainer.outerHeight();
         
-        if (typeof position === 'number') {
-            const offset: number = sliderHeight - (position * sliderHeight);
+        if (points.length === 1) {
+            const offset: number = sliderHeight - (points[0].position * sliderHeight);
             bgLine.css('top', offset);
         } else {
-            const offsetMin: number = position[0] * sliderHeight;
-            const offsetMax: number = sliderHeight - (position[1] * sliderHeight);
+            const offsetMin: number = points[0].position * sliderHeight;
+            const offsetMax: number = sliderHeight - (points[1].position * sliderHeight);
             bgLine.css('top', offsetMax);
             bgLine.css('bottom', offsetMin);
         }
+    }
+
+    public updateScale(scaleElem: JQuery, scale: SliderScale): void {
+        
     }
 }

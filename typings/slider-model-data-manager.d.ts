@@ -2,8 +2,8 @@ interface ISliderModelDataManager {
     getScale(): SliderScale;
     setScale(scale: SliderScale): void;
 
-    getPointPosition(): number | [number, number];
-    setPointPosition(position: number | [number, number]): void;
+    getPointsPosition(): number[];
+    setPointsPosition(positions: number[]): void;
 
     getStep(): number;
     setStep(step: number): void;
@@ -17,5 +17,5 @@ interface SliderModelDataConfig {
     readonly scale: SliderScale;
     readonly rangeOfValues: number;
     readonly step: number;
-    readonly start?: number | [number, number];
+    readonly start?: number[];
 }

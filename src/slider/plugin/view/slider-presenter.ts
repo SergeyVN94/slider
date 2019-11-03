@@ -11,7 +11,7 @@ export class SliderPresenter implements ISliderPresenter {
             this._model.setState(viewState);
         });
 
-        this._model.onChangeState((modelState: SliderModelStateData) => {
+        this._model.onChangeState((modelState: SliderModelPointsState) => {
             // console.log(modelState);
             this._view.update(modelState);
         });

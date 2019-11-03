@@ -1,17 +1,16 @@
-import {SliderModelDataManager} from './slider-model-data';
-import { 
+import { SliderModelDataManager } from './slider-model-data';
+import {
     calcSliderRange,
     valueToPointPosition
 } from './slider-model-lib';
-import { SliderSingleStateHandler } from './slider-handler-single';
-import { SliderRangeStateHandler } from './slider-handler-range';
+import { SliderStateHandler } from './slider-handler';
 
 export class SliderModel implements ISliderModel {
     private readonly _dataManager: ISliderModelDataManager;
     private readonly _sliderStateHandler: ISliderModelStateHandler;
     private readonly _selectMode: SliderMode;
     private readonly _callbackList: SliderModelCallback[];
-    
+
     constructor(config: SliderModelConfig) {
         const dataConfig: SliderModelDataConfig = {
             scale: config.scale,
@@ -21,13 +20,7 @@ export class SliderModel implements ISliderModel {
 
         this._dataManager = new SliderModelDataManager(dataConfig);
         this._selectMode = config.selectMode;
-
-        if (config.selectMode === 'single') {
-            this._sliderStateHandler = new SliderSingleStateHandler();
-        } else {
-            this._sliderStateHandler = new SliderRangeStateHandler();
-        }
-        
+        this._sliderStateHandler = new SliderStateHandler();
         this._callbackList = [];
     }
 
@@ -37,34 +30,25 @@ export class SliderModel implements ISliderModel {
     }
 
     public onChangeState(callback: SliderModelCallback): void {
-        this._callbackList.push(callback);  
+        this._callbackList.push(callback);
     }
 
-    public setStateThroughValue(value: number | string): void {
-        const pointPosition: number = valueToPointPosition(value, this._dataManager);
-        if (pointPosition >= 0) {
-            if (this._selectMode === 'single') {
-                this._dataManager.setPointPosition(pointPosition);
-            } else {
-                this._dataManager.setPointPosition([pointPosition, this._dataManager.getRangeOfValues()]);
+    public setStateThroughValue(values: number[] | string[]): void {
+        const positions: number[] = [];
+        let isCorrect: boolean = true;
+
+        for (let i: number = 0; i < values.length; i++) {
+            const position: number = valueToPointPosition(values[i], this._dataManager);
+            if (position < 0) {
+                isCorrect = false;
+                break;
             }
-            this._eventUpdateState();
+            positions[i] = position;
         }
-    }
 
-    public setStateThroughValues(value: [number, number] | [string, string]): void {
-        const pointPosition: [number, number] = [
-            valueToPointPosition(value[0], this._dataManager),
-            valueToPointPosition(value[1], this._dataManager)
-        ];
-        if (pointPosition[0] >= 0 && pointPosition[1] >= 0 ) {
-            if (
-                pointPosition[0] <= pointPosition[1] &&
-                pointPosition[1] >= pointPosition[0]
-            ) {
-                this._dataManager.setPointPosition(pointPosition); 
-                this._eventUpdateState();
-            }
+        if (isCorrect) {
+            this._dataManager.setPointsPosition(positions);
+            this._eventUpdateState();
         }
     }
 
@@ -74,8 +58,11 @@ export class SliderModel implements ISliderModel {
         });
     }
 
-    public getValue(): string | CoupleStr {
-        return this._sliderStateHandler.getModelState(this._dataManager).pointValue;
+    public getValue(): string[] {
+        return this._sliderStateHandler.getModelState(this._dataManager)
+            .map<string>((point: SliderPointState): string => {
+                return point.value;
+            });
     }
 
     public step(value?: number): number | void {
@@ -84,19 +71,14 @@ export class SliderModel implements ISliderModel {
         }
 
         const scale: SliderScale = this._dataManager.getScale();
-        if (scale.type === 'custom') {
+        if (typeof scale[0] === 'string') {
             console.error('Cannot set step for array.');
         } else {
-            const values: string | CoupleStr = this.getValue();
+            const sliderValues: string[] = this.getValue();
             if (value <= 0) value = 1;
             this._dataManager.setStep(value);
             this._dataManager.setRangeOfValues(calcSliderRange(scale, value));
-
-            if (typeof values === 'string') {
-                this.setStateThroughValue(values);
-            } else {
-                this.setStateThroughValues(values);
-            }
-        }        
+            this.setStateThroughValue(sliderValues);
+        }
     }
 }

@@ -1,9 +1,9 @@
 export function calcSliderRange(scale: SliderScale, step?: number): number {
-    if (scale.type === 'custom') {
-        return Math.floor(scale.value.length - 1);
+    if (typeof scale[0] === 'string') {
+        return scale.length - 1;
     }
 
-    const minMax: [number, number] = scale.value;
+    const minMax: CoupleNum = scale as CoupleNum;
     return Math.floor((minMax[1] - minMax[0]) / (step || 1));
 }
 
@@ -11,7 +11,7 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
     const scale = dataManager.getScale();
     const step = dataManager.getStep();
 
-    if (scale.type === 'range' && typeof value === 'string') {
+    if (typeof scale[0] === 'number' && typeof value === 'string') {
         try {
             value = parseInt(value, 10);
         } catch (error) {
@@ -19,9 +19,9 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
         }
     }
 
-    if (scale.type === 'range') {
+    if (typeof scale[0] === 'number') {
         value = value as number;
-        const minMax: [number, number] = scale.value;  
+        const minMax: CoupleNum = scale as CoupleNum; 
         
         if (value < minMax[0]) {
             return -1;
@@ -35,7 +35,7 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
         return Math.round(stepsInValue);
     } else {
         let result = -1;
-        scale.value.forEach((item: number | string, index: number) => {
+        (scale as string[]).forEach((item: string, index: number) => {
             if (item == value) {
                 result = index;
             }

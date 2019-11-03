@@ -33,17 +33,21 @@ export class DriverHorizontal implements SliderViewDriver {
         tooltip.css('left', `${offset}px`);
     }
 
-    public updateBgLine(bgLine: JQuery, pointContainer: JQuery, position: number | CoupleNum): void {
+    public updateBgLine(bgLine: JQuery, pointContainer: JQuery, points: SliderModelPointsState): void {
         const sliderWidth: number = pointContainer.outerWidth();
 
-        if (typeof position === 'number') {
-            const offset: number = position * sliderWidth;
+        if (points.length === 1) {
+            const offset: number = points[0].position * sliderWidth;
             bgLine.css('right', sliderWidth - offset);
         } else {
-            const offsetMin: number = position[0] * sliderWidth;
-            const offsetMax: number = position[1] * sliderWidth;
+            const offsetMin: number = points[0].position * sliderWidth;
+            const offsetMax: number = points[1].position * sliderWidth;
             bgLine.css('right', sliderWidth - offsetMax);
             bgLine.css('left', offsetMin);
         }
+    }
+
+    public updateScale(scaleElem: JQuery, scale: SliderScale): void {
+            
     }
 }

@@ -1,4 +1,4 @@
-import {DriverHorizontal} from './drivers/slider-driver-horizontal';
+import { DriverHorizontal } from './drivers/slider-driver-horizontal';
 import * as $ from 'jquery';
 import { DriverVertical } from './drivers/slider-driver-vertical';
 
@@ -25,12 +25,15 @@ export class SliderView implements ISliderView {
     private _isShowValue: boolean;
     private _mode: SliderMode;
     private _pointSelected: 'min' | 'max' | null;
-    private _lastModelState: SliderModelStateData;
+    private _lastModelState: SliderModelPointsState;
     private _prettify: PrettifyFunc;
     private _showBgLine: boolean;
-    private _bgLine: JQuery;
+    private readonly _bgLine: JQuery;
+    private _showScale: boolean;
+    private readonly _scaleElement: JQuery;
+    private readonly _scale: SliderScale;
 
-    constructor(slider: JQuery, config: SliderViewConfig) {        
+    constructor(slider: JQuery, config: SliderViewConfig) {
         this._slider = slider;
         this._isShowValue = config.showValue;
         this._mode = config.selectMode;
@@ -40,7 +43,9 @@ export class SliderView implements ISliderView {
             return value;
         });
         this._showBgLine = config.showBgLine;
-        
+        this._showScale = config.showScale;
+        this._scale = config.scale;
+
         if (config.selectMode === 'single') {
             this._points = [createPoint()];
             this._tooltips = [createTooltip()];
@@ -61,6 +66,13 @@ export class SliderView implements ISliderView {
             this._pointContainer.append(this._bgLine);
         }
 
+        if (this._showScale) {
+            this._scaleElement = $('<div/>', {
+                class: 'slider__scale'
+            });
+            this._pointContainer.append(this._scaleElement);
+        }
+
         switch (config.viewName) {
             case 'vertical':
                 this._driver = new DriverVertical();
@@ -78,41 +90,34 @@ export class SliderView implements ISliderView {
         const _this: SliderView = this;
 
         const mouseHandler = (event: JQuery.Event): boolean => {
-            let state: SliderViewStateData;
-            const targetPosition: number = this._driver.getTargetPosition(
-                event, this._pointContainer);
-            
-            if (this._mode === 'single') {
-                state = {
-                    mode: 'single',
-                    targetPosition: targetPosition,
-                    pointPosition: this._driver.getPointPosition(this._points[0], this._pointContainer)
-                };
-            } else {
-                state = {
-                    mode: 'range',
-                    targetPosition: targetPosition,
-                    pointPosition: [
-                        this._driver.getPointPosition(this._points[0], this._pointContainer),
-                        this._driver.getPointPosition(this._points[1], this._pointContainer)
-                    ],
-                    pointSelected: this._pointSelected
-                };
+            const points: SliderPointState[] = [];
+            for (let i = 0; i < this._points.length; i++) {
+                points.push({
+                    position: this._driver.getPointPosition(
+                        this._points[i],
+                        this._pointContainer
+                    )
+                });
             }
-            
-            this._dataStateCallback(state);
+
+            this._dataStateCallback({
+                targetPosition: this._driver.getTargetPosition(
+                    event, this._pointContainer),
+                points: points,
+                pointSelected: this._pointSelected
+            });
             return true;
         }
 
         this._pointContainer.mousedown(mouseHandler);
         this._points.forEach((item: JQuery): void => {
-            item.mousedown(function(): void {
-                if(this.dataset['type'] === 'min'){
+            item.mousedown(function (): void {
+                if (this.dataset['type'] === 'min') {
                     _this._pointSelected = 'min';
                     _this._points[0].css('z-index', 6);
                 }
-                    
-                if(this.dataset['type'] === 'max'){
+
+                if (this.dataset['type'] === 'max') {
                     _this._pointSelected = 'max';
                     _this._points[0].css('z-index', 4);
                 }
@@ -126,43 +131,32 @@ export class SliderView implements ISliderView {
         })
     }
 
-    public update(state: SliderModelStateData): void {
-        this._lastModelState = state;
+    public update(points: SliderModelPointsState): void {
+        this._lastModelState = points;
 
-        if (state.mode === 'single') {
-            this._driver.setPointPosition(this._points[0], this._pointContainer, state.pointPosition);
-        } else {
-            this._driver.setPointPosition(this._points[0], this._pointContainer, state.pointPosition[0]);
-            this._driver.setPointPosition(this._points[1], this._pointContainer, state.pointPosition[1]);
+        for (let i: number = 0; i < points.length; i++) {
+            this._driver.setPointPosition(
+                this._points[i],
+                this._pointContainer,
+                points[i].position);
         }
 
         if (this._isShowValue) {
-            this._updateTooltips(state);
+            this._updateTooltips(points);
         }
 
         if (this._showBgLine) {
-            this._driver.updateBgLine(this._bgLine, this._pointContainer, state.pointPosition);
+            this._driver.updateBgLine(this._bgLine, this._pointContainer, points);
         }
     }
 
-    private _updateTooltips(state: SliderModelStateData): void {
-        if (state.mode === 'single') {
+    private _updateTooltips(points: SliderModelPointsState): void {
+        for (let i: number = 0; i < points.length; i++) {
             this._driver.updateTooltip(
-                this._tooltips[0], 
-                this._pointContainer, 
-                state.pointPosition, 
-                this._prettify(state.pointValue));
-        } else {
-            this._driver.updateTooltip(
-                this._tooltips[0], 
-                this._pointContainer, 
-                state.pointPosition[0], 
-                this._prettify(state.pointValue[0]));
-            this._driver.updateTooltip(
-                this._tooltips[1], 
-                this._pointContainer, 
-                state.pointPosition[1], 
-                this._prettify(state.pointValue[1]));
+                this._tooltips[i],
+                this._pointContainer,
+                points[i].position,
+                this._prettify(points[i].value));
         }
     }
 
@@ -180,7 +174,7 @@ export class SliderView implements ISliderView {
             item.toggleClass('slider__display_hide', !state);
             if (state && this._lastModelState) {
                 this._updateTooltips(this._lastModelState);
-            } 
+            }
         });
     }
 }

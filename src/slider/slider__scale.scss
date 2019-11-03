@@ -1,0 +1,6 @@
+.slider__scale {
+    position: relative;
+    width: 100%;
+    height: $tooltip-height;
+    bottom: -($slider-height + $point-offset + $scale-margin);
+}

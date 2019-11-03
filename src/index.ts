@@ -7,9 +7,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
 (function (fun: Function) {
     jQuery(fun(jQuery, window, document));
 }(function($: JQueryStatic, window: Window, document: Document) {
-    const scale1: SliderScale = {
-        type: 'custom',
-        value: [
+    const scale1: SliderScale = [
             'Январь',
             'Февраль',
             'Март',
@@ -22,20 +20,15 @@ import { DemoPanel } from './demo-panel/demo-panel';
             'Октябрь',
             'Ноябрь',
             'Декабрь'
-        ]
-    };
+        ];
 
-    const scale2: SliderScale = {
-        type: 'range',
-        value: [-1000, 1000]
-    };
-    
+    const scale2: SliderScale = [-1000, 1000];
+
     // slider 1
 
     const slider1: JQuery = $('#slider1');
        
     slider1.slider('init', {
-        viewName: 'horizontal',
         selectMode: 'single',
         scale: scale1
     } as SliderConfig);
@@ -60,10 +53,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
     slider3.slider('init', {
         viewName: 'vertical',
         selectMode: 'single',
-        scale: {
-            type: 'range',
-            value: [0, 1000]
-        },
+        scale: [0, 1000],
         prettify: (value: string): string => {
             return `${value}$`;
         }
@@ -78,10 +68,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
     slider4.slider('init', {
         viewName: 'vertical',
         selectMode: 'range',
-        scale: {
-            type: 'range',
-            value: [0, 1000]
-        }
+        scale: scale1
     } as SliderConfig);
 
     const panel4: DemoPanel = new DemoPanel($('#panel4'), slider4);

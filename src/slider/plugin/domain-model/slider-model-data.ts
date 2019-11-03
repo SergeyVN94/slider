@@ -2,13 +2,13 @@ export class SliderModelDataManager implements ISliderModelDataManager {
     private _rangeOfValues: number;
     private _scale: SliderScale;
     private _step: number;
-    private _pointPosition: number | [number, number];
+    private _pointsPosition: number[];
 
     constructor(config: SliderModelDataConfig) {
         this._scale = config.scale;
         this._rangeOfValues = config.rangeOfValues;
         this._step = config.step;
-        this._pointPosition = 0;
+        this._pointsPosition = [];
     }
 
     public getStep(): number {
@@ -19,12 +19,12 @@ export class SliderModelDataManager implements ISliderModelDataManager {
         this._step = step;
     }
 
-    public getPointPosition(): number | [number, number] {
-        return this._pointPosition;
+    public getPointsPosition(): number[] {
+        return this._pointsPosition;
     }
 
-    public setPointPosition(position: number | [number, number]): void {
-        this._pointPosition = position;
+    public setPointsPosition(positions: number[]): void {
+        this._pointsPosition = positions;
     }
 
     public getScale(): SliderScale {
