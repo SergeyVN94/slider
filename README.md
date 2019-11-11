@@ -1,2 +1,3 @@
 # slider
-![alt text](/slider/docs/uml.png)
+![alt text](/docs/uml.png)
+
