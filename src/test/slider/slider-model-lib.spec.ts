@@ -36,8 +36,6 @@ describe('calcSliderRange', () => {
 });
 
 describe('valueToPointPosition', () => {
-    
-
     it('convert value to standard range 1', () => {
         expect(
             valueToPointPosition(654, getManager([-1000, 1000], 1))
@@ -48,6 +46,12 @@ describe('valueToPointPosition', () => {
         expect(
             valueToPointPosition(255, getManager([-100, 1100], 100))
         ).to.equal(4);
+    });
+
+    it('Convert maximum value to standard range in increments of one step', () => {
+        expect(
+            valueToPointPosition(1000, getManager([0, 1000], 28))
+        ).to.equal(35);
     });
 
     it('convert value to standard range in large increments', () => {

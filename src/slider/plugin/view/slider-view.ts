@@ -171,7 +171,7 @@ export class SliderView implements ISliderView {
 
     private _showTooltips(state?: boolean): void {
         this._tooltips.forEach((item: JQuery): void => {
-            item.toggleClass('slider__display_hide', !state);
+            item.toggleClass('slider__tooltip_hide', !state);
             if (state && this._lastModelState) {
                 this._updateTooltips(this._lastModelState);
             }

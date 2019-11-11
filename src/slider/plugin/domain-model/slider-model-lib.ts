@@ -31,8 +31,12 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
             return -1;
         }
 
-        const stepsInValue: number = (value - minMax[0]) / step;        
-        return Math.round(stepsInValue);
+        const stepsInValue: number = Math.round((value - minMax[0]) / step);        
+        if ((stepsInValue * step) + minMax[0] > minMax[1]) {
+            return dataManager.getRangeOfValues();
+        } 
+
+        return stepsInValue;
     } else {
         let result = -1;
         (scale as string[]).forEach((item: string, index: number) => {

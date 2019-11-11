@@ -47,8 +47,15 @@ export class SliderModel implements ISliderModel {
         }
 
         if (isCorrect) {
-            this._dataManager.setPointsPosition(positions);
-            this._eventUpdateState();
+            if (positions.length === 1) {
+                this._dataManager.setPointsPosition(positions);
+                this._eventUpdateState();
+            } else if (positions.length === 2) {
+                if (positions[0] <= positions[1]) {
+                    this._dataManager.setPointsPosition(positions);
+                    this._eventUpdateState();
+                }    
+            }
         }
     }
 
