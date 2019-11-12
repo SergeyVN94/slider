@@ -26,14 +26,6 @@ module.exports = {
                 test: /\.pug$/,
                 loader: 'pug-loader'
             },
-            // {
-            //     test: /\.s[ac]ss$/i,
-            //     use: [
-            //         'style-loader',
-            //         'css-loader',
-            //         'sass-loader'
-            //     ]
-            // },
             {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
@@ -57,8 +49,6 @@ module.exports = {
             filename: 'index.html'
         }),
         new MiniCssExtractPlugin({
-            // Options similar to the same options in webpackOptions.output
-            // both options are optional
             filename: 'index.css'
         })
     ]
