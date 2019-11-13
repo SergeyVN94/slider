@@ -29,7 +29,7 @@ module.exports = {
             {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    'style-loader',
                     'css-loader',
                     'sass-loader',
                 ],
@@ -47,9 +47,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'index.pug',
             filename: 'index.html'
-        }),
-        new MiniCssExtractPlugin({
-            filename: 'index.css'
         })
     ]
 };

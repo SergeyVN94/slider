@@ -5,15 +5,9 @@ module.exports = function (config) {
     config.set({
         frameworks: ["mocha", "chai", "sinon"],
         files: [
-            { pattern: "dist/index.css", type: 'css', watched: true },
+            "dist/style.js",
             "src/test/**/*.spec.ts"
         ],
-        // customDebugFile: 'dist/index.html',
-        // customContextFile: 'dist/index.html',
-        client: {
-            clearContext: false,
-            runInParent: true
-        },
         preprocessors: {
             "src/test/**/*.spec.ts": ["webpack", "sourcemap"]
         },

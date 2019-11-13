@@ -1,4 +1,4 @@
-import './index.scss';
+// import './index.scss';
 import './demo-panel/demo-panel';
 import './slider/slider';
 import * as jQuery from 'jquery';
