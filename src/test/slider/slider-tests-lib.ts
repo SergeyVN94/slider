@@ -43,6 +43,7 @@ export function createSlider(config: TestSliderConfig): SliderPacket {
         slider.css('width', `${config.size}px`);
         marginName = 'left';
     } else {
+        slider.addClass('slider_vertical');
         slider.css('height', `${config.size}px`);
         marginName = 'bottom';
     }
