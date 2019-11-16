@@ -94,10 +94,11 @@ describe('driver.setPointPosition', () => {
                 packet.pointContainer,
                 pointPosition
             );
+            
+            const targetPos: number = sliderSize * pointPosition - (pointSize / 2);
+            const currentPos: number = parseInt(packet.points[0].css('left'));                        
 
-            const leftStr: string = `${sliderSize * pointPosition - (pointSize / 2)}`.slice(0, 5);            
-
-            expect(packet.points[0].css('left').slice(0, 5)).to.equal(leftStr);
+            expect(Math.abs(targetPos - currentPos) < 1).to.be.true;
         });
     }
 });
@@ -129,9 +130,10 @@ describe('driver.updateTooltip', () => {
                 ''
             );            
             
-            const leftStr: string = `${sliderSize * pointPosition - (tooltipSize / 2)}`.slice(0, 5);                        
+            const targetPos: number = sliderSize * pointPosition - (tooltipSize / 2);
+            const currentPos: number = parseInt(packet.tooltips[0].css('left'));                        
 
-            expect(packet.tooltips[0].css('left').slice(0, 5)).to.equal(leftStr);
+            expect(Math.abs(targetPos - currentPos) < 1).to.be.true;  
         });
     }
 });
