@@ -107,11 +107,11 @@ describe('driver.updateTooltip', () => {
         $(document.body).remove('.slider');
     });
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
         const pointPosition: number = Math.random();
         const pointSize: number = Math.round(Math.random() * 10 + 5);
         const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
-        const tooltipSize: number = Math.round(Math.random() * 30 + 15);
+        const tooltipSize: number = Math.round(Math.random() * 30 + 16); // minimum tooltip width 16px
         it(`Set random tooltip position and random size: ${pointPosition} ${tooltipSize}`, () => {
             const packet: SliderPacket = createSlider({
                 size: sliderSize,
@@ -126,8 +126,8 @@ describe('driver.updateTooltip', () => {
                 packet.tooltips[0],
                 packet.pointContainer,
                 pointPosition,
-                'aaa'
-            );
+                ''
+            );            
             
             const leftStr: string = `${sliderSize * pointPosition - (tooltipSize / 2)}`.slice(0, 5);                        
 
@@ -142,7 +142,7 @@ describe('driver.updateBgLine', () => {
     });
 
     describe('1 point', () => {
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < 20; i++) {
             const pointPosition: number = Math.random();
             const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
             it(`Set random position: ${pointPosition}`, () => {
@@ -168,5 +168,37 @@ describe('driver.updateBgLine', () => {
                 ) < 1).to.be.true;
             });
         }
-    });    
+    });
+    
+    describe('2 point', () => {
+        for (let i = 0; i < 20; i++) {
+            const pointPosition1: number = Math.random() * 0.5;
+            const pointPosition2: number = Math.random() * 0.40 + 0.6;
+            const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
+            it(`Set random positions: ${pointPosition1} ${pointPosition2}`, () => {
+                const packet: SliderPacket = createSlider({
+                    size: sliderSize,
+                    viewName: 'horizontal',
+                    pointPosition: [1],
+                    pointSize: 10
+                });          
+    
+                $(document.body).append(packet.slider);
+
+                driver.updateBgLine(
+                    packet.bgLine,
+                    packet.pointContainer,
+                    [{
+                        position: pointPosition1
+                    },{
+                        position: pointPosition2
+                    }]
+                );                   
+    
+                expect(Math.abs(
+                    packet.bgLine.width() - (sliderSize * (pointPosition2 - pointPosition1))
+                ) < 1).to.be.true;
+            });
+        }
+    });
 });
