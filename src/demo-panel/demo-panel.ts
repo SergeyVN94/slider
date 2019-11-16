@@ -22,7 +22,7 @@ export class DemoPanel {
 
         this._inputs.focusout(() => {
             if (this._mode === 'single') {
-                this._slider.slider('value', (String(this._inputs.val() as string)));
+                this._slider.slider('value', [(String(this._inputs.val() as string))]);
             } else {
                 this._slider.slider('value', [
                     this._inputMin.val() as string,
