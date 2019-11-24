@@ -10,14 +10,14 @@ type SliderViewStateData = {
     readonly pointSelected: 'min' | 'max' | null;
 }
 
-interface SliderCallbackMouseEvent {
+interface SliderViewSelectEventCallback {
     (stateData: SliderViewStateData): void;
 }
 
 interface ISliderView {
-    onMouseMove(callback: SliderCallbackMouseEvent): void;
+    onSelect(callback: SliderViewSelectEventCallback): void;
     update(points: SliderModelPointsState): void;
-    showValue(state?: boolean): boolean | void;
+    showTooltips(state?: boolean): boolean | void;
 }
 
 type SliderViewName = 'horizontal' | 'vertical';

@@ -19,7 +19,7 @@ class SliderView implements ISliderView {
     private readonly _driver: SliderViewDriver;
     private readonly _slider: JQuery;
     private readonly _pointContainer: JQuery;
-    private _dataStateCallback: SliderCallbackMouseEvent;
+    private _dataStateCallback: SliderViewSelectEventCallback;
     private _points: JQuery[];
     private _tooltips: JQuery[];
     private _isShowValue: boolean;
@@ -108,7 +108,7 @@ class SliderView implements ISliderView {
         return points;
     }
 
-    public onMouseMove(callback: SliderCallbackMouseEvent): void {
+    public onSelect(callback: SliderViewSelectEventCallback): void {
         this._dataStateCallback = callback;
     }
 
@@ -191,7 +191,7 @@ class SliderView implements ISliderView {
         }
     }
 
-    public showValue(state?: boolean): void | boolean {
+    public showTooltips(state?: boolean): void | boolean {
         if (state === undefined) {
             return this._isShowValue;
         }

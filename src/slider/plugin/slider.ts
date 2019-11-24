@@ -81,9 +81,9 @@ class Slider implements ISlider {
 
     public showValue(state?: boolean): boolean | void {
         if (state === undefined) {
-            return this._view.showValue();
+            return this._view.showTooltips();
         } else {
-            this._view.showValue(state);
+            this._view.showTooltips(state);
         }
     }
 

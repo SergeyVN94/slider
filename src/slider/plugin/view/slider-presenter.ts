@@ -6,7 +6,7 @@ class SliderPresenter implements ISliderPresenter {
         this._view = view;
         this._model = model;
 
-        this._view.onMouseMove((viewState: SliderViewStateData): void => {
+        this._view.onSelect((viewState: SliderViewStateData): void => {
             // console.log(viewState);
             this._model.setState(viewState);
         });
