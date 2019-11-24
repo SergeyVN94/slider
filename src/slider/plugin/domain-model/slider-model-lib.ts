@@ -1,4 +1,4 @@
-export function calcSliderRange(scale: SliderScale, step?: number): number {
+function calcSliderRange(scale: SliderScale, step?: number): number {
     if (typeof scale[0] === 'string') {
         return scale.length - 1;
     }
@@ -7,7 +7,7 @@ export function calcSliderRange(scale: SliderScale, step?: number): number {
     return Math.floor((minMax[1] - minMax[0]) / (step || 1));
 }
 
-export function valueToPointPosition(value: number | string, dataManager: ISliderModelDataManager): number {
+function valueToPointPosition(value: number | string, dataManager: ISliderModelDataManager): number {
     const scale = dataManager.getScale();
     const step = dataManager.getStep();
 
@@ -48,3 +48,8 @@ export function valueToPointPosition(value: number | string, dataManager: ISlide
         return result;
     }
 }
+
+export {
+    calcSliderRange,
+    valueToPointPosition
+};

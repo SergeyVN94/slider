@@ -1,4 +1,4 @@
-export class SliderStateHandler implements ISliderModelStateHandler {
+class SliderStateHandler implements ISliderModelStateHandler {
     constructor() {
 
     }
@@ -78,3 +78,7 @@ export class SliderStateHandler implements ISliderModelStateHandler {
         return points;
     }
 }
+
+export {
+    SliderStateHandler
+};

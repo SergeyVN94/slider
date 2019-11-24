@@ -1,4 +1,4 @@
-export class DriverVertical implements SliderViewDriver {
+class DriverVertical implements SliderViewDriver {
     constructor() {
         
     }
@@ -54,3 +54,7 @@ export class DriverVertical implements SliderViewDriver {
         
     }
 }
+
+export {
+    DriverVertical
+};

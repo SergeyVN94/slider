@@ -2,20 +2,20 @@ import { DriverHorizontal } from './drivers/slider-driver-horizontal';
 import * as $ from 'jquery';
 import { DriverVertical } from './drivers/slider-driver-vertical';
 
-export function createPoint(type?: 'min' | 'max'): JQuery {
+function createPoint(type?: 'min' | 'max'): JQuery {
     return $('<div/>', {
         class: 'slider__point',
         "data-type": type || ''
     });
 }
 
-export function createTooltip(): JQuery {
+function createTooltip(): JQuery {
     return $('<div/>', {
         class: 'slider__tooltip'
     });
 }
 
-export class SliderView implements ISliderView {
+class SliderView implements ISliderView {
     private readonly _driver: SliderViewDriver;
     private readonly _slider: JQuery;
     private readonly _pointContainer: JQuery;
@@ -178,3 +178,9 @@ export class SliderView implements ISliderView {
         });
     }
 }
+
+export {
+    SliderView,
+    createPoint,
+    createTooltip
+};

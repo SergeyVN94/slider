@@ -1,4 +1,4 @@
-export class SliderPresenter implements ISliderPresenter {
+class SliderPresenter implements ISliderPresenter {
     readonly _view: ISliderView;
     readonly _model: ISliderModel;
 
@@ -17,3 +17,7 @@ export class SliderPresenter implements ISliderPresenter {
         });
     }
 }
+
+export {
+    SliderPresenter
+};

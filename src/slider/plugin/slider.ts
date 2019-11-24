@@ -2,7 +2,7 @@ import {SliderView} from './view/slider-view';
 import {SliderPresenter} from './view/slider-presenter';
 import {SliderModel} from './domain-model/slider-model';
 
-export class Slider implements ISlider {
+class Slider implements ISlider {
     private readonly _presenter: ISliderPresenter;
     private readonly _model: ISliderModel;
     private readonly _view: ISliderView;
@@ -95,3 +95,7 @@ export class Slider implements ISlider {
         this._model.step(value);
     }
 }
+
+export {
+    Slider
+};

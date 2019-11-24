@@ -1,6 +1,6 @@
 import '../slider/slider';
 
-export class DemoPanel {
+class DemoPanel {
     private readonly _panel: JQuery;
     private readonly _inputs: JQuery;
     private readonly _inputMin: JQuery;
@@ -60,3 +60,7 @@ export class DemoPanel {
         this._inputStep.val(this._slider.slider('step'));
     }
 }
+
+export {
+    DemoPanel
+};

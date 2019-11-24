@@ -1,4 +1,4 @@
-export const sliderPluginFunction: SliderPluginFunction = function(this: JQuery, command: Command, params: any): any {
+const sliderPluginFunction: SliderPluginFunction = function(this: JQuery, command: Command, params: any): any {
     if (command === 'onInput') {
         if (typeof params !== 'function') {
             throw 'For "onInput" command expected function';
@@ -21,3 +21,7 @@ export const sliderPluginFunction: SliderPluginFunction = function(this: JQuery,
 
     return this;
 }
+
+export {
+    sliderPluginFunction
+};

@@ -5,7 +5,7 @@ import {
 } from './slider-model-lib';
 import { SliderStateHandler } from './slider-handler';
 
-export class SliderModel implements ISliderModel {
+class SliderModel implements ISliderModel {
     private readonly _dataManager: ISliderModelDataManager;
     private readonly _sliderStateHandler: ISliderModelStateHandler;
     private readonly _selectMode: SliderMode;
@@ -89,3 +89,7 @@ export class SliderModel implements ISliderModel {
         }
     }
 }
+
+export {
+    SliderModel
+};

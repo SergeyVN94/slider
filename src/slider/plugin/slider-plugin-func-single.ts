@@ -1,4 +1,4 @@
-export const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(this: JQuery, command: Command): any {
+const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(this: JQuery, command: Command): any {
     if (command === 'showValue') {
         return this.get()[0].slider.showValue();
     }
@@ -10,4 +10,8 @@ export const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(t
     if (command === 'step') {
         return this.get()[0].slider.step();
     }
+}
+
+export {
+    sliderPluginFunctionSingle
 }
