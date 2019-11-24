@@ -46,10 +46,6 @@ class DriverHorizontal implements SliderViewDriver {
             bgLine.css('left', offsetMin);
         }
     }
-
-    public updateScale(scaleElem: JQuery, scale: SliderScale): void {
-            
-    }
 }
 
 export {

@@ -49,10 +49,6 @@ class DriverVertical implements SliderViewDriver {
             bgLine.css('bottom', offsetMin);
         }
     }
-
-    public updateScale(scaleElem: JQuery, scale: SliderScale): void {
-        
-    }
 }
 
 export {
