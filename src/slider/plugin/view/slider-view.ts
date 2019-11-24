@@ -20,10 +20,10 @@ class SliderView implements ISliderView {
     private readonly _slider: JQuery;
     private readonly _pointContainer: JQuery;
     private _dataStateCallback: SliderCallbackMouseEvent;
-    private _points: [JQuery] | [JQuery, JQuery];
-    private _tooltips: [JQuery] | [JQuery, JQuery];
+    private _points: JQuery[];
+    private _tooltips: JQuery[];
     private _isShowValue: boolean;
-    private _mode: SliderMode;
+    private _selectMode: SliderMode;
     private _pointSelected: 'min' | 'max' | null;
     private _lastModelState: SliderModelPointsState;
     private _prettify: PrettifyFunc;
@@ -32,11 +32,13 @@ class SliderView implements ISliderView {
     private _showScale: boolean;
     private readonly _scaleElement: JQuery;
     private readonly _scale: SliderScale;
+    private readonly _mouseMoveHandlerBind: any;
+    private readonly _mouseDownHandlerBind: any;
 
     constructor(slider: JQuery, config: SliderViewConfig) {
         this._slider = slider;
         this._isShowValue = config.showValue;
-        this._mode = config.selectMode;
+        this._selectMode = config.selectMode;
         this._pointContainer = slider.find('.slider__container');
         this._pointSelected = null;
         this._prettify = config.prettify || ((value: string): string => {
@@ -45,15 +47,8 @@ class SliderView implements ISliderView {
         this._showBgLine = config.showBgLine;
         this._showScale = config.showScale;
         this._scale = config.scale;
-
-        if (config.selectMode === 'single') {
-            this._points = [createPoint()];
-            this._tooltips = [createTooltip()];
-        } else {
-            this._points = [createPoint('min'), createPoint('max')];
-            this._tooltips = [createTooltip(), createTooltip()];
-            this._points[1].css('z-index', 5);
-        }
+        this._points = this._createPointsArray();
+        this._tooltips = this._createTooltipsArray();
 
         this._showTooltips(this._isShowValue);
         this._pointContainer.append(this._points);
@@ -83,52 +78,88 @@ class SliderView implements ISliderView {
                 this._driver = new DriverHorizontal();
                 break;
         }
+
+        this._mouseDownHandlerBind = this._mouseDownHandler.bind(this);
+        this._mouseMoveHandlerBind = this._mouseMoveHandler.bind(this);
+        this._pointContainer.mousedown(this._mouseDownHandlerBind);
+    }
+
+    private _createTooltipsArray() {
+        const tooltips: JQuery[] = [];
+        tooltips.push(createTooltip());
+
+        if (this._selectMode === 'range') {
+            tooltips.push(createTooltip());
+        }
+
+        return tooltips;
+    }
+
+    private _createPointsArray() {
+        const points: JQuery[] = [];
+        points.push(createPoint('min'));
+        points[0].css('z-index', 6);
+
+        if (this._selectMode === 'range') {
+            points.push(createPoint('max'));
+            points[1].css('z-index', 5);
+        }
+
+        return points;
     }
 
     public onMouseMove(callback: SliderCallbackMouseEvent): void {
         this._dataStateCallback = callback;
-        const _this: SliderView = this;
+    }
 
-        const mouseHandler = (event: JQuery.Event): boolean => {
-            const points: SliderPointState[] = [];
-            for (let i = 0; i < this._points.length; i++) {
-                points.push({
-                    position: this._driver.getPointPosition(
-                        this._points[i],
-                        this._pointContainer
-                    )
-                });
-            }
+    private _getViewState(event: JQuery.Event): SliderViewStateData {
+        const points: SliderPointState[] = [];
 
-            this._dataStateCallback({
-                targetPosition: this._driver.getTargetPosition(
-                    event, this._pointContainer),
-                points: points,
-                pointSelected: this._pointSelected
+        for (let i = 0; i < this._points.length; i++) {
+            points.push({
+                position: this._driver.getPointPosition(
+                    this._points[i],
+                    this._pointContainer
+                )
             });
-            return true;
         }
 
-        this._pointContainer.mousedown(mouseHandler);
-        this._points.forEach((item: JQuery): void => {
-            item.mousedown(function (): void {
-                if (this.dataset['type'] === 'min') {
-                    _this._pointSelected = 'min';
-                    _this._points[0].css('z-index', 6);
-                }
+        return {
+            targetPosition: this._driver.getTargetPosition(
+                event, this._pointContainer),
+            points: points,
+            pointSelected: this._pointSelected
+        };
+    }
 
-                if (this.dataset['type'] === 'max') {
-                    _this._pointSelected = 'max';
-                    _this._points[0].css('z-index', 4);
-                }
+    private _mouseMoveHandler(event: JQuery.Event): void {
+        this._dataStateCallback(this._getViewState(event));
+    }
 
-                $(document).mousemove(mouseHandler);
-                $(document).one('mouseup', () => {
-                    _this._pointSelected = null;
-                    $(document).off('mousemove', mouseHandler);
-                });
-            });
-        })
+    private _mouseDownHandler(event: JQuery.MouseDownEvent): void {
+        const target: JQuery = $(event.target);
+
+        if (!target.hasClass('slider__point')) {
+            this._dataStateCallback(this._getViewState(event));
+        } else {
+            this._pointSelected = event.target.dataset['type'] as 'min' | 'max';
+
+            if (this._pointSelected === 'min') {
+                this._points[0].css('z-index', 6);
+            } 
+            
+            if (this._pointSelected === 'max') {
+                this._points[0].css('z-index', 4);
+            }
+    
+            $(document).mousemove(this._mouseMoveHandlerBind);
+            $(document).one('mouseup', this._mouseUpHandler.bind(this));
+        }
+    }
+
+    private _mouseUpHandler(): void {
+        this._pointSelected = null;
+        $(document).off('mousemove', this._mouseMoveHandlerBind);
     }
 
     public update(points: SliderModelPointsState): void {
