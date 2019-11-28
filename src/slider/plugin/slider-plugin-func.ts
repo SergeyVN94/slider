@@ -1,18 +1,22 @@
-const sliderPluginFunction: SliderPluginFunction = function(this: JQuery, command: Command, params: any): any {
-    if (command === 'onInput') {
+const sliderPluginFunction: SliderPluginFunction = function(
+    this: JQuery,
+    command: Command,
+    params: SliderPluginParams
+): SliderPluginResponse {
+    if (command === 'onSelect') {
         if (typeof params !== 'function') {
-            throw 'For "onInput" command expected function';
+            throw TypeError('For "onSelect" command expected SliderPluginSelectEventCallback');
         }
 
-        this.get()[0].slider.onStateChange(params);        
+        this.get()[0].slider.onSelect(params);
     }
 
     if (command === 'value') {
-        this.get()[0].slider.value(params);
+        this.get()[0].slider.value(params as (string[] | number[]));
     }
 
-    if (command === 'showValue') {
-        this.get()[0].slider.showValue(params);
+    if (command === 'showTooltips') {
+        this.get()[0].slider.showTooltips(params as boolean);
     }
 
     if (command === 'step') {
@@ -20,8 +24,6 @@ const sliderPluginFunction: SliderPluginFunction = function(this: JQuery, comman
     }
 
     return this;
-}
-
-export {
-    sliderPluginFunction
 };
+
+export { sliderPluginFunction };

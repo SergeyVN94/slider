@@ -4,17 +4,15 @@ type SliderPointState = {
     readonly name?: string;
 };
 
-type SliderViewStateData = {
+type SliderViewState = {
     readonly targetPosition: number;
     readonly points: SliderPointState[];
     readonly pointSelected: 'min' | 'max' | null;
-}
+};
 
-interface SliderViewSelectEventCallback {
-    (stateData: SliderViewStateData): void;
-}
+type SliderViewSelectEventCallback = (state: SliderViewState) => void;
 
-interface ISliderView {
+interface SliderView {
     onSelect(callback: SliderViewSelectEventCallback): void;
     update(points: SliderModelPointsState): void;
     showTooltips(state?: boolean): boolean | void;
@@ -23,11 +21,10 @@ interface ISliderView {
 type SliderViewName = 'horizontal' | 'vertical';
 
 interface SliderViewConfig {
+    readonly slider: JQuery;
     readonly viewName: SliderViewName;
     readonly selectMode: SliderMode;
-    readonly showValue: boolean;
-    readonly prettify?: PrettifyFunc;
+    readonly showTooltips: boolean;
+    readonly prettify: PrettifyFunc;
     readonly showBgLine: boolean;
-    readonly showScale: boolean;
-    readonly scale: SliderScale;
 }

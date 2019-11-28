@@ -1,6 +1,9 @@
-const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(this: JQuery, command: Command): any {
-    if (command === 'showValue') {
-        return this.get()[0].slider.showValue();
+const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(
+    this: JQuery,
+    command: Command
+): SliderPluginResponse {
+    if (command === 'showTooltips') {
+        return this.get()[0].slider.showTooltips();
     }
 
     if (command === 'value') {
@@ -10,8 +13,6 @@ const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(this: JQ
     if (command === 'step') {
         return this.get()[0].slider.step();
     }
-}
+};
 
-export {
-    sliderPluginFunctionSingle
-}
+export { sliderPluginFunctionSingle };

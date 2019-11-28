@@ -1,4 +1,4 @@
-interface ISliderModelDataManager {
+interface SliderModelDataManager {
     getScale(): SliderScale;
     setScale(scale: SliderScale): void;
 
@@ -11,7 +11,6 @@ interface ISliderModelDataManager {
     getRangeOfValues(): number;
     setRangeOfValues(rangeOfValues: number): void;
 }
-
 
 interface SliderModelDataConfig {
     readonly scale: SliderScale;

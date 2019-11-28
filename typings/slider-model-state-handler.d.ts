@@ -1,4 +1,4 @@
-interface ISliderModelStateHandler {
-    updateModelState(state: SliderViewStateData, dataManager: ISliderModelDataManager): void;
-    getModelState(dataManager: ISliderModelDataManager): SliderModelPointsState;
+interface SliderModelStateHandler {
+    updateModelState(state: SliderViewState, dataManager: SliderModelDataManager): void;
+    getModelState(dataManager: SliderModelDataManager): SliderModelPointsState;
 }

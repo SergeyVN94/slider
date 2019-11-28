@@ -22,16 +22,16 @@ class DemoPanel {
 
         this._inputs.focusout(() => {
             if (this._mode === 'single') {
-                this._slider.slider('value', [(String(this._inputs.val() as string))]);
+                this._slider.slider('value', [this._inputs.val().toString()]);
             } else {
                 this._slider.slider('value', [
                     this._inputMin.val() as string,
-                    this._inputMax.val() as string
+                    this._inputMax.val() as string,
                 ]);
             }
         });
 
-        this._slider.slider('onInput', (value: string[]): void => {
+        this._slider.slider('onSelect', (value: string[]): void => {
             if (value.length === 1) {
                 this._inputs.val(value[0]);
             } else {
@@ -41,12 +41,12 @@ class DemoPanel {
         });
 
         this._showValue.change((): void => {
-            this._slider.slider('showValue', this._showValue.is(':checked'));
+            this._slider.slider('showTooltips', this._showValue.is(':checked'));
         });
 
-        this._showValue.attr('checked', this._slider.slider('showValue'));
+        this._showValue.attr('checked', this._slider.slider('showTooltips') as string);
 
-        const sliderValues: string[] = this._slider.slider('value');
+        const sliderValues: string[] = this._slider.slider('value') as string[];
         if (sliderValues.length === 1) {
             this._inputs.val(sliderValues[0]);
         } else {
@@ -55,12 +55,10 @@ class DemoPanel {
         }
 
         this._inputStep.on('input', (): void => {
-            this._slider.slider('step', this._inputStep.val());
+            this._slider.slider('step', this._inputStep.val() as number);
         });
-        this._inputStep.val(this._slider.slider('step'));
+        this._inputStep.val(this._slider.slider('step') as number);
     }
 }
 
-export {
-    DemoPanel
-};
+export { DemoPanel };

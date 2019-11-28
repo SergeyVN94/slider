@@ -1,157 +1,206 @@
-import { DriverHorizontal } from './drivers/slider-driver-horizontal';
 import * as $ from 'jquery';
+import { DriverHorizontal } from './drivers/slider-driver-horizontal';
 import { DriverVertical } from './drivers/slider-driver-vertical';
+import { isNull } from 'util';
 
 function createPoint(type?: 'min' | 'max'): JQuery {
     return $('<div/>', {
         class: 'slider__point',
-        "data-type": type || ''
+        'data-type': type || '',
     });
 }
 
 function createTooltip(): JQuery {
     return $('<div/>', {
-        class: 'slider__tooltip'
+        class: 'slider__tooltip',
     });
 }
 
-class SliderView implements ISliderView {
+interface Flags {
+    isShowTooltips: boolean;
+    selectMode: SliderMode;
+    showBgLine: boolean;
+}
+
+interface DomElements {
+    slider: JQuery;
+    points: JQuery[];
+    tooltips: JQuery[];
+    pointContainer: JQuery;
+    tooltipsContainer: JQuery;
+    bgLine: JQuery;
+    scale: JQuery;
+}
+
+type MouseEventHandler = (t: JQuery.Event) => void;
+
+class SliderView implements SliderView {
     private readonly _driver: SliderViewDriver;
-    private readonly _slider: JQuery;
-    private readonly _pointContainer: JQuery;
-    private _dataStateCallback: SliderViewSelectEventCallback;
-    private _points: JQuery[];
-    private _tooltips: JQuery[];
-    private _isShowValue: boolean;
-    private _selectMode: SliderMode;
+    private readonly _domElements: DomElements;
+    private _flags: Flags;
+    private readonly _dataStateCallbacks: SliderViewSelectEventCallback[];
     private _pointSelected: 'min' | 'max' | null;
     private _lastModelState: SliderModelPointsState;
-    private _prettify: PrettifyFunc;
-    private _showBgLine: boolean;
-    private readonly _bgLine: JQuery;
-    private _showScale: boolean;
-    private readonly _scaleElement: JQuery;
-    private readonly _scale: SliderScale;
-    private readonly _mouseMoveHandlerBind: any;
-    private readonly _mouseDownHandlerBind: any;
+    private readonly _prettify: PrettifyFunc;
+    private readonly _mouseMoveHandlerBind: MouseEventHandler;
+    private readonly _mouseDownHandlerBind: MouseEventHandler;
 
-    constructor(slider: JQuery, config: SliderViewConfig) {
-        this._slider = slider;
-        this._isShowValue = config.showValue;
-        this._selectMode = config.selectMode;
-        this._pointContainer = slider.find('.slider__container');
+    constructor(config: SliderViewConfig) {
+        this._flags = this._createFlags(config);
+        this._domElements = this._createDomElements(config.slider, config);
+        this._dataStateCallbacks = [];
         this._pointSelected = null;
-        this._prettify = config.prettify || ((value: string): string => {
-            return value;
-        });
-        this._showBgLine = config.showBgLine;
-        this._showScale = config.showScale;
-        this._scale = config.scale;
-        this._points = this._createPointsArray();
-        this._tooltips = this._createTooltipsArray();
-
-        this._showTooltips(this._isShowValue);
-        this._pointContainer.append(this._points);
-        this._slider.find('.slider__tooltips-container').append(this._tooltips);
-
-        if (this._showBgLine) {
-            this._bgLine = $('<div/>', {
-                class: 'slider__bg-line'
+        this._prettify =
+            config.prettify ||
+            ((value: string): string => {
+                return value;
             });
-            this._pointContainer.append(this._bgLine);
-        }
-
-        if (this._showScale) {
-            this._scaleElement = $('<div/>', {
-                class: 'slider__scale'
-            });
-            this._pointContainer.append(this._scaleElement);
-        }
-
-        switch (config.viewName) {
-            case 'vertical':
-                this._driver = new DriverVertical();
-                this._slider.addClass('slider_vertical');
-                break;
-            // default - 'horizontal'
-            default:
-                this._driver = new DriverHorizontal();
-                break;
-        }
+        this._driver = this._createDriver(config.viewName);
 
         this._mouseDownHandlerBind = this._mouseDownHandler.bind(this);
         this._mouseMoveHandlerBind = this._mouseMoveHandler.bind(this);
-        this._pointContainer.mousedown(this._mouseDownHandlerBind);
-    }
+        this._domElements.pointContainer.mousedown(this._mouseDownHandlerBind);
 
-    private _createTooltipsArray() {
-        const tooltips: JQuery[] = [];
-        tooltips.push(createTooltip());
+        this._domElements.pointContainer.append(
+            this._domElements.points,
+            this._domElements.bgLine,
+            this._domElements.scale
+        );
+        this._domElements.tooltipsContainer.append(this._domElements.tooltips);
 
-        if (this._selectMode === 'range') {
-            tooltips.push(createTooltip());
-        }
-
-        return tooltips;
-    }
-
-    private _createPointsArray() {
-        const points: JQuery[] = [];
-        points.push(createPoint('min'));
-        points[0].css('z-index', 6);
-
-        if (this._selectMode === 'range') {
-            points.push(createPoint('max'));
-            points[1].css('z-index', 5);
-        }
-
-        return points;
+        this._showTooltips(this._flags.isShowTooltips);
     }
 
     public onSelect(callback: SliderViewSelectEventCallback): void {
-        this._dataStateCallback = callback;
+        this._dataStateCallbacks.push(callback);
     }
 
-    private _getViewState(event: JQuery.Event): SliderViewStateData {
+    public update(points: SliderModelPointsState): void {
+        this._lastModelState = points;
+
+        for (let i = 0; i < points.length; i++) {
+            this._driver.setPointPosition(
+                this._domElements.points[i],
+                this._domElements.pointContainer,
+                points[i].position
+            );
+        }
+
+        if (this._flags.isShowTooltips) {
+            this._updateTooltips(points);
+        }
+
+        if (this._flags.showBgLine) {
+            this._driver.updateBgLine(
+                this._domElements.bgLine,
+                this._domElements.pointContainer,
+                points
+            );
+        }
+    }
+
+    public showTooltips(state: boolean = null): void | boolean {
+        if (isNull(state)) {
+            return this._flags.isShowTooltips;
+        }
+
+        this._flags.isShowTooltips = state;
+        this._showTooltips(this._flags.isShowTooltips);
+
+        if (state && this._lastModelState) {
+            this._updateTooltips(this._lastModelState);
+        }
+    }
+
+    private _createDomElements(slider: JQuery, config: SliderViewConfig): DomElements {
+        const domElements: DomElements = {
+            slider: slider,
+            points: [],
+            tooltips: [],
+            tooltipsContainer: slider.find('.slider__tooltips-container'),
+            pointContainer: slider.find('.slider__container'),
+            bgLine: $('<div/>', {
+                class: 'slider__bg-line',
+            }),
+            scale: $('<div/>', {
+                class: 'slider__scale',
+            }),
+        };
+
+        domElements.points.push(createPoint('min'));
+        if (config.selectMode === 'range') {
+            domElements.points.push(createPoint('max'));
+        }
+
+        domElements.tooltips.push(createTooltip());
+        if (config.selectMode === 'range') {
+            domElements.tooltips.push(createTooltip());
+        }
+
+        return domElements;
+    }
+
+    private _createFlags(config: SliderViewConfig): Flags {
+        return {
+            isShowTooltips: config.showTooltips,
+            selectMode: config.selectMode,
+            showBgLine: config.showBgLine,
+        };
+    }
+
+    private _createDriver(viewName: SliderViewName): SliderViewDriver {
+        switch (viewName) {
+            case 'vertical':
+                this._domElements.slider.addClass('slider_vertical');
+                return new DriverVertical();
+            // default - 'horizontal'
+            default:
+                return new DriverHorizontal();
+        }
+    }
+
+    private _getViewState(e: JQuery.Event): SliderViewState {
         const points: SliderPointState[] = [];
 
-        for (let i = 0; i < this._points.length; i++) {
+        for (const point of this._domElements.points) {
             points.push({
-                position: this._driver.getPointPosition(
-                    this._points[i],
-                    this._pointContainer
-                )
+                position: this._driver.getPointPosition(point, this._domElements.pointContainer),
             });
         }
 
         return {
-            targetPosition: this._driver.getTargetPosition(
-                event, this._pointContainer),
+            targetPosition: this._driver.getTargetPosition(e, this._domElements.pointContainer),
             points: points,
-            pointSelected: this._pointSelected
+            pointSelected: this._pointSelected,
         };
     }
 
-    private _mouseMoveHandler(event: JQuery.Event): void {
-        this._dataStateCallback(this._getViewState(event));
+    private _emitSelectEvent(e: JQuery.Event): void {
+        for (const callback of this._dataStateCallbacks) {
+            callback(this._getViewState(e));
+        }
     }
 
-    private _mouseDownHandler(event: JQuery.MouseDownEvent): void {
-        const target: JQuery = $(event.target);
+    private _mouseMoveHandler(e: JQuery.Event): void {
+        this._emitSelectEvent(e);
+    }
+
+    private _mouseDownHandler(e: JQuery.MouseDownEvent): void {
+        const target: JQuery = $(e.target);
 
         if (!target.hasClass('slider__point')) {
-            this._dataStateCallback(this._getViewState(event));
+            this._emitSelectEvent(e);
         } else {
-            this._pointSelected = event.target.dataset['type'] as 'min' | 'max';
+            this._pointSelected = e.target.dataset['type'] as 'min' | 'max';
 
             if (this._pointSelected === 'min') {
-                this._points[0].css('z-index', 6);
-            } 
-            
-            if (this._pointSelected === 'max') {
-                this._points[0].css('z-index', 4);
+                this._domElements.points[0].css('z-index', 6);
             }
-    
+
+            if (this._pointSelected === 'max') {
+                this._domElements.points[0].css('z-index', 4);
+            }
+
             $(document).mousemove(this._mouseMoveHandlerBind);
             $(document).one('mouseup', this._mouseUpHandler.bind(this));
         }
@@ -162,56 +211,22 @@ class SliderView implements ISliderView {
         $(document).off('mousemove', this._mouseMoveHandlerBind);
     }
 
-    public update(points: SliderModelPointsState): void {
-        this._lastModelState = points;
-
-        for (let i: number = 0; i < points.length; i++) {
-            this._driver.setPointPosition(
-                this._points[i],
-                this._pointContainer,
-                points[i].position);
-        }
-
-        if (this._isShowValue) {
-            this._updateTooltips(points);
-        }
-
-        if (this._showBgLine) {
-            this._driver.updateBgLine(this._bgLine, this._pointContainer, points);
-        }
-    }
-
     private _updateTooltips(points: SliderModelPointsState): void {
-        for (let i: number = 0; i < points.length; i++) {
+        for (let i = 0; i < points.length; i++) {
             this._driver.updateTooltip(
-                this._tooltips[i],
-                this._pointContainer,
+                this._domElements.tooltips[i],
+                this._domElements.pointContainer,
                 points[i].position,
-                this._prettify(points[i].value));
+                this._prettify(points[i].value)
+            );
         }
-    }
-
-    public showTooltips(state?: boolean): void | boolean {
-        if (state === undefined) {
-            return this._isShowValue;
-        }
-
-        this._isShowValue = state;
-        this._showTooltips(this._isShowValue);
     }
 
     private _showTooltips(state?: boolean): void {
-        this._tooltips.forEach((item: JQuery): void => {
-            item.toggleClass('slider__tooltip_hide', !state);
-            if (state && this._lastModelState) {
-                this._updateTooltips(this._lastModelState);
-            }
+        this._domElements.tooltips.forEach((tooltip: JQuery): void => {
+            tooltip.toggleClass('slider__tooltip_hide', !state);
         });
     }
 }
 
-export {
-    SliderView,
-    createPoint,
-    createTooltip
-};
+export { SliderView, createPoint, createTooltip };

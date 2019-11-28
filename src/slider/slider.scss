@@ -6,15 +6,13 @@
 @import './slider__tooltip.scss';
 @import './slider__tooltip_hide.scss';
 @import './slider__tooltips-container.scss';
-@import './slider__scale.scss';
-@import './slider__scale-item.scss';
 
 .slider {
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    height: $slider-height;
-    min-width: $point-diameter * 4;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: $slider-height;
+  min-width: $point-diameter * 4;
 }
 
 @import './slider_vertical.scss';

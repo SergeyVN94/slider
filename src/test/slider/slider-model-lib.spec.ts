@@ -1,15 +1,15 @@
-import { expect } from "chai";
+import { expect } from 'chai';
 import {
     calcSliderRange,
-    valueToPointPosition
+    valueToPointPosition,
 } from '../../slider/plugin/domain-model/slider-model-lib';
 import { SliderModelDataManager } from '../../slider/plugin/domain-model/slider-model-data';
 
-function getManager(scale: SliderScale, step?: number): ISliderModelDataManager {
+function getManager(scale: SliderScale, step?: number): SliderModelDataManager {
     return new SliderModelDataManager({
         scale: scale,
         rangeOfValues: calcSliderRange(scale, step),
-        step: step
+        step: step,
     });
 }
 
@@ -37,45 +37,31 @@ describe('calcSliderRange', () => {
 
 describe('valueToPointPosition', () => {
     it('convert value to standard range 1', () => {
-        expect(
-            valueToPointPosition(654, getManager([-1000, 1000], 1))
-        ).to.equal(1654);
+        expect(valueToPointPosition(654, getManager([-1000, 1000], 1))).to.equal(1654);
     });
 
     it('convert value to standard range 2', () => {
-        expect(
-            valueToPointPosition(255, getManager([-100, 1100], 100))
-        ).to.equal(4);
+        expect(valueToPointPosition(255, getManager([-100, 1100], 100))).to.equal(4);
     });
 
     it('Convert maximum value to standard range in increments of one step', () => {
-        expect(
-            valueToPointPosition(1000, getManager([0, 1000], 28))
-        ).to.equal(35);
+        expect(valueToPointPosition(1000, getManager([0, 1000], 28))).to.equal(35);
     });
 
     it('convert value to standard range in large increments', () => {
-        expect(
-            valueToPointPosition(2550, getManager([0, 10000], 250))
-        ).to.equal(10);
+        expect(valueToPointPosition(2550, getManager([0, 10000], 250))).to.equal(10);
     });
 
     it('convert non-integer value to standard range in large increments', () => {
-        expect(
-            valueToPointPosition(623.43, getManager([-1000, 1000], 350))
-        ).to.equal(5);
+        expect(valueToPointPosition(623.43, getManager([-1000, 1000], 350))).to.equal(5);
     });
 
     it('conversion of values ​​beyond the range of the scale', () => {
-        expect(
-            valueToPointPosition(9999, getManager([-1000, 1000], 350))
-        ).to.equal(-1);
+        expect(valueToPointPosition(9999, getManager([-1000, 1000], 350))).to.equal(-1);
     });
 
     it('conversion of values ​​beyond the range of the scale', () => {
-        expect(
-            valueToPointPosition(-9999, getManager([-1000, 1000], 350))
-        ).to.equal(-1);
+        expect(valueToPointPosition(-9999, getManager([-1000, 1000], 350))).to.equal(-1);
     });
 
     it('conversion of the correct value for the array', () => {
@@ -91,11 +77,9 @@ describe('valueToPointPosition', () => {
             'Сентябрь',
             'Октябрь',
             'Ноябрь',
-            'Декабрь'
+            'Декабрь',
         ];
-        expect(
-            valueToPointPosition('Май', getManager(scale))
-        ).to.equal(4);
+        expect(valueToPointPosition('Май', getManager(scale))).to.equal(4);
     });
 
     it('invalid conversion', () => {
@@ -111,10 +95,8 @@ describe('valueToPointPosition', () => {
             'Сентябрь',
             'Октябрь',
             'Ноябрь',
-            'Декабрь'
+            'Декабрь',
         ];
-        expect(
-            valueToPointPosition(345, getManager(scale))
-        ).to.equal(-1);
+        expect(valueToPointPosition(345, getManager(scale))).to.equal(-1);
     });
 });

@@ -1,9 +1,7 @@
 type SliderMode = 'single' | 'range';
 type SliderScale = [number, number] | string[];
 
-interface PrettifyFunc {
-    (value: string): string;
-}
+type PrettifyFunc = (value: string) => string;
 
 type CoupleStr = [string, string];
 type CoupleNum = [number, number];
@@ -20,22 +18,19 @@ type CoupleNum = [number, number];
 interface SliderConfig {
     readonly viewName?: SliderViewName;
     readonly selectMode?: SliderMode;
-    readonly showValue?: boolean;
+    readonly showTooltips?: boolean;
     readonly scale?: SliderScale;
     readonly step?: number;
     readonly prettify?: PrettifyFunc;
     readonly start?: number[] | string[];
     readonly showBgLine?: boolean;
-    readonly showScale?: boolean;
 }
 
-interface SliderValueCallback {
-    (values: string[]): void;
-}
+type SliderValueCallback = (values: string[]) => void;
 
-interface ISlider {
-    onStateChange(callback: SliderValueCallback): void;
+interface Slider {
+    onSelect(callback: SliderValueCallback): void;
     value(value?: number[] | string[]): string[] | void;
-    showValue(state?: boolean): boolean | void;
+    showTooltips(state?: boolean): boolean | void;
     step(value?: number): number | void;
 }

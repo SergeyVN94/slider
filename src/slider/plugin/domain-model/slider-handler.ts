@@ -1,9 +1,8 @@
-class SliderStateHandler implements ISliderModelStateHandler {
-    constructor() {
-
-    }
-
-    public updateModelState(state: SliderViewStateData, dataManager: ISliderModelDataManager): void {
+class SliderStateHandler implements SliderModelStateHandler {
+    public updateModelState(
+        state: SliderViewState,
+        dataManager: SliderModelDataManager
+    ): void {
         const range: number = dataManager.getRangeOfValues();
         const points: SliderPointState[] = state.points;
         const pointsPosition: number[] = [];
@@ -11,9 +10,11 @@ class SliderStateHandler implements ISliderModelStateHandler {
 
         if (points.length === 1) {
             pointsPosition.push(targetPosition);
-        } else if (points.length === 2) {
+        }
+
+        if (points.length === 2) {
             pointsPosition[0] = Math.round(points[0].position * range);
-            pointsPosition[1] = Math.round(points[1].position * range);            
+            pointsPosition[1] = Math.round(points[1].position * range);
 
             if (state.pointSelected === 'min') {
                 if (targetPosition >= pointsPosition[1]) {
@@ -30,8 +31,8 @@ class SliderStateHandler implements ISliderModelStateHandler {
             } else {
                 const distanceToPoints: number[] = [
                     Math.abs(pointsPosition[0] - targetPosition),
-                    Math.abs(pointsPosition[1] - targetPosition)
-                ];                
+                    Math.abs(pointsPosition[1] - targetPosition),
+                ];
 
                 if (distanceToPoints[0] < distanceToPoints[1]) {
                     pointsPosition[0] = targetPosition;
@@ -50,7 +51,7 @@ class SliderStateHandler implements ISliderModelStateHandler {
         dataManager.setPointsPosition(pointsPosition);
     }
 
-    public getModelState(dataManager: ISliderModelDataManager): SliderModelPointsState {
+    public getModelState(dataManager: SliderModelDataManager): SliderModelPointsState {
         const pointsPosition: number[] = dataManager.getPointsPosition();
         const scale: SliderScale = dataManager.getScale();
         const step: number = dataManager.getStep();
@@ -58,19 +59,17 @@ class SliderStateHandler implements ISliderModelStateHandler {
         const range: number = dataManager.getRangeOfValues();
 
         if (typeof scale[0] === 'string') {
-            for (let i: number = 0; i < pointsPosition.length; i++) {
-                const position = pointsPosition[i];
+            for (const position of pointsPosition) {
                 points.push({
                     position: position / range,
-                    value: String(scale[position])
+                    value: scale[position].toString(),
                 });
             }
         } else {
-            for (let i: number = 0; i < pointsPosition.length; i++) {
-                const position = pointsPosition[i];
+            for (const position of pointsPosition) {
                 points.push({
                     position: position / range,
-                    value: String((position * step) + scale[0])
+                    value: (position * step + scale[0]).toString(),
                 });
             }
         }
@@ -79,6 +78,4 @@ class SliderStateHandler implements ISliderModelStateHandler {
     }
 }
 
-export {
-    SliderStateHandler
-};
+export { SliderStateHandler };

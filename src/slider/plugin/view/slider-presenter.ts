@@ -1,12 +1,12 @@
-class SliderPresenter implements ISliderPresenter {
-    readonly _view: ISliderView;
-    readonly _model: ISliderModel;
+class SliderPresenter {
+    readonly _view: SliderView;
+    readonly _model: SliderModel;
 
-    constructor(view: ISliderView, model: ISliderModel) {
+    constructor(view: SliderView, model: SliderModel) {
         this._view = view;
         this._model = model;
 
-        this._view.onSelect((viewState: SliderViewStateData): void => {
+        this._view.onSelect((viewState: SliderViewState): void => {
             // console.log(viewState);
             this._model.setState(viewState);
         });
@@ -18,6 +18,4 @@ class SliderPresenter implements ISliderPresenter {
     }
 }
 
-export {
-    SliderPresenter
-};
+export { SliderPresenter };

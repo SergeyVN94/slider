@@ -1,6 +1,6 @@
 .slider__tooltips-container {
-    position: relative;
-    width: 100%;
-    height: $tooltip-height;
-    top: -($tooltip-margin + $point-offset + $slider-height + $tooltip-height + $triangle);
+  position: relative;
+  width: 100%;
+  height: $tooltip-height;
+  top: -($tooltip-margin + $point-offset + $slider-height + $tooltip-height + $triangle);
 }

@@ -1,22 +1,21 @@
 @import './demo-panel__slider-container.scss';
 @import './demo-panel__setting.scss';
 
-
 $max-size: 700px;
 
 .demo-panel {
-    display: flex;
-    flex-direction: row;
-    max-width: $max-size;
-    width: 100%;
-    max-width: $max-size;
-    height: auto;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  max-width: $max-size;
+  width: 100%;
+  max-width: $max-size;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-input[type="number"] {
-    margin: 3px;
-    padding: 3px;
-    box-sizing: border-box;
+input[type='number'] {
+  margin: 3px;
+  padding: 3px;
+  box-sizing: border-box;
 }

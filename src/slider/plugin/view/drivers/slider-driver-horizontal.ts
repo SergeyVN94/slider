@@ -1,20 +1,21 @@
 class DriverHorizontal implements SliderViewDriver {
-    constructor() {
-    }
-
-    public getTargetPosition(event: JQuery.Event, pointContainer: JQuery): number {
+    public getTargetPosition(e: JQuery.Event, pointContainer: JQuery): number {
         const sliderWidth: number = pointContainer.width();
-        const globalMousePosition: number = event.pageX;
-        const mousePosition: number = (globalMousePosition - pointContainer.offset().left);
+        const globalMousePosition: number = e.pageX;
+        const mousePosition: number = globalMousePosition - pointContainer.offset().left;
         const targetPosition: number = mousePosition / sliderWidth;
-        if (targetPosition < 0) return 0;
-        if (targetPosition > 1) return 1;
+        if (targetPosition < 0) {
+            return 0;
+        }
+        if (targetPosition > 1) {
+            return 1;
+        }
         return targetPosition;
     }
 
     public getPointPosition(point: JQuery, pointContainer: JQuery): number {
         const sliderLeft: number = pointContainer.offset().left;
-        const pointLeft: number = point.offset().left + (point.outerWidth() / 2);
+        const pointLeft: number = point.offset().left + point.outerWidth() / 2;
 
         return (pointLeft - sliderLeft) / pointContainer.outerWidth();
     }
@@ -26,14 +27,23 @@ class DriverHorizontal implements SliderViewDriver {
         point.css('left', `${marginLeft}px`);
     }
 
-    public updateTooltip(tooltip: JQuery, pointContainer: JQuery, position: number, value: string): void {
+    public updateTooltip(
+        tooltip: JQuery,
+        pointContainer: JQuery,
+        position: number,
+        value: string
+    ): void {
         const sliderWidth: number = pointContainer.outerWidth();
         tooltip.html(value);
-        const offset: number = position * sliderWidth - (tooltip.outerWidth() / 2);
+        const offset: number = position * sliderWidth - tooltip.outerWidth() / 2;
         tooltip.css('left', `${offset}px`);
     }
 
-    public updateBgLine(bgLine: JQuery, pointContainer: JQuery, points: SliderModelPointsState): void {
+    public updateBgLine(
+        bgLine: JQuery,
+        pointContainer: JQuery,
+        points: SliderModelPointsState
+    ): void {
         const sliderWidth: number = pointContainer.outerWidth();
 
         if (points.length === 1) {
@@ -48,6 +58,4 @@ class DriverHorizontal implements SliderViewDriver {
     }
 }
 
-export {
-    DriverHorizontal
-};
+export { DriverHorizontal };

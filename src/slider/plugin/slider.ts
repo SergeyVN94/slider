@@ -1,54 +1,65 @@
-import {SliderView} from './view/slider-view';
-import {SliderPresenter} from './view/slider-presenter';
-import {SliderModel} from './domain-model/slider-model';
+import { SliderView } from './view/slider-view';
+import { SliderPresenter } from './view/slider-presenter';
+import { SliderModel } from './domain-model/slider-model';
+import { isNull } from 'util';
 
-class Slider implements ISlider {
-    private readonly _presenter: ISliderPresenter;
-    private readonly _model: ISliderModel;
-    private readonly _view: ISliderView;
+function hasOwnProp(obj: object, field: string | number | symbol): boolean {
+    return Object.prototype.hasOwnProperty.apply(obj, [field]);
+}
+
+class Slider implements Slider {
+    private readonly _presenter: SliderPresenter;
+    private readonly _model: SliderModel;
+    private readonly _view: SliderView;
     private readonly _callbackList: SliderValueCallback[];
 
     constructor(slider: JQuery, config: SliderConfig) {
-        const defaultConfig: SliderConfig = {
-            selectMode: 'single',
-            showValue: true,
-            viewName: 'horizontal',
-            scale: [0, 100],
-            step: 1,
-            showBgLine: true,
-            showScale: true
-        };
-        
-        this._view = new SliderView(slider, {
-            selectMode: config.selectMode || defaultConfig.selectMode,
-            showValue: config.showValue === undefined ? defaultConfig.showValue : config.showValue,
-            viewName: config.viewName || defaultConfig.viewName,
-            prettify: config.prettify,
-            showBgLine: config.showBgLine === undefined ? defaultConfig.showBgLine : config.showBgLine,
-            showScale: config.showScale === undefined ? defaultConfig.showScale : config.showScale,
-            scale: config.scale || defaultConfig.scale
+        const {
+            selectMode = 'single',
+            showTooltips = true,
+            viewName = 'horizontal',
+            scale = [0, 100],
+            step = 1,
+            showBgLine = true,
+            prettify = (value: string): string => {
+                return value;
+            },
+        } = config;
+
+        this._view = new SliderView({
+            slider: slider,
+            selectMode: selectMode,
+            showTooltips: showTooltips,
+            viewName: viewName,
+            prettify: prettify,
+            showBgLine: showBgLine,
         });
 
         this._model = new SliderModel({
-            selectMode: config.selectMode || defaultConfig.selectMode,
-            scale: config.scale || defaultConfig.scale,
-            step: !isNaN(config.step) ? Math.round(config.step) : defaultConfig.step
+            selectMode: selectMode,
+            scale: scale as SliderScale,
+            step: step,
         });
 
         this._presenter = new SliderPresenter(this._view, this._model);
-        
-        if (!config.start) {
-            const points: SliderPointState[] = [{
-                position: 0
-            }];
-            if (config.selectMode === 'range') points.push({
-                position: 1
-            });
+
+        if (!hasOwnProp(config, 'start')) {
+            const points: SliderPointState[] = [
+                {
+                    position: 0,
+                },
+            ];
+
+            if (config.selectMode === 'range') {
+                points.push({
+                    position: 1,
+                });
+            }
 
             this._model.setState({
                 targetPosition: 0,
                 points: points,
-                pointSelected: 'min'
+                pointSelected: 'min',
             });
         } else {
             this._model.setStateThroughValue(config.start);
@@ -58,37 +69,38 @@ class Slider implements ISlider {
 
         this._model.onChangeState((points: SliderModelPointsState): void => {
             const values: string[] = [];
-            for (let i = 0; i < points.length; i++) {
-                values[i] = points[i].value;
+            for (const point of points) {
+                values.push(point.value);
             }
+
             this._callbackList.forEach((callback: SliderValueCallback): void => {
                 callback(values);
             });
         });
     }
 
-    public onStateChange(callback: SliderValueCallback): void {
+    public onSelect(callback: SliderValueCallback): void {
         this._callbackList.push(callback);
     }
 
-    public value(value?: number[] | string[]): string[] | void {
-        if (value === undefined) {
-           return this._model.getValue();
-        } else {
-            this._model.setStateThroughValue(value);
+    public value(value: number[] | string[] = null): string[] | void {
+        if (isNull(value)) {
+            return this._model.getValue();
         }
+
+        this._model.setStateThroughValue(value);
     }
 
-    public showValue(state?: boolean): boolean | void {
-        if (state === undefined) {
+    public showTooltips(state: boolean = null): boolean | void {
+        if (isNull(state)) {
             return this._view.showTooltips();
-        } else {
-            this._view.showTooltips(state);
         }
+
+        this._view.showTooltips(state);
     }
 
-    public step(value?: number): number | void {
-        if (value === undefined) {
+    public step(value: number = null): number | void {
+        if (isNull(value)) {
             return this._model.step();
         }
 
@@ -96,6 +108,4 @@ class Slider implements ISlider {
     }
 }
 
-export {
-    Slider
-};
+export { Slider, hasOwnProp };

@@ -1,31 +1,32 @@
-type Command = 
-    'init' | 
-    'onInput' | 
-    'value' | 
-    'showValue' |
-    'step'
-;
+type Command = 'init' | 'onSelect' | 'value' | 'showTooltips' | 'step';
 
-interface SliderPluginFunctionInit {
-    (this: JQuery, params: SliderConfig): void;
-}
+type SliderPluginSelectEventCallback = (value: string[]) => void;
 
-interface SliderPluginFunctionSingle {
-    (this: JQuery, command: Command): any;
-}
+type SliderPluginResponse = void | boolean | string[] | string | number | JQuery;
+type SliderPluginParams =
+    | boolean
+    | string[]
+    | number
+    | SliderPluginSelectEventCallback
+    | SliderConfig;
 
-interface SliderPluginFunction {
-    (this: JQuery, command: Command, params: any): any;
-}
-
-interface SliderPluginFunctionGlobal {
-    (this: JQuery, command: Command, params?: any): any;
-}
+type SliderPluginFunctionInit = (this: JQuery, params: SliderConfig) => void;
+type SliderPluginFunctionSingle = (this: JQuery, command: Command) => SliderPluginResponse;
+type SliderPluginFunction = (
+    this: JQuery,
+    command: Command,
+    params: SliderPluginParams
+) => SliderPluginResponse;
+type SliderPluginFunctionGlobal = (
+    this: JQuery,
+    command: Command,
+    params?: SliderPluginParams
+) => SliderPluginResponse;
 
 interface JQuery {
     slider: SliderPluginFunctionGlobal;
 }
 
 interface Element {
-    slider: ISlider;
+    slider: Slider;
 }

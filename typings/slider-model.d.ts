@@ -7,13 +7,11 @@ interface SliderModelConfig {
     readonly step: number;
 }
 
-interface SliderModelCallback {
-    (points: SliderModelPointsState): void;
-}
+type SliderModelUpdateEventCallback = (points: SliderModelPointsState) => void;
 
-interface ISliderModel {
-    setState(state: SliderViewStateData): void;
-    onChangeState(callback: SliderModelCallback): void;
+interface SliderModel {
+    setState(state: SliderViewState): void;
+    onChangeState(callback: SliderModelUpdateEventCallback): void;
     setStateThroughValue(value: number[] | string[]): void;
     getValue(): string[];
     step(value?: number): number | void;
