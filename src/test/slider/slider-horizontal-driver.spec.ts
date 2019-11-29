@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as $ from 'jquery';
+import $ from 'jquery';
 import { DriverHorizontal } from '../../slider/plugin/view/drivers/slider-driver-horizontal';
 import { SliderPacket, createSlider } from './slider-tests-lib';
 

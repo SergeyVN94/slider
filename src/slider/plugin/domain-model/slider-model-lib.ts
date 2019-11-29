@@ -13,28 +13,29 @@ function valueToPointPosition(
 ): number {
     const scale = dataManager.getScale();
     const step = dataManager.getStep();
+    let _value = value;
 
-    if (typeof scale[0] === 'number' && typeof value === 'string') {
+    if (typeof scale[0] === 'number' && typeof _value === 'string') {
         try {
-            value = parseInt(value, 10);
+            _value = parseInt(_value, 10);
         } catch (error) {
             console.error('A range of numbers can only be initialized with a number');
         }
     }
 
     if (typeof scale[0] === 'number') {
-        value = value as number;
+        _value = _value as number;
         const minMax: CoupleNum = scale as CoupleNum;
 
-        if (value < minMax[0]) {
+        if (_value < minMax[0]) {
             return -1;
         }
 
-        if (value > minMax[1]) {
+        if (_value > minMax[1]) {
             return -1;
         }
 
-        const stepsInValue: number = Math.round((value - minMax[0]) / step);
+        const stepsInValue: number = Math.round((_value - minMax[0]) / step);
         if (stepsInValue * step + minMax[0] > minMax[1]) {
             return dataManager.getRangeOfValues();
         }
@@ -44,7 +45,7 @@ function valueToPointPosition(
 
     let result = -1;
     (scale as string[]).forEach((item: string, index: number) => {
-        if (item === value) {
+        if (item === _value) {
             result = index;
         }
     });

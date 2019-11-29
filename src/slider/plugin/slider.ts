@@ -11,7 +11,7 @@ class Slider implements Slider {
     private readonly _presenter: SliderPresenter;
     private readonly _model: SliderModel;
     private readonly _view: SliderView;
-    private readonly _callbackList: SliderValueCallback[];
+    private readonly _callbackList: SliderSelectEventCallback[];
 
     constructor(slider: JQuery, config: SliderConfig) {
         const {
@@ -73,13 +73,13 @@ class Slider implements Slider {
                 values.push(point.value);
             }
 
-            this._callbackList.forEach((callback: SliderValueCallback): void => {
+            this._callbackList.forEach((callback: SliderSelectEventCallback): void => {
                 callback(values);
             });
         });
     }
 
-    public onSelect(callback: SliderValueCallback): void {
+    public onSelect(callback: SliderSelectEventCallback): void {
         this._callbackList.push(callback);
     }
 
@@ -109,3 +109,4 @@ class Slider implements Slider {
 }
 
 export { Slider, hasOwnProp };
+

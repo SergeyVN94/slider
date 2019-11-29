@@ -7,7 +7,7 @@ module.exports = {
     context: `${__dirname}/src`,
     entry: {
         'style.js': './index.scss',
-        'index.js': './index.ts'
+        'index.js': './index.ts',
     },
     output: {
         path: `${__dirname}/dist`,

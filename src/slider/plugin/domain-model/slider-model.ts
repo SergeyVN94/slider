@@ -6,7 +6,6 @@ import { isNull } from 'util';
 class SliderModel implements SliderModel {
     private readonly _dataManager: SliderModelDataManager;
     private readonly _sliderStateHandler: SliderModelStateHandler;
-    private readonly _selectMode: SliderMode;
     private readonly _callbackList: SliderModelUpdateEventCallback[];
 
     constructor(config: SliderModelConfig) {
@@ -17,7 +16,6 @@ class SliderModel implements SliderModel {
         };
 
         this._dataManager = new SliderModelDataManager(dataConfig);
-        this._selectMode = config.selectMode;
         this._sliderStateHandler = new SliderStateHandler();
         this._callbackList = [];
     }
@@ -47,12 +45,13 @@ class SliderModel implements SliderModel {
         if (typeof scale[0] === 'string') {
             console.error('Cannot set step for array.');
         } else {
+            let stepValue = value;
             const sliderValues: string[] = this.getValue();
-            if (value <= 0) {
-                value = 1;
+            if (stepValue <= 0) {
+                stepValue = 1;
             }
-            this._dataManager.setStep(value);
-            this._dataManager.setRangeOfValues(calcSliderRange(scale, value));
+            this._dataManager.setStep(stepValue);
+            this._dataManager.setRangeOfValues(calcSliderRange(scale, stepValue));
             this.setStateThroughValue(sliderValues);
         }
     }

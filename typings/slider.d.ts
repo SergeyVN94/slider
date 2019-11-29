@@ -26,10 +26,11 @@ interface SliderConfig {
     readonly showBgLine?: boolean;
 }
 
-type SliderValueCallback = (values: string[]) => void;
+// TODO: переименовать
+type SliderSelectEventCallback = (values: string[]) => void;
 
 interface Slider {
-    onSelect(callback: SliderValueCallback): void;
+    onSelect(callback: SliderSelectEventCallback): void;
     value(value?: number[] | string[]): string[] | void;
     showTooltips(state?: boolean): boolean | void;
     step(value?: number): number | void;

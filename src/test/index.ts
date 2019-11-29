@@ -1,1 +1,0 @@
-import './slider/slider-handler.spec';

@@ -191,7 +191,7 @@ class SliderView implements SliderView {
         if (!target.hasClass('slider__point')) {
             this._emitSelectEvent(e);
         } else {
-            this._pointSelected = e.target.dataset['type'] as 'min' | 'max';
+            this._pointSelected = e.target.dataset.type as 'min' | 'max';
 
             if (this._pointSelected === 'min') {
                 this._domElements.points[0].css('z-index', 6);

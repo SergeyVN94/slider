@@ -38,12 +38,10 @@ class SliderStateHandler implements SliderModelStateHandler {
                     pointsPosition[0] = targetPosition;
                 } else if (distanceToPoints[1] < distanceToPoints[0]) {
                     pointsPosition[1] = targetPosition;
+                } else if (targetPosition < pointsPosition[0]) {
+                    pointsPosition[0] = targetPosition;
                 } else {
-                    if (targetPosition < pointsPosition[0]) {
-                        pointsPosition[0] = targetPosition;
-                    } else {
-                        pointsPosition[1] = targetPosition;
-                    }
+                    pointsPosition[1] = targetPosition;
                 }
             }
         }
