@@ -23,12 +23,12 @@ interface Flags {
 }
 
 interface DomElements {
-    slider: JQuery;
+    $slider: JQuery;
     points: JQuery[];
     tooltips: JQuery[];
-    pointContainer: JQuery;
-    tooltipContainer: JQuery;
-    bgLine: JQuery;
+    $pointContainer: JQuery;
+    $tooltipContainer: JQuery;
+    $bgLine: JQuery;
 }
 
 type MouseEventHandler = (t: JQuery.Event) => void;
@@ -46,7 +46,7 @@ class SliderView implements SliderView {
 
     constructor(config: SliderViewConfig) {
         this._flags = this._createFlags(config);
-        this._domElements = this._createDomElements(config.slider, config);
+        this._domElements = this._createDomElements(config);
         this._dataStateCallbacks = [];
         this._pointSelected = null;
         this._prettify =
@@ -58,13 +58,13 @@ class SliderView implements SliderView {
 
         this._mouseDownHandlerBind = this._mouseDownHandler.bind(this);
         this._mouseMoveHandlerBind = this._mouseMoveHandler.bind(this);
-        this._domElements.pointContainer.mousedown(this._mouseDownHandlerBind);
+        this._domElements.$pointContainer.mousedown(this._mouseDownHandlerBind);
 
-        this._domElements.pointContainer.append(
+        this._domElements.$pointContainer.append(
             this._domElements.points,
-            this._domElements.bgLine,
+            this._domElements.$bgLine
         );
-        this._domElements.tooltipContainer.append(this._domElements.tooltips);
+        this._domElements.$tooltipContainer.append(this._domElements.tooltips);
 
         this._showTooltips(this._flags.isShowTooltips);
     }
@@ -79,7 +79,7 @@ class SliderView implements SliderView {
         for (let i = 0; i < points.length; i++) {
             this._driver.setPointPosition(
                 this._domElements.points[i],
-                this._domElements.pointContainer,
+                this._domElements.$pointContainer,
                 points[i].position
             );
         }
@@ -90,8 +90,8 @@ class SliderView implements SliderView {
 
         if (this._flags.showBgLine) {
             this._driver.updateBgLine(
-                this._domElements.bgLine,
-                this._domElements.pointContainer,
+                this._domElements.$bgLine,
+                this._domElements.$pointContainer,
                 points
             );
         }
@@ -110,14 +110,14 @@ class SliderView implements SliderView {
         }
     }
 
-    private _createDomElements(slider: JQuery, config: SliderViewConfig): DomElements {
+    private _createDomElements(config: SliderViewConfig): DomElements {
         const domElements: DomElements = {
-            slider: slider,
+            $slider: config.$slider,
             points: [],
             tooltips: [],
-            tooltipContainer: slider.find('.slider__tooltip-container'),
-            pointContainer: slider.find('.slider__point-container'),
-            bgLine: $('<div/>', {
+            $tooltipContainer: config.$slider.find('.slider__tooltip-container'),
+            $pointContainer: config.$slider.find('.slider__point-container'),
+            $bgLine: $('<div/>', {
                 class: 'slider__bg-line',
             }),
         };
@@ -146,7 +146,7 @@ class SliderView implements SliderView {
     private _createDriver(viewName: SliderViewName): SliderViewDriver {
         switch (viewName) {
             case 'vertical':
-                this._domElements.slider.addClass('slider_theme_vertical');
+                this._domElements.$slider.addClass('slider_theme_vertical');
                 return new DriverVertical();
             // default - 'horizontal'
             default:
@@ -159,12 +159,12 @@ class SliderView implements SliderView {
 
         for (const point of this._domElements.points) {
             points.push({
-                position: this._driver.getPointPosition(point, this._domElements.pointContainer),
+                position: this._driver.getPointPosition(point, this._domElements.$pointContainer),
             });
         }
 
         return {
-            targetPosition: this._driver.getTargetPosition(e, this._domElements.pointContainer),
+            targetPosition: this._driver.getTargetPosition(e, this._domElements.$pointContainer),
             points: points,
             pointSelected: this._pointSelected,
         };
@@ -210,7 +210,7 @@ class SliderView implements SliderView {
         for (let i = 0; i < points.length; i++) {
             this._driver.updateTooltip(
                 this._domElements.tooltips[i],
-                this._domElements.tooltipContainer,
+                this._domElements.$tooltipContainer,
                 points[i].position,
                 this._prettify(points[i].value)
             );

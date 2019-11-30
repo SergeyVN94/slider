@@ -21,9 +21,9 @@ describe('DriverHorizontal driver.getPointPosition', () => {
             pointSize: 14,
         });
 
-        $(document.body).append(packet.slider);
+        $(document.body).append(packet.$slider);
 
-        expect(driver.getPointPosition(packet.points[0], packet.pointContainer)).to.equal(0);
+        expect(driver.getPointPosition(packet.points[0], packet.$pointContainer)).to.equal(0);
     });
 
     it('Rightmost point position', () => {
@@ -34,9 +34,9 @@ describe('DriverHorizontal driver.getPointPosition', () => {
             pointSize: 16,
         });
 
-        $(document.body).append(packet.slider);
+        $(document.body).append(packet.$slider);
 
-        expect(driver.getPointPosition(packet.points[0], packet.pointContainer)).to.equal(1);
+        expect(driver.getPointPosition(packet.points[0], packet.$pointContainer)).to.equal(1);
     });
 
     for (let i = 0; i < 15; i++) {
@@ -52,11 +52,11 @@ describe('DriverHorizontal driver.getPointPosition', () => {
                 pointSize: pointSize,
             });
 
-            $(document.body).append(packet.slider);
+            $(document.body).append(packet.$slider);
 
             expect(
                 Math.abs(
-                    driver.getPointPosition(packet.points[0], packet.tooltipContainer) - pointPosition
+                    driver.getPointPosition(packet.points[0], packet.$tooltipContainer) - pointPosition
                 ) < 0.01
             ).to.be.true;
         });
@@ -80,8 +80,8 @@ describe('DriverHorizontal driver.setPointPosition', () => {
                 pointSize: pointSize,
             });
 
-            $(document.body).append(packet.slider);
-            driver.setPointPosition(packet.points[0], packet.pointContainer, pointPosition);
+            $(document.body).append(packet.$slider);
+            driver.setPointPosition(packet.points[0], packet.$pointContainer, pointPosition);
 
             const targetPos: number = sliderSize * pointPosition - pointSize / 2;
             const currentPos: number = parseInt(packet.points[0].css('left'), 10);
@@ -109,9 +109,9 @@ describe('DriverHorizontal driver.updateTooltip', () => {
                 pointSize: pointSize,
             });
 
-            $(document.body).append(packet.slider);
+            $(document.body).append(packet.$slider);
             packet.tooltips[0].css('width', `${tooltipSize}px`);
-            driver.updateTooltip(packet.tooltips[0], packet.tooltipContainer, pointPosition, '');
+            driver.updateTooltip(packet.tooltips[0], packet.$tooltipContainer, pointPosition, '');
 
             const targetPos: number = sliderSize * pointPosition - tooltipSize / 2;
             const currentPos: number = parseInt(packet.tooltips[0].css('left'), 10);
@@ -138,15 +138,15 @@ describe('DriverHorizontal driver.updateBgLine', () => {
                     pointSize: 10,
                 });
 
-                $(document.body).append(packet.slider);
+                $(document.body).append(packet.$slider);
 
-                driver.updateBgLine(packet.bgLine, packet.pointContainer, [
+                driver.updateBgLine(packet.$bgLine, packet.$pointContainer, [
                     {
                         position: pointPosition,
                     },
                 ]);
 
-                expect(Math.abs(packet.bgLine.width() - sliderSize * pointPosition) < 1).to.be.true;
+                expect(Math.abs(packet.$bgLine.width() - sliderSize * pointPosition) < 1).to.be.true;
             });
         }
     });
@@ -164,9 +164,9 @@ describe('DriverHorizontal driver.updateBgLine', () => {
                     pointSize: 10,
                 });
 
-                $(document.body).append(packet.slider);
+                $(document.body).append(packet.$slider);
 
-                driver.updateBgLine(packet.bgLine, packet.pointContainer, [
+                driver.updateBgLine(packet.$bgLine, packet.$pointContainer, [
                     {
                         position: pointPosition1,
                     },
@@ -177,7 +177,7 @@ describe('DriverHorizontal driver.updateBgLine', () => {
 
                 expect(
                     Math.abs(
-                        packet.bgLine.width() - sliderSize * (pointPosition2 - pointPosition1)
+                        packet.$bgLine.width() - sliderSize * (pointPosition2 - pointPosition1)
                     ) < 1
                 ).to.be.true;
             });

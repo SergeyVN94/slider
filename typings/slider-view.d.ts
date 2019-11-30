@@ -21,7 +21,7 @@ interface SliderView {
 type SliderViewName = 'horizontal' | 'vertical';
 
 interface SliderViewConfig {
-    readonly slider: JQuery;
+    readonly $slider: JQuery;
     readonly viewName: SliderViewName;
     readonly selectMode: SliderMode;
     readonly showTooltips: boolean;

@@ -27,7 +27,7 @@ class Slider implements Slider {
         } = config;
 
         this._view = new SliderView({
-            slider: slider,
+            $slider: slider,
             selectMode: selectMode,
             showTooltips: showTooltips,
             viewName: viewName,
