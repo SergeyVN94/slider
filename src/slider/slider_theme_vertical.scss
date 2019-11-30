@@ -1,4 +1,4 @@
-.slider_vertical {
+.slider_theme_vertical {
   width: $slider-height;
   height: 100%;
   min-width: 0;
@@ -15,7 +15,7 @@
     left: -$point-offset;
   }
 
-  .slider__tooltips-container {
+  .slider__tooltip-container {
     height: 100%;
     width: $tooltip-height;
     top: -100%;

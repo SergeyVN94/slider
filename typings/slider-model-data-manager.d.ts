@@ -8,13 +8,13 @@ interface SliderModelDataManager {
     getStep(): number;
     setStep(step: number): void;
 
-    getRangeOfValues(): number;
-    setRangeOfValues(rangeOfValues: number): void;
+    getRange(): number;
+    setRange(range: number): void;
 }
 
 interface SliderModelDataConfig {
     readonly scale: SliderScale;
-    readonly rangeOfValues: number;
+    readonly range: number;
     readonly step: number;
     readonly start?: number[];
 }

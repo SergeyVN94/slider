@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
+
 import { DriverHorizontal } from './drivers/slider-driver-horizontal';
 import { DriverVertical } from './drivers/slider-driver-vertical';
-import { isNull } from 'util';
 
 function createPoint(type?: 'min' | 'max'): JQuery {
     return $('<div/>', {
@@ -27,9 +27,8 @@ interface DomElements {
     points: JQuery[];
     tooltips: JQuery[];
     pointContainer: JQuery;
-    tooltipsContainer: JQuery;
+    tooltipContainer: JQuery;
     bgLine: JQuery;
-    scale: JQuery;
 }
 
 type MouseEventHandler = (t: JQuery.Event) => void;
@@ -64,9 +63,8 @@ class SliderView implements SliderView {
         this._domElements.pointContainer.append(
             this._domElements.points,
             this._domElements.bgLine,
-            this._domElements.scale
         );
-        this._domElements.tooltipsContainer.append(this._domElements.tooltips);
+        this._domElements.tooltipContainer.append(this._domElements.tooltips);
 
         this._showTooltips(this._flags.isShowTooltips);
     }
@@ -100,7 +98,7 @@ class SliderView implements SliderView {
     }
 
     public showTooltips(state: boolean = null): void | boolean {
-        if (isNull(state)) {
+        if (state === null) {
             return this._flags.isShowTooltips;
         }
 
@@ -117,13 +115,10 @@ class SliderView implements SliderView {
             slider: slider,
             points: [],
             tooltips: [],
-            tooltipsContainer: slider.find('.slider__tooltips-container'),
-            pointContainer: slider.find('.slider__container'),
+            tooltipContainer: slider.find('.slider__tooltip-container'),
+            pointContainer: slider.find('.slider__point-container'),
             bgLine: $('<div/>', {
                 class: 'slider__bg-line',
-            }),
-            scale: $('<div/>', {
-                class: 'slider__scale',
             }),
         };
 
@@ -151,7 +146,7 @@ class SliderView implements SliderView {
     private _createDriver(viewName: SliderViewName): SliderViewDriver {
         switch (viewName) {
             case 'vertical':
-                this._domElements.slider.addClass('slider_vertical');
+                this._domElements.slider.addClass('slider_theme_vertical');
                 return new DriverVertical();
             // default - 'horizontal'
             default:
@@ -215,7 +210,7 @@ class SliderView implements SliderView {
         for (let i = 0; i < points.length; i++) {
             this._driver.updateTooltip(
                 this._domElements.tooltips[i],
-                this._domElements.pointContainer,
+                this._domElements.tooltipContainer,
                 points[i].position,
                 this._prettify(points[i].value)
             );

@@ -37,7 +37,7 @@ function valueToPointPosition(
 
         const stepsInValue: number = Math.round((_value - minMax[0]) / step);
         if (stepsInValue * step + minMax[0] > minMax[1]) {
-            return dataManager.getRangeOfValues();
+            return dataManager.getRange();
         }
 
         return stepsInValue;

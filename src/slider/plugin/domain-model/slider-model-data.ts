@@ -1,12 +1,12 @@
 class SliderModelDataManager implements SliderModelDataManager {
-    private _rangeOfValues: number;
+    private _range: number;
     private _scale: SliderScale;
     private _step: number;
     private _pointsPosition: number[];
 
     constructor(config: SliderModelDataConfig) {
         this._scale = config.scale;
-        this._rangeOfValues = config.rangeOfValues;
+        this._range = config.range;
         this._step = config.step;
         this._pointsPosition = [];
     }
@@ -35,12 +35,12 @@ class SliderModelDataManager implements SliderModelDataManager {
         this._scale = scale;
     }
 
-    public getRangeOfValues(): number {
-        return this._rangeOfValues;
+    public getRange(): number {
+        return this._range;
     }
 
-    public setRangeOfValues(rangeOfValues: number): void {
-        this._rangeOfValues = rangeOfValues;
+    public setRange(rangeOfValues: number): void {
+        this._range = rangeOfValues;
     }
 }
 

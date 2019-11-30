@@ -1,4 +1,5 @@
 import * as $ from 'jquery';
+
 import { createPoint } from '../../slider/plugin/view/slider-view';
 
 interface TestSliderConfig {
@@ -12,14 +13,15 @@ interface SliderPacket {
     slider: JQuery;
     points: JQuery[];
     pointContainer: JQuery;
+    tooltipContainer: JQuery;
     tooltips: JQuery[];
     bgLine: JQuery;
 }
 
 function createSlider(config: TestSliderConfig): SliderPacket {
     const slider: JQuery = $('<div class="slider"></div>');
-    const pointContainer: JQuery = $('<div class="slider__container"></div>');
-    const tooltipsContainer: JQuery = $('<div class="slider__bg-line"></div>');
+    const pointContainer: JQuery = $('<div class="slider__point-container"></div>');
+    const tooltipContainer: JQuery = $('<div class="slider__tooltip-container"></div>');
     const bgLine: JQuery = $('<div class="slider__bg-line"></div>');
     const tooltips: JQuery[] = [];
     const points: JQuery[] = [];
@@ -42,7 +44,7 @@ function createSlider(config: TestSliderConfig): SliderPacket {
         slider.css('width', `${config.size}px`);
         marginName = 'left';
     } else {
-        slider.addClass('slider_vertical');
+        slider.addClass('slider_theme_vertical');
         slider.css('height', `${config.size}px`);
         marginName = 'bottom';
     }
@@ -57,14 +59,15 @@ function createSlider(config: TestSliderConfig): SliderPacket {
         });
     });
 
-    tooltipsContainer.append(tooltips);
+    tooltipContainer.append(tooltips);
     pointContainer.append(points).append(bgLine);
-    slider.append(pointContainer).append(tooltipsContainer);
+    slider.append(pointContainer, tooltipContainer);
 
     return {
         slider: slider,
         points: points,
         pointContainer: pointContainer,
+        tooltipContainer: tooltipContainer,
         tooltips: tooltips,
         bgLine: bgLine,
     };

@@ -3,6 +3,7 @@ type Command = 'init' | 'onSelect' | 'value' | 'showTooltips' | 'step';
 type SliderPluginSelectEventCallback = (value: string[]) => void;
 
 type SliderPluginResponse = void | boolean | string[] | string | number | JQuery;
+
 type SliderPluginParams =
     | boolean
     | string[]
@@ -11,12 +12,15 @@ type SliderPluginParams =
     | SliderConfig;
 
 type SliderPluginFunctionInit = (this: JQuery, params: SliderConfig) => void;
+
 type SliderPluginFunctionSingle = (this: JQuery, command: Command) => SliderPluginResponse;
+
 type SliderPluginFunction = (
     this: JQuery,
     command: Command,
     params: SliderPluginParams
 ) => SliderPluginResponse;
+
 type SliderPluginFunctionGlobal = (
     this: JQuery,
     command: Command,

@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import {
     calcSliderRange,
     valueToPointPosition,
@@ -8,7 +9,7 @@ import { SliderModelDataManager } from '../../slider/plugin/domain-model/slider-
 function getManager(scale: SliderScale, step?: number): SliderModelDataManager {
     return new SliderModelDataManager({
         scale: scale,
-        rangeOfValues: calcSliderRange(scale, step),
+        range: calcSliderRange(scale, step),
         step: step,
     });
 }

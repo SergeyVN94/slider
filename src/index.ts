@@ -1,6 +1,6 @@
-// import './index.scss';
-import './slider/slider';
 import * as jQuery from 'jquery';
+
+import './slider/slider';
 import { DemoPanel } from './demo-panel/demo-panel';
 
 ((fun: Function): void => {

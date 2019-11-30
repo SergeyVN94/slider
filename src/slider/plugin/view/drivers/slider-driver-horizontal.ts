@@ -29,11 +29,11 @@ class DriverHorizontal implements SliderViewDriver {
 
     public updateTooltip(
         tooltip: JQuery,
-        pointContainer: JQuery,
+        tooltipContainer: JQuery,
         position: number,
         value: string
     ): void {
-        const sliderWidth: number = pointContainer.outerWidth();
+        const sliderWidth: number = tooltipContainer.outerWidth();
         tooltip.html(value);
         const offset: number = position * sliderWidth - tooltip.outerWidth() / 2;
         tooltip.css('left', `${offset}px`);

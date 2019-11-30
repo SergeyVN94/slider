@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import $ from 'jquery';
+import * as $ from 'jquery';
+
 import { DriverVertical } from '../../slider/plugin/view/drivers/slider-driver-vertical';
 import { SliderPacket, createSlider } from './slider-tests-lib';
 
@@ -7,7 +8,7 @@ const driver: SliderViewDriver = new DriverVertical();
 
 document.body.style.padding = '50px';
 
-describe('driver.getPointPosition', () => {
+describe('DriverVertical driver.getPointPosition', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -62,7 +63,7 @@ describe('driver.getPointPosition', () => {
     }
 });
 
-describe('driver.setPointPosition', () => {
+describe('DriverVertical driver.setPointPosition', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -90,7 +91,7 @@ describe('driver.setPointPosition', () => {
     }
 });
 
-describe('driver.updateTooltip', () => {
+describe('DriverVertical driver.updateTooltip', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -110,7 +111,7 @@ describe('driver.updateTooltip', () => {
 
             $(document.body).append(packet.slider);
             packet.tooltips[0].css('height', `${tooltipSize}px`);
-            driver.updateTooltip(packet.tooltips[0], packet.pointContainer, pointPosition, '');
+            driver.updateTooltip(packet.tooltips[0], packet.tooltipContainer, pointPosition, '');
 
             const targetPos: number = sliderSize * pointPosition - tooltipSize / 2;
             const currentPos: number = parseInt(packet.tooltips[0].css('bottom'), 10);
@@ -120,7 +121,7 @@ describe('driver.updateTooltip', () => {
     }
 });
 
-describe('driver.updateBgLine', () => {
+describe('DriverVertical driver.updateBgLine', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });

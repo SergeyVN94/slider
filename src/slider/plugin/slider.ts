@@ -1,7 +1,6 @@
 import { SliderView } from './view/slider-view';
 import { SliderPresenter } from './view/slider-presenter';
 import { SliderModel } from './domain-model/slider-model';
-import { isNull } from 'util';
 
 function hasOwnProp(obj: object, field: string | number | symbol): boolean {
     return Object.prototype.hasOwnProperty.apply(obj, [field]);
@@ -18,12 +17,13 @@ class Slider implements Slider {
             selectMode = 'single',
             showTooltips = true,
             viewName = 'horizontal',
-            scale = [0, 100],
+            scale = [0, 100] as CoupleNum,
             step = 1,
             showBgLine = true,
             prettify = (value: string): string => {
                 return value;
             },
+            start = this._getInitialDefaults(scale, selectMode),
         } = config;
 
         this._view = new SliderView({
@@ -37,8 +37,9 @@ class Slider implements Slider {
 
         this._model = new SliderModel({
             selectMode: selectMode,
-            scale: scale as SliderScale,
+            scale: scale,
             step: step,
+            start: start,
         });
 
         this._presenter = new SliderPresenter(this._view, this._model);
@@ -67,7 +68,7 @@ class Slider implements Slider {
 
         this._callbackList = [];
 
-        this._model.onChangeState((points: SliderModelPointsState): void => {
+        this._model.onUpdate((points: SliderModelPointsState): void => {
             const values: string[] = [];
             for (const point of points) {
                 values.push(point.value);
@@ -84,7 +85,7 @@ class Slider implements Slider {
     }
 
     public value(value: number[] | string[] = null): string[] | void {
-        if (isNull(value)) {
+        if (value === null) {
             return this._model.getValue();
         }
 
@@ -92,7 +93,7 @@ class Slider implements Slider {
     }
 
     public showTooltips(state: boolean = null): boolean | void {
-        if (isNull(state)) {
+        if (state === null) {
             return this._view.showTooltips();
         }
 
@@ -100,11 +101,21 @@ class Slider implements Slider {
     }
 
     public step(value: number = null): number | void {
-        if (isNull(value)) {
+        if (value === null) {
             return this._model.step();
         }
 
         this._model.step(value);
+    }
+
+    private _getInitialDefaults(scale: SliderScale, selectMode: SliderMode): SliderScale {
+        const result = [scale[0]];
+
+        if (selectMode === 'range') {
+            result.push(scale[scale.length - 1]);
+        }
+
+        return result as SliderScale;
     }
 }
 

@@ -12,7 +12,7 @@ const sliderPluginFunction: SliderPluginFunction = function(
     }
 
     if (command === 'value') {
-        this.get()[0].slider.value(params as (string[] | number[]));
+        this.get()[0].slider.value(params as (CoupleStr | CoupleNum));
     }
 
     if (command === 'showTooltips') {

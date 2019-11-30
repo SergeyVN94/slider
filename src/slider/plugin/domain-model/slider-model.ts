@@ -1,7 +1,6 @@
 import { SliderModelDataManager } from './slider-model-data';
 import { calcSliderRange, valueToPointPosition } from './slider-model-lib';
 import { SliderStateHandler } from './slider-handler';
-import { isNull } from 'util';
 
 class SliderModel implements SliderModel {
     private readonly _dataManager: SliderModelDataManager;
@@ -11,7 +10,7 @@ class SliderModel implements SliderModel {
     constructor(config: SliderModelConfig) {
         const dataConfig: SliderModelDataConfig = {
             scale: config.scale,
-            rangeOfValues: calcSliderRange(config.scale, config.step),
+            range: calcSliderRange(config.scale, config.step),
             step: config.step,
         };
 
@@ -25,7 +24,7 @@ class SliderModel implements SliderModel {
         this._eventUpdateState();
     }
 
-    public onChangeState(callback: SliderModelUpdateEventCallback): void {
+    public onUpdate(callback: SliderModelUpdateEventCallback): void {
         this._callbackList.push(callback);
     }
 
@@ -37,7 +36,7 @@ class SliderModel implements SliderModel {
     }
 
     public step(value: number = null): number | void {
-        if (isNull(value)) {
+        if (value === null) {
             return this._dataManager.getStep();
         }
 
@@ -51,7 +50,7 @@ class SliderModel implements SliderModel {
                 stepValue = 1;
             }
             this._dataManager.setStep(stepValue);
-            this._dataManager.setRangeOfValues(calcSliderRange(scale, stepValue));
+            this._dataManager.setRange(calcSliderRange(scale, stepValue));
             this.setStateThroughValue(sliderValues);
         }
     }

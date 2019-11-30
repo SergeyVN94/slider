@@ -11,7 +11,7 @@ class SliderPresenter {
             this._model.setState(viewState);
         });
 
-        this._model.onChangeState((modelState: SliderModelPointsState) => {
+        this._model.onUpdate((modelState: SliderModelPointsState) => {
             // console.log(modelState);
             this._view.update(modelState);
         });

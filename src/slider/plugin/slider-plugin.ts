@@ -1,8 +1,8 @@
 import * as jQuery from 'jquery';
+
 import { initSlider } from './slider-plugin-func-init';
 import { sliderPluginFunctionSingle } from './slider-plugin-func-single';
 import { sliderPluginFunction } from './slider-plugin-func';
-import { isNull } from 'util';
 
 (function($: JQueryStatic): void {
     $.fn.slider = function(this: JQuery, command: Command, params: SliderPluginParams = null): SliderPluginResponse {
@@ -11,7 +11,7 @@ import { isNull } from 'util';
             return this;
         }
 
-        if (isNull(params)) {
+        if (params === null) {
             return sliderPluginFunctionSingle.call(this, command);
         }
 

@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import $ from 'jquery';
+import * as $ from 'jquery';
+
 import { DriverHorizontal } from '../../slider/plugin/view/drivers/slider-driver-horizontal';
 import { SliderPacket, createSlider } from './slider-tests-lib';
 
@@ -7,7 +8,7 @@ const driver: SliderViewDriver = new DriverHorizontal();
 
 document.body.style.padding = '50px';
 
-describe('driver.getPointPosition', () => {
+describe('DriverHorizontal driver.getPointPosition', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -55,14 +56,14 @@ describe('driver.getPointPosition', () => {
 
             expect(
                 Math.abs(
-                    driver.getPointPosition(packet.points[0], packet.pointContainer) - pointPosition
+                    driver.getPointPosition(packet.points[0], packet.tooltipContainer) - pointPosition
                 ) < 0.01
             ).to.be.true;
         });
     }
 });
 
-describe('driver.setPointPosition', () => {
+describe('DriverHorizontal driver.setPointPosition', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -90,7 +91,7 @@ describe('driver.setPointPosition', () => {
     }
 });
 
-describe('driver.updateTooltip', () => {
+describe('DriverHorizontal driver.updateTooltip', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -110,7 +111,7 @@ describe('driver.updateTooltip', () => {
 
             $(document.body).append(packet.slider);
             packet.tooltips[0].css('width', `${tooltipSize}px`);
-            driver.updateTooltip(packet.tooltips[0], packet.pointContainer, pointPosition, '');
+            driver.updateTooltip(packet.tooltips[0], packet.tooltipContainer, pointPosition, '');
 
             const targetPos: number = sliderSize * pointPosition - tooltipSize / 2;
             const currentPos: number = parseInt(packet.tooltips[0].css('left'), 10);
@@ -120,7 +121,7 @@ describe('driver.updateTooltip', () => {
     }
 });
 
-describe('driver.updateBgLine', () => {
+describe('DriverHorizontal driver.updateBgLine', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });

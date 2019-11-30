@@ -3,7 +3,7 @@ class SliderStateHandler implements SliderModelStateHandler {
         state: SliderViewState,
         dataManager: SliderModelDataManager
     ): void {
-        const range: number = dataManager.getRangeOfValues();
+        const range: number = dataManager.getRange();
         const points: SliderPointState[] = state.points;
         const pointsPosition: number[] = [];
         const targetPosition: number = Math.round(state.targetPosition * range);
@@ -54,7 +54,7 @@ class SliderStateHandler implements SliderModelStateHandler {
         const scale: SliderScale = dataManager.getScale();
         const step: number = dataManager.getStep();
         const points: SliderModelPointsState = [];
-        const range: number = dataManager.getRangeOfValues();
+        const range: number = dataManager.getRange();
 
         if (typeof scale[0] === 'string') {
             for (const position of pointsPosition) {

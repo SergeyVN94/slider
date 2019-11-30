@@ -31,11 +31,11 @@ class DriverVertical implements SliderViewDriver {
 
     public updateTooltip(
         tooltip: JQuery,
-        pointContainer: JQuery,
+        tooltipContainer: JQuery,
         position: number,
         value: string
     ): void {
-        const sliderHeight: number = pointContainer.outerHeight();
+        const sliderHeight: number = tooltipContainer.outerHeight();
         tooltip.html(value);
         const offset: number = position * sliderHeight - tooltip.outerHeight() / 2;
         tooltip.css('bottom', `${offset}px`);
