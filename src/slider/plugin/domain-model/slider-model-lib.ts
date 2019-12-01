@@ -7,50 +7,65 @@ function calcSliderRange(scale: SliderScale, step?: number): number {
     return Math.floor((minMax[1] - minMax[0]) / (step || 1));
 }
 
-function valueToPointPosition(
-    value: number | string,
-    dataManager: SliderModelDataManager
-): number {
-    const scale = dataManager.getScale();
-    const step = dataManager.getStep();
-    let _value = value;
+function numberToPointPosition(value: number, dataManager: SliderModelDataManager): number {
+    const step = dataManager.step;
+    const range = dataManager.range;
+    const minMax: CoupleNum = dataManager.scale as CoupleNum;
 
-    if (typeof scale[0] === 'number' && typeof _value === 'string') {
-        try {
-            _value = parseInt(_value, 10);
-        } catch (error) {
-            console.error('A range of numbers can only be initialized with a number');
-        }
+    if (typeof dataManager.scale[0] === 'string') {
+        console.error(
+            new Error(
+                'You cannot set the position of a point using a number if the scale is an array of strings'
+            )
+        );
+        return -1;
     }
 
-    if (typeof scale[0] === 'number') {
-        _value = _value as number;
-        const minMax: CoupleNum = scale as CoupleNum;
+    if (value < minMax[0]) {
+        return -1;
+    }
 
-        if (_value < minMax[0]) {
-            return -1;
-        }
+    if (value > minMax[1]) {
+        return -1;
+    }
 
-        if (_value > minMax[1]) {
-            return -1;
-        }
+    const stepsInValue: number = Math.round((value - minMax[0]) / step);
 
-        const stepsInValue: number = Math.round((_value - minMax[0]) / step);
-        if (stepsInValue * step + minMax[0] > minMax[1]) {
-            return dataManager.getRange();
-        }
+    if (stepsInValue * step + minMax[0] > minMax[1]) {
+        return range;
+    }
 
-        return stepsInValue;
+    return stepsInValue;
+}
+
+function stringToPointPosition(value: string, dataManager: SliderModelDataManager): number {
+    const scale = dataManager.scale;
+
+    if (typeof dataManager.scale[0] === 'number') {
+        console.error(
+            new Error(
+                'You cannot set the position of a point using a string if the scale is a range of numbers'
+            )
+        );
+        return -1;
     }
 
     let result = -1;
-    (scale as string[]).forEach((item: string, index: number) => {
-        if (item === _value) {
+    (scale as string[]).forEach((item, index) => {
+        if (item === value) {
             result = index;
         }
     });
 
     return result;
+}
+
+function valueToPointPosition(value: number | string, dataManager: SliderModelDataManager): number {
+    if (typeof value === 'number') {
+        return numberToPointPosition(value, dataManager);
+    }
+
+    return stringToPointPosition(value, dataManager);
 }
 
 export { calcSliderRange, valueToPointPosition };

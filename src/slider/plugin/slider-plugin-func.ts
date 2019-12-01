@@ -12,15 +12,15 @@ const sliderPluginFunction: SliderPluginFunction = function(
     }
 
     if (command === 'value') {
-        this.get()[0].slider.value(params as (CoupleStr | CoupleNum));
+        this.get()[0].slider.value = params as string[];
     }
 
     if (command === 'showTooltips') {
-        this.get()[0].slider.showTooltips(params as boolean);
+        this.get()[0].slider.isShowTooltips = params as boolean;
     }
 
     if (command === 'step') {
-        return this.get()[0].slider.step(Number(params));
+        return this.get()[0].slider.step = params as number;
     }
 
     return this;

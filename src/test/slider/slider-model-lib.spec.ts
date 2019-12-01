@@ -4,7 +4,7 @@ import {
     calcSliderRange,
     valueToPointPosition,
 } from '../../slider/plugin/domain-model/slider-model-lib';
-import { SliderModelDataManager } from '../../slider/plugin/domain-model/slider-model-data';
+import { SliderModelDataManager } from '../../slider/plugin/domain-model/slider-data-manager';
 
 function getManager(scale: SliderScale, step?: number): SliderModelDataManager {
     return new SliderModelDataManager({

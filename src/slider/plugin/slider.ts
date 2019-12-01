@@ -39,83 +39,62 @@ class Slider implements Slider {
             selectMode: selectMode,
             scale: scale,
             step: step,
-            start: start,
         });
 
         this._presenter = new SliderPresenter(this._view, this._model);
-
-        if (!hasOwnProp(config, 'start')) {
-            const points: SliderPointState[] = [
-                {
-                    position: 0,
-                },
-            ];
-
-            if (config.selectMode === 'range') {
-                points.push({
-                    position: 1,
-                });
-            }
-
-            this._model.setState({
-                targetPosition: 0,
-                points: points,
-                pointSelected: 'min',
-            });
-        } else {
-            this._model.setStateThroughValue(config.start);
-        }
-
         this._callbackList = [];
 
-        this._model.onUpdate((points: SliderModelPointsState): void => {
-            const values: string[] = [];
-            for (const point of points) {
-                values.push(point.value);
-            }
+        this._model.onUpdate(this.__onModelUpdateHandler.bind(this));
 
-            this._callbackList.forEach((callback: SliderSelectEventCallback): void => {
-                callback(values);
-            });
-        });
+        this._model.value = start;
+    }
+
+    public get value(): string[] | number[] {
+        return this._model.value;
+    }
+
+    public set value(value: string[] | number[]) {
+        this._model.value = value;
+    }
+
+    public get step(): number {
+        return this._model.step;
+    }
+
+    public set step(value: number) {
+        this._model.step = value;
+    }
+
+    public get isShowTooltips(): boolean {
+        return this._view.isShowTooltips;
+    }
+
+    public set isShowTooltips(state: boolean) {
+        this._view.isShowTooltips = state;
     }
 
     public onSelect(callback: SliderSelectEventCallback): void {
         this._callbackList.push(callback);
     }
 
-    public value(value: number[] | string[] = null): string[] | void {
-        if (value === null) {
-            return this._model.getValue();
-        }
+    private __onModelUpdateHandler(points: SliderModelPointsState): void {
+        const values = points.map((point) => {
+            return point.value;
+        });
 
-        this._model.setStateThroughValue(value);
+        this._callbackList.forEach((callback: SliderSelectEventCallback): void => {
+            callback(values as string[] | number[]);
+        });
     }
 
-    public showTooltips(state: boolean = null): boolean | void {
-        if (state === null) {
-            return this._view.showTooltips();
-        }
-
-        this._view.showTooltips(state);
-    }
-
-    public step(value: number = null): number | void {
-        if (value === null) {
-            return this._model.step();
-        }
-
-        this._model.step(value);
-    }
-
-    private _getInitialDefaults(scale: SliderScale, selectMode: SliderMode): SliderScale {
+    private _getInitialDefaults(scale: SliderScale, selectMode: SliderMode): string[] | number[] {
         const result = [scale[0]];
 
         if (selectMode === 'range') {
             result.push(scale[scale.length - 1]);
         }
 
-        return result as SliderScale;
+        return result as string[] | number[];
     }
 }
 

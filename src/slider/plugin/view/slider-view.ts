@@ -18,8 +18,8 @@ function createTooltip(): JQuery {
 
 interface Flags {
     isShowTooltips: boolean;
+    isShowBgLine: boolean;
     selectMode: SliderMode;
-    showBgLine: boolean;
 }
 
 interface DomElements {
@@ -31,23 +31,19 @@ interface DomElements {
     $bgLine: JQuery;
 }
 
-type MouseEventHandler = (t: JQuery.Event) => void;
-
 class SliderView implements SliderView {
     private readonly _driver: SliderViewDriver;
     private readonly _domElements: DomElements;
     private _flags: Flags;
-    private readonly _dataStateCallbacks: SliderViewSelectEventCallback[];
+    private readonly _updateEventCallbackList: SliderViewSelectEventCallback[];
     private _pointSelected: 'min' | 'max' | null;
     private _lastModelState: SliderModelPointsState;
     private readonly _prettify: PrettifyFunc;
-    private readonly _mouseMoveHandlerBind: MouseEventHandler;
-    private readonly _mouseDownHandlerBind: MouseEventHandler;
 
     constructor(config: SliderViewConfig) {
         this._flags = this._createFlags(config);
         this._domElements = this._createDomElements(config);
-        this._dataStateCallbacks = [];
+        this._updateEventCallbackList = [];
         this._pointSelected = null;
         this._prettify =
             config.prettify ||
@@ -56,39 +52,44 @@ class SliderView implements SliderView {
             });
         this._driver = this._createDriver(config.viewName);
 
-        this._mouseDownHandlerBind = this._mouseDownHandler.bind(this);
-        this._mouseMoveHandlerBind = this._mouseMoveHandler.bind(this);
-        this._domElements.$pointContainer.mousedown(this._mouseDownHandlerBind);
-
-        this._domElements.$pointContainer.append(
-            this._domElements.points,
-            this._domElements.$bgLine
-        );
-        this._domElements.$tooltipContainer.append(this._domElements.tooltips);
+        this._initDomElements();
 
         this._showTooltips(this._flags.isShowTooltips);
     }
 
+    public get isShowTooltips(): boolean {
+        return this._flags.isShowTooltips;
+    }
+
+    public set isShowTooltips(state: boolean) {
+        this._flags.isShowTooltips = state;
+        this._showTooltips(this._flags.isShowTooltips);
+
+        if (state && this._lastModelState) {
+            this._updateTooltips(this._lastModelState);
+        }
+    }
+
     public onSelect(callback: SliderViewSelectEventCallback): void {
-        this._dataStateCallbacks.push(callback);
+        this._updateEventCallbackList.push(callback);
     }
 
     public update(points: SliderModelPointsState): void {
         this._lastModelState = points;
 
-        for (let i = 0; i < points.length; i++) {
+        points.forEach((point, index) => {
             this._driver.setPointPosition(
-                this._domElements.points[i],
+                this._domElements.points[index],
                 this._domElements.$pointContainer,
-                points[i].position
+                point.position
             );
-        }
+        });
 
         if (this._flags.isShowTooltips) {
             this._updateTooltips(points);
         }
 
-        if (this._flags.showBgLine) {
+        if (this._flags.isShowBgLine) {
             this._driver.updateBgLine(
                 this._domElements.$bgLine,
                 this._domElements.$pointContainer,
@@ -97,17 +98,17 @@ class SliderView implements SliderView {
         }
     }
 
-    public showTooltips(state: boolean = null): void | boolean {
-        if (state === null) {
-            return this._flags.isShowTooltips;
-        }
+    private _initDomElements(): void {
+        this._domElements.$pointContainer.on(
+            'mousedown.slider.downHandler',
+            this._mouseDownHandler.bind(this)
+        );
 
-        this._flags.isShowTooltips = state;
-        this._showTooltips(this._flags.isShowTooltips);
-
-        if (state && this._lastModelState) {
-            this._updateTooltips(this._lastModelState);
-        }
+        this._domElements.$pointContainer.append(
+            this._domElements.points,
+            this._domElements.$bgLine
+        );
+        this._domElements.$tooltipContainer.append(this._domElements.tooltips);
     }
 
     private _createDomElements(config: SliderViewConfig): DomElements {
@@ -123,12 +124,10 @@ class SliderView implements SliderView {
         };
 
         domElements.points.push(createPoint('min'));
+        domElements.tooltips.push(createTooltip());
+
         if (config.selectMode === 'range') {
             domElements.points.push(createPoint('max'));
-        }
-
-        domElements.tooltips.push(createTooltip());
-        if (config.selectMode === 'range') {
             domElements.tooltips.push(createTooltip());
         }
 
@@ -139,7 +138,7 @@ class SliderView implements SliderView {
         return {
             isShowTooltips: config.showTooltips,
             selectMode: config.selectMode,
-            showBgLine: config.showBgLine,
+            isShowBgLine: config.showBgLine,
         };
     }
 
@@ -157,11 +156,11 @@ class SliderView implements SliderView {
     private _getViewState(e: JQuery.Event): SliderViewState {
         const points: SliderPointState[] = [];
 
-        for (const point of this._domElements.points) {
+        this._domElements.points.forEach((point) => {
             points.push({
                 position: this._driver.getPointPosition(point, this._domElements.$pointContainer),
             });
-        }
+        });
 
         return {
             targetPosition: this._driver.getTargetPosition(e, this._domElements.$pointContainer),
@@ -170,17 +169,17 @@ class SliderView implements SliderView {
         };
     }
 
-    private _emitSelectEvent(e: JQuery.Event): void {
-        for (const callback of this._dataStateCallbacks) {
+    private _emitSelectEvent(this: SliderView, e: JQuery.Event): void {
+        this._updateEventCallbackList.forEach((callback) => {
             callback(this._getViewState(e));
-        }
+        });
     }
 
-    private _mouseMoveHandler(e: JQuery.Event): void {
+    private _mouseMoveHandler(this: SliderView, e: JQuery.Event): void {
         this._emitSelectEvent(e);
     }
 
-    private _mouseDownHandler(e: JQuery.MouseDownEvent): void {
+    private _mouseDownHandler(this: SliderView, e: JQuery.MouseDownEvent): void {
         const target: JQuery = $(e.target);
 
         if (!target.hasClass('slider__point')) {
@@ -196,29 +195,29 @@ class SliderView implements SliderView {
                 this._domElements.points[0].css('z-index', 4);
             }
 
-            $(document).mousemove(this._mouseMoveHandlerBind);
-            $(document).one('mouseup', this._mouseUpHandler.bind(this));
+            $(document).on('mousemove.slider.moveHandler', this._mouseMoveHandler.bind(this));
+            $(document).one('mouseup.slider.upHandler', this._mouseUpHandler.bind(this));
         }
     }
 
-    private _mouseUpHandler(): void {
+    private _mouseUpHandler(this: SliderView): void {
         this._pointSelected = null;
-        $(document).off('mousemove', this._mouseMoveHandlerBind);
+        $(document).off('mousemove.slider.moveHandler');
     }
 
     private _updateTooltips(points: SliderModelPointsState): void {
-        for (let i = 0; i < points.length; i++) {
+        points.forEach((point, index) => {
             this._driver.updateTooltip(
-                this._domElements.tooltips[i],
+                this._domElements.tooltips[index],
                 this._domElements.$tooltipContainer,
-                points[i].position,
-                this._prettify(points[i].value)
+                point.position,
+                this._prettify(point.value.toString())
             );
-        }
+        });
     }
 
-    private _showTooltips(state?: boolean): void {
-        this._domElements.tooltips.forEach((tooltip: JQuery): void => {
+    private _showTooltips(state: boolean): void {
+        this._domElements.tooltips.forEach((tooltip) => {
             tooltip.toggleClass('slider__tooltip_hide', !state);
         });
     }

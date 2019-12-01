@@ -22,34 +22,77 @@ import { DemoPanel } from './demo-panel/demo-panel';
     ];
 
     const scale2: SliderScale = [-1000, 1000];
+    const scale3: SliderScale = [0, 1000];
+    const scale4: SliderScale = [
+        'А',
+        'Б',
+        'В',
+        'Г',
+        'Д',
+        'Е',
+        'Ё',
+        'Ж',
+        'З',
+        'И',
+        'Й',
+        'К',
+        'Л',
+        'М',
+        'Н',
+        'О',
+        'П',
+        'Р',
+        'С',
+        'Т',
+        'У',
+        'Ф',
+        'Х',
+        'Ц',
+        'Ч',
+        'Ш',
+        'Щ',
+        'Ъ',
+        'Ы',
+        'Ь',
+        'Э',
+        'Ю',
+        'Я',
+    ].reverse();
 
     // slider 1
+    const $slider1: JQuery = $('#slider1');
 
-    const slider1: JQuery = $('#slider1');
-
-    slider1.slider('init', {
+    $slider1.slider('init', {
         selectMode: 'single',
         scale: scale1,
     });
 
-    new DemoPanel($('#panel1'), slider1);
+    new DemoPanel({
+        $slider: $slider1,
+        selector: '#panel1',
+        selectMode: 'single',
+        scale: scale1,
+    });
 
     // slider 2
+    const $slider2: JQuery = $('#slider2');
 
-    const slider2: JQuery = $('#slider2');
-
-    slider2.slider('init', {
+    $slider2.slider('init', {
         selectMode: 'range',
         scale: scale2,
     });
 
-    new DemoPanel($('#panel2'), slider2);
+    new DemoPanel({
+        $slider: $slider2,
+        selector: '#panel2',
+        selectMode: 'range',
+        scale: scale2,
+    });
 
     // slider 3
+    const $slider3: JQuery = $('#slider3');
 
-    const slider3: JQuery = $('#slider3');
-
-    slider3.slider('init', {
+    $slider3.slider('init', {
         viewName: 'vertical',
         selectMode: 'single',
         scale: [0, 1000],
@@ -58,51 +101,26 @@ import { DemoPanel } from './demo-panel/demo-panel';
         },
     });
 
-    new DemoPanel($('#panel3'), slider3);
-
-    // slider 4
-
-    const slider4: JQuery = $('#slider4');
-
-    slider4.slider('init', {
-        viewName: 'vertical',
-        selectMode: 'range',
-        scale: [
-            'А',
-            'Б',
-            'В',
-            'Г',
-            'Д',
-            'Е',
-            'Ё',
-            'Ж',
-            'З',
-            'И',
-            'Й',
-            'К',
-            'Л',
-            'М',
-            'Н',
-            'О',
-            'П',
-            'Р',
-            'С',
-            'Т',
-            'У',
-            'Ф',
-            'Х',
-            'Ц',
-            'Ч',
-            'Ш',
-            'Щ',
-            'Ъ',
-            'Ы',
-            'Ь',
-            'Э',
-            'Ю',
-            'Я',
-        ].reverse(),
+    new DemoPanel({
+        $slider: $slider3,
+        selector: '#panel3',
+        selectMode: 'single',
+        scale: scale3,
     });
 
-    new DemoPanel($('#panel4'), slider4);
+    // slider 4
+    const $slider4: JQuery = $('#slider4');
+
+    $slider4.slider('init', {
+        viewName: 'vertical',
+        selectMode: 'range',
+        scale: scale4,
+    });
+
+    new DemoPanel({
+        $slider: $slider4,
+        selector: '#panel4',
+        selectMode: 'range',
+        scale: scale4,
+    });
 });

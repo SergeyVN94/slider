@@ -1,18 +1,11 @@
 interface SliderModelDataManager {
-    getScale(): SliderScale;
-    setScale(scale: SliderScale): void;
-
-    getPointsPosition(): number[];
-    setPointsPosition(positions: number[]): void;
-
-    getStep(): number;
-    setStep(step: number): void;
-
-    getRange(): number;
-    setRange(range: number): void;
+    scale: SliderScale;
+    pointPositions: number[];
+    step: number;
+    range: number;
 }
 
-interface SliderModelDataConfig {
+interface SliderDataManagerConfig {
     readonly scale: SliderScale;
     readonly range: number;
     readonly step: number;

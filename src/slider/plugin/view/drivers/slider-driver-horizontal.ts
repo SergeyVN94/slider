@@ -45,12 +45,11 @@ class DriverHorizontal implements SliderViewDriver {
         points: SliderModelPointsState
     ): void {
         const sliderWidth: number = pointContainer.outerWidth();
+        const offsetMin: number = points[0].position * sliderWidth;
 
         if (points.length === 1) {
-            const offset: number = points[0].position * sliderWidth;
-            bgLine.css('right', sliderWidth - offset);
+            bgLine.css('right', sliderWidth - offsetMin);
         } else {
-            const offsetMin: number = points[0].position * sliderWidth;
             const offsetMax: number = points[1].position * sliderWidth;
             bgLine.css('right', sliderWidth - offsetMax);
             bgLine.css('left', offsetMin);

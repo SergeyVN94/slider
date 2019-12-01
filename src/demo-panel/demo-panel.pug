@@ -2,19 +2,12 @@ include ../slider/slider.pug
 
 mixin demo-panel(args={})
     -const classes = (args.classes || []).join(',');
-    .demo-panel(class=classes, id=args.id, data-mode=(args.mode || 'single'))
+    .demo-panel(class=classes, id=args.id)
         .demo-panel__slider-container
             +slider(args.slider || {})
-        .demo-panel__setting
-            if args.mode === 'single'
-                input(type="text", class="demo-panel__input-value")
-            else
-                label min:
-                    input(type="text", class="demo-panel__input-value", data-type="min")
-                label max:
-                    input(type="text", class="demo-panel__input-value", data-type="max")
+        .demo-panel__setting.js-demo-panel__setting
             label step:
-                input(type="number", class="demo-panel__input-step", autocomplete="off")
+                input(type="number", class="demo-panel__input-step js-demo-panel__input-step", autocomplete="off")
             label
-                input(type="checkbox", class="demo-panel__show-tooltips", checked=args.showTooltips, autocomplete="off")
+                input(type="checkbox", class="demo-panel__show-tooltips js-demo-panel__show-tooltips", checked=args.showTooltips, autocomplete="off")
                 | show / hide tooltips 

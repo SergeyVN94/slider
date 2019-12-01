@@ -1,7 +1,6 @@
 type SliderPointState = {
     readonly position: number;
-    readonly value?: string;
-    readonly name?: string;
+    readonly value?: string | number;
 };
 
 type SliderViewState = {
@@ -13,9 +12,9 @@ type SliderViewState = {
 type SliderViewSelectEventCallback = (state: SliderViewState) => void;
 
 interface SliderView {
+    isShowTooltips: boolean;
     onSelect(callback: SliderViewSelectEventCallback): void;
     update(points: SliderModelPointsState): void;
-    showTooltips(state?: boolean): boolean | void;
 }
 
 type SliderViewName = 'horizontal' | 'vertical';
