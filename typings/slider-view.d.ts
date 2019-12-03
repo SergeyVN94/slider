@@ -9,11 +9,11 @@ type SliderViewState = {
     readonly pointSelected: 'min' | 'max' | null;
 };
 
-type SliderViewSelectEventCallback = (state: SliderViewState) => void;
+type HandlerSliderViewSelect = (state: SliderViewState) => void;
 
 interface SliderView {
     isShowTooltips: boolean;
-    onSelect(callback: SliderViewSelectEventCallback): void;
+    onSelect(callback: HandlerSliderViewSelect): void;
     update(points: SliderModelPointsState): void;
 }
 

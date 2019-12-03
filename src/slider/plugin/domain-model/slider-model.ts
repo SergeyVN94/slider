@@ -1,20 +1,20 @@
 import { SliderModelDataManager } from './slider-data-manager';
-import { calcSliderRange, valueToPointPosition } from './slider-model-lib';
+import { calcRange, valueToPointPosition } from './slider-model-lib';
 import { SliderStateHandler } from './slider-handler';
 
 class SliderModel implements SliderModel {
     private readonly _dataManager: SliderModelDataManager;
     private readonly _stateHandler: SliderModelStateHandler;
-    private readonly _updateEventCallbackList: SliderModelUpdateEventCallback[];
+    private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
 
     constructor(config: SliderModelConfig) {
-        const dataConfig: SliderDataManagerConfig = {
+        const managerConfig: SliderDataManagerConfig = {
             scale: config.scale,
-            range: calcSliderRange(config.scale, config.step),
+            range: calcRange(config.scale, config.step),
             step: config.step,
         };
 
-        this._dataManager = new SliderModelDataManager(dataConfig);
+        this._dataManager = new SliderModelDataManager(managerConfig);
         this._stateHandler = new SliderStateHandler();
         this._updateEventCallbackList = [];
     }
@@ -24,7 +24,7 @@ class SliderModel implements SliderModel {
     }
 
     public set step(value: number) {
-        const scale: SliderScale = this._dataManager.scale;
+        const { scale } = this._dataManager;
 
         if (typeof scale[0] === 'string') {
             console.error('Cannot set step for array.');
@@ -37,9 +37,9 @@ class SliderModel implements SliderModel {
 
             const sliderValues = this.value;
             this._dataManager.step = newStep;
-            this._dataManager.range = calcSliderRange(scale, newStep);
+            this._dataManager.range = calcRange(scale, newStep);
 
-            if (this._setStateThroughValue(sliderValues)) {
+            if (this._setStateThroughValues(sliderValues)) {
                 this._eventUpdateState();
             } else {
                 console.error(new Error('Failed to set step.'));
@@ -55,7 +55,7 @@ class SliderModel implements SliderModel {
     }
 
     public set value(values: string[] | number[]) {
-        if (this._setStateThroughValue(values)) {
+        if (this._setStateThroughValues(values)) {
             this._eventUpdateState();
         }
     }
@@ -65,7 +65,7 @@ class SliderModel implements SliderModel {
         this._eventUpdateState();
     }
 
-    public onUpdate(callback: SliderModelUpdateEventCallback): void {
+    public onUpdate(callback: HandlerSliderModelUpdate): void {
         this._updateEventCallbackList.push(callback);
     }
 
@@ -73,7 +73,7 @@ class SliderModel implements SliderModel {
         let isCorrect = true;
 
         positions.forEach((position, index) => {
-            if (index > 0 && position < positions[index]) {
+            if (index > 0 && position < positions[index - 1]) {
                 isCorrect = false;
             }
 
@@ -85,10 +85,10 @@ class SliderModel implements SliderModel {
         return isCorrect;
     }
 
-    private _setStateThroughValue(value: string[] | number[]): boolean {
+    private _setStateThroughValues(values: string[] | number[]): boolean {
         const positions: number[] = [];
 
-        value.forEach((val: string | number) => {
+        values.forEach((val: string | number) => {
             const position: number = valueToPointPosition(val, this._dataManager);
             positions.push(position);
         });

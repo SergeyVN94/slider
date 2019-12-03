@@ -1,6 +1,6 @@
 type Command = 'init' | 'onSelect' | 'value' | 'showTooltips' | 'step';
 
-type SliderPluginSelectEventCallback = (value: string[]) => void;
+type HandlerSliderPluginSelect = (value: string[] | number[]) => void;
 
 type SliderPluginResponse = void | boolean | string[] | number[] | string | number | JQuery;
 
@@ -9,7 +9,7 @@ type SliderPluginParams =
     | string[]
     | number
     | number[]
-    | SliderPluginSelectEventCallback
+    | HandlerSliderPluginSelect
     | SliderConfig;
 
 type SliderPluginFunctionInit = (this: JQuery, params: SliderConfig) => void;

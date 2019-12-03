@@ -22,9 +22,7 @@ class DemoPanel {
         this._$checkboxShowTooltips = this._$panel.find('.js-demo-panel__show-tooltips');
         this._scaleType = typeof scale[0] as 'string' | 'number';
 
-        this._inputsSliderValue.forEach((input) => {
-            this._$panel.find('.js-demo-panel__setting').append(input);
-        });
+        this._$panel.find('.js-demo-panel__setting').append(this._inputsSliderValue);
 
         this._$slider.slider('onSelect', this._sliderSelectHandler.bind(this));
         this._$inputStep.on('input.sliderDemoPanel.updateStep', this.__inputStepHandler.bind(this));

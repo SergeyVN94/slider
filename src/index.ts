@@ -80,6 +80,9 @@ import { DemoPanel } from './demo-panel/demo-panel';
     $slider2.slider('init', {
         selectMode: 'range',
         scale: scale2,
+        prettify: (value: number) => {
+            return `${value} -> ${value / 10}`;
+        },
     });
 
     new DemoPanel({
@@ -96,8 +99,9 @@ import { DemoPanel } from './demo-panel/demo-panel';
         viewName: 'vertical',
         selectMode: 'single',
         scale: [0, 1000],
-        prettify: (value: string): string => {
-            return `${value}$`;
+        start: [1000],
+        prettify: (value: string | number): string => {
+            return `${value} $`;
         },
     });
 
@@ -115,6 +119,9 @@ import { DemoPanel } from './demo-panel/demo-panel';
         viewName: 'vertical',
         selectMode: 'range',
         scale: scale4,
+        prettify: (value: string) => {
+            return `${value} -> ${value.toLowerCase()}`;
+        },
     });
 
     new DemoPanel({

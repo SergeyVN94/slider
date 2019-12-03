@@ -5,7 +5,7 @@ const sliderPluginFunction: SliderPluginFunction = function(
 ): SliderPluginResponse {
     if (command === 'onSelect') {
         if (typeof params !== 'function') {
-            throw TypeError('For "onSelect" command expected SliderPluginSelectEventCallback');
+            throw TypeError('For "onSelect" command expected HandlerSliderPluginSelect');
         }
 
         this.get()[0].slider.onSelect(params);

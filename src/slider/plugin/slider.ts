@@ -10,7 +10,7 @@ class Slider implements Slider {
     private readonly _presenter: SliderPresenter;
     private readonly _model: SliderModel;
     private readonly _view: SliderView;
-    private readonly _callbackList: SliderSelectEventCallback[];
+    private readonly _callbackList: HandlerSliderSelect[];
 
     constructor(slider: JQuery, config: SliderConfig) {
         const {
@@ -23,7 +23,7 @@ class Slider implements Slider {
             prettify = (value: string): string => {
                 return value;
             },
-            start = this._getInitialDefaults(scale, selectMode),
+            start = this._getDefaultScale(scale, selectMode),
         } = config;
 
         this._view = new SliderView({
@@ -73,7 +73,7 @@ class Slider implements Slider {
         this._view.isShowTooltips = state;
     }
 
-    public onSelect(callback: SliderSelectEventCallback): void {
+    public onSelect(callback: HandlerSliderSelect): void {
         this._callbackList.push(callback);
     }
 
@@ -82,12 +82,12 @@ class Slider implements Slider {
             return point.value;
         });
 
-        this._callbackList.forEach((callback: SliderSelectEventCallback): void => {
+        this._callbackList.forEach((callback: HandlerSliderSelect): void => {
             callback(values as string[] | number[]);
         });
     }
 
-    private _getInitialDefaults(scale: SliderScale, selectMode: SliderMode): string[] | number[] {
+    private _getDefaultScale(scale: SliderScale, selectMode: SliderMode): string[] | number[] {
         const result = [scale[0]];
 
         if (selectMode === 'range') {

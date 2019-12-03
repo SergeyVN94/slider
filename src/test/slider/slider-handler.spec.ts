@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 
 import { SliderStateHandler } from '../../slider/plugin/domain-model/slider-handler';
-import { calcSliderRange } from '../../slider/plugin/domain-model/slider-model-lib';
+import { calcRange } from '../../slider/plugin/domain-model/slider-model-lib';
 import { SliderModelDataManager } from '../../slider/plugin/domain-model/slider-data-manager';
 
 function getManager(scale: SliderScale, step?: number): SliderModelDataManager {
     return new SliderModelDataManager({
         scale: scale,
-        range: calcSliderRange(scale, step),
+        range: calcRange(scale, step),
         step: step,
     });
 }

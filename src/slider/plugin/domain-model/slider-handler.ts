@@ -1,7 +1,7 @@
 class SliderStateHandler implements SliderModelStateHandler {
     public updateModelState(state: SliderViewState, dataManager: SliderModelDataManager): void {
-        const range = dataManager.range;
-        const points = state.points;
+        const { range } = dataManager;
+        const { points } = state;
         const pointPositions: number[] = [];
         const targetPosition = Math.round(state.targetPosition * range);
 
@@ -13,22 +13,24 @@ class SliderStateHandler implements SliderModelStateHandler {
             pointPositions[0] = Math.round(points[0].position * range);
             pointPositions[1] = Math.round(points[1].position * range);
 
+            const [pointMin, pointMax] = pointPositions;
+
             if (state.pointSelected === 'min') {
                 if (targetPosition >= pointPositions[1]) {
-                    pointPositions[0] = pointPositions[1];
+                    pointPositions[0] = pointMax;
                 } else {
                     pointPositions[0] = targetPosition;
                 }
             } else if (state.pointSelected === 'max') {
                 if (targetPosition <= pointPositions[0]) {
-                    pointPositions[1] = pointPositions[0];
+                    pointPositions[1] = pointMin;
                 } else {
                     pointPositions[1] = targetPosition;
                 }
             } else {
                 const distanceToPoints: number[] = [
-                    Math.abs(pointPositions[0] - targetPosition),
-                    Math.abs(pointPositions[1] - targetPosition),
+                    Math.abs(pointMin - targetPosition),
+                    Math.abs(pointMax - targetPosition),
                 ];
 
                 if (distanceToPoints[0] < distanceToPoints[1]) {
@@ -47,10 +49,7 @@ class SliderStateHandler implements SliderModelStateHandler {
     }
 
     public getModelState(dataManager: SliderModelDataManager): SliderModelPointsState {
-        const pointPositions = dataManager.pointPositions;
-        const scale = dataManager.scale;
-        const step = dataManager.step;
-        const range = dataManager.range;
+        const { pointPositions, scale, step, range } = dataManager;
         const points: SliderModelPointsState = [];
 
         if (typeof scale[0] === 'string') {

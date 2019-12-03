@@ -35,7 +35,7 @@ class SliderView implements SliderView {
     private readonly _driver: SliderViewDriver;
     private readonly _domElements: DomElements;
     private _flags: Flags;
-    private readonly _updateEventCallbackList: SliderViewSelectEventCallback[];
+    private readonly _updateEventCallbackList: HandlerSliderViewSelect[];
     private _pointSelected: 'min' | 'max' | null;
     private _lastModelState: SliderModelPointsState;
     private readonly _prettify: PrettifyFunc;
@@ -70,7 +70,7 @@ class SliderView implements SliderView {
         }
     }
 
-    public onSelect(callback: SliderViewSelectEventCallback): void {
+    public onSelect(callback: HandlerSliderViewSelect): void {
         this._updateEventCallbackList.push(callback);
     }
 
@@ -163,8 +163,8 @@ class SliderView implements SliderView {
         });
 
         return {
+            points,
             targetPosition: this._driver.getTargetPosition(e, this._domElements.$pointContainer),
-            points: points,
             pointSelected: this._pointSelected,
         };
     }
@@ -180,7 +180,7 @@ class SliderView implements SliderView {
     }
 
     private _mouseDownHandler(this: SliderView, e: JQuery.MouseDownEvent): void {
-        const target: JQuery = $(e.target);
+        const target = $(e.target);
 
         if (!target.hasClass('slider__point')) {
             this._emitSelectEvent(e);

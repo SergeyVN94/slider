@@ -1,15 +1,14 @@
-function calcSliderRange(scale: SliderScale, step?: number): number {
+function calcRange(scale: SliderScale, step = 1): number {
     if (typeof scale[0] === 'string') {
         return scale.length - 1;
     }
 
     const minMax: CoupleNum = scale as CoupleNum;
-    return Math.floor((minMax[1] - minMax[0]) / (step || 1));
+    return Math.floor((minMax[1] - minMax[0]) / step);
 }
 
 function numberToPointPosition(value: number, dataManager: SliderModelDataManager): number {
-    const step = dataManager.step;
-    const range = dataManager.range;
+    const { step, range } = dataManager;
     const minMax: CoupleNum = dataManager.scale as CoupleNum;
 
     if (typeof dataManager.scale[0] === 'string') {
@@ -39,7 +38,7 @@ function numberToPointPosition(value: number, dataManager: SliderModelDataManage
 }
 
 function stringToPointPosition(value: string, dataManager: SliderModelDataManager): number {
-    const scale = dataManager.scale;
+    const { scale } = dataManager;
 
     if (typeof dataManager.scale[0] === 'number') {
         console.error(
@@ -50,14 +49,14 @@ function stringToPointPosition(value: string, dataManager: SliderModelDataManage
         return -1;
     }
 
-    let result = -1;
+    let pointPosition = -1;
     (scale as string[]).forEach((item, index) => {
         if (item === value) {
-            result = index;
+            pointPosition = index;
         }
     });
 
-    return result;
+    return pointPosition;
 }
 
 function valueToPointPosition(value: number | string, dataManager: SliderModelDataManager): number {
@@ -68,4 +67,4 @@ function valueToPointPosition(value: number | string, dataManager: SliderModelDa
     return stringToPointPosition(value, dataManager);
 }
 
-export { calcSliderRange, valueToPointPosition };
+export { calcRange, valueToPointPosition };

@@ -1,29 +1,32 @@
 class DriverHorizontal implements SliderViewDriver {
     public getTargetPosition(e: JQuery.Event, pointContainer: JQuery): number {
-        const sliderWidth: number = pointContainer.width();
-        const globalMousePosition: number = e.pageX;
-        const mousePosition: number = globalMousePosition - pointContainer.offset().left;
-        const targetPosition: number = mousePosition / sliderWidth;
+        const sliderWidth = pointContainer.width();
+        const globalMousePosition = e.pageX;
+        const mousePosition = globalMousePosition - pointContainer.offset().left;
+        const targetPosition = mousePosition / sliderWidth;
+
         if (targetPosition < 0) {
             return 0;
         }
+
         if (targetPosition > 1) {
             return 1;
         }
+
         return targetPosition;
     }
 
     public getPointPosition(point: JQuery, pointContainer: JQuery): number {
-        const sliderLeft: number = pointContainer.offset().left;
-        const pointLeft: number = point.offset().left + point.outerWidth() / 2;
+        const sliderLeft = pointContainer.offset().left;
+        const pointLeft = point.offset().left + point.outerWidth() / 2;
 
         return (pointLeft - sliderLeft) / pointContainer.outerWidth();
     }
 
     public setPointPosition(point: JQuery, pointContainer: JQuery, position: number): void {
-        const sliderWidth: number = pointContainer.outerWidth();
-        const pointOffset: number = point.outerWidth() / 2;
-        const marginLeft: number = position * sliderWidth - pointOffset;
+        const sliderWidth = pointContainer.outerWidth();
+        const pointOffset = point.outerWidth() / 2;
+        const marginLeft = position * sliderWidth - pointOffset;
         point.css('left', `${marginLeft}px`);
     }
 
@@ -33,9 +36,11 @@ class DriverHorizontal implements SliderViewDriver {
         position: number,
         value: string
     ): void {
-        const sliderWidth: number = pointContainer.outerWidth();
+        const sliderWidth = pointContainer.outerWidth();
+
         tooltip.html(value);
-        const offset: number = position * sliderWidth - tooltip.outerWidth() / 2;
+
+        const offset = position * sliderWidth - tooltip.outerWidth() / 2;
         tooltip.css('left', `${offset}px`);
     }
 
@@ -44,13 +49,13 @@ class DriverHorizontal implements SliderViewDriver {
         pointContainer: JQuery,
         points: SliderModelPointsState
     ): void {
-        const sliderWidth: number = pointContainer.outerWidth();
-        const offsetMin: number = points[0].position * sliderWidth;
+        const sliderWidth = pointContainer.outerWidth();
+        const offsetMin = points[0].position * sliderWidth;
 
         if (points.length === 1) {
             bgLine.css('right', sliderWidth - offsetMin);
         } else {
-            const offsetMax: number = points[1].position * sliderWidth;
+            const offsetMax = points[1].position * sliderWidth;
             bgLine.css('right', sliderWidth - offsetMax);
             bgLine.css('left', offsetMin);
         }

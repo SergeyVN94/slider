@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import {
-    calcSliderRange,
+    calcRange,
     valueToPointPosition,
 } from '../../slider/plugin/domain-model/slider-model-lib';
 import { SliderModelDataManager } from '../../slider/plugin/domain-model/slider-data-manager';
@@ -9,30 +9,30 @@ import { SliderModelDataManager } from '../../slider/plugin/domain-model/slider-
 function getManager(scale: SliderScale, step?: number): SliderModelDataManager {
     return new SliderModelDataManager({
         scale: scale,
-        range: calcSliderRange(scale, step),
+        range: calcRange(scale, step),
         step: step,
     });
 }
 
-describe('calcSliderRange', () => {
-    it('calcSliderRange with array', () => {
+describe('calcRange', () => {
+    it('calcRange with array', () => {
         const scale: SliderScale = ['a', 'b', 'c', 'd', 'e'];
-        expect(calcSliderRange(scale)).to.equal(4);
+        expect(calcRange(scale)).to.equal(4);
     });
 
-    it('calcSliderRange with array and step', () => {
+    it('calcRange with array and step', () => {
         const scale: SliderScale = ['a', 'b', 'c', 'd', 'e'];
-        expect(calcSliderRange(scale, 2)).to.equal(4);
+        expect(calcRange(scale, 2)).to.equal(4);
     });
 
-    it('calcSliderRange with range', () => {
+    it('calcRange with range', () => {
         const scale: SliderScale = [-100, 1000];
-        expect(calcSliderRange(scale)).to.equal(1100);
+        expect(calcRange(scale)).to.equal(1100);
     });
 
-    it('calcSliderRange with range and step', () => {
+    it('calcRange with range and step', () => {
         const scale: SliderScale = [-100, 1000];
-        expect(calcSliderRange(scale, 3)).to.equal(366);
+        expect(calcRange(scale, 3)).to.equal(366);
     });
 });
 
