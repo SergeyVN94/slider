@@ -1,10 +1,8 @@
 import { SliderModelDataManager } from './slider-data-manager';
-import { calcRange, valueToPointPosition } from './slider-model-lib';
-import { SliderStateHandler } from './slider-handler';
+import { calcRange, valueToPointPosition, updateModel, getModelState } from './slider-model-lib';
 
 class SliderModel implements SliderModel {
     private readonly _dataManager: SliderModelDataManager;
-    private readonly _stateHandler: SliderModelStateHandler;
     private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
 
     constructor(config: SliderModelConfig) {
@@ -15,7 +13,6 @@ class SliderModel implements SliderModel {
         };
 
         this._dataManager = new SliderModelDataManager(managerConfig);
-        this._stateHandler = new SliderStateHandler();
         this._updateEventCallbackList = [];
     }
 
@@ -48,7 +45,7 @@ class SliderModel implements SliderModel {
     }
 
     public get value(): string[] | number[] {
-        const state = this._stateHandler.getModelState(this._dataManager);
+        const state = getModelState(this._dataManager);
         return state.map((point: SliderPointState) => {
             return point.value;
         }) as string[] | number[];
@@ -61,7 +58,7 @@ class SliderModel implements SliderModel {
     }
 
     public setState(state: SliderViewState): void {
-        this._stateHandler.updateModelState(state, this._dataManager);
+        updateModel(state, this._dataManager);
         this._eventUpdateState();
     }
 
@@ -102,9 +99,11 @@ class SliderModel implements SliderModel {
     }
 
     private _eventUpdateState(): void {
-        for (const callback of this._updateEventCallbackList) {
-            callback(this._stateHandler.getModelState(this._dataManager));
-        }
+        const modelState = getModelState(this._dataManager);
+
+        this._updateEventCallbackList.forEach((callback) => {
+            callback(modelState);
+        });
     }
 }
 

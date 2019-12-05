@@ -18,7 +18,7 @@ interface SliderPacket {
     $bgLine: JQuery;
 }
 
-function createSlider(config: TestSliderConfig): SliderPacket {
+const createSlider = function createSlider(config: TestSliderConfig): SliderPacket {
     const $slider: JQuery = $('<div class="slider"></div>');
     const $pointContainer: JQuery = $('<div class="slider__point-container"></div>');
     const $tooltipContainer: JQuery = $('<div class="slider__tooltip-container"></div>');
@@ -28,7 +28,7 @@ function createSlider(config: TestSliderConfig): SliderPacket {
 
     const amountPoints = config.pointPosition.length;
 
-    for (let i = 0; i < amountPoints; i++) {
+    for (let i = 0; i < amountPoints; i += 1) {
         tooltips.push($('<div class="slider__tooltip"></div>'));
     }
 
@@ -64,13 +64,13 @@ function createSlider(config: TestSliderConfig): SliderPacket {
     $slider.append($pointContainer, $tooltipContainer);
 
     return {
-        $slider: $slider,
-        points: points,
-        $pointContainer: $pointContainer,
-        $tooltipContainer: $tooltipContainer,
-        tooltips: tooltips,
-        $bgLine: $bgLine,
+        $slider,
+        points,
+        $pointContainer,
+        $tooltipContainer,
+        tooltips,
+        $bgLine,
     };
-}
+};
 
 export { TestSliderConfig, SliderPacket, createSlider };

@@ -39,24 +39,25 @@ describe('DriverHorizontal driver.getPointPosition', () => {
         expect(driver.getPointPosition(packet.points[0], packet.$pointContainer)).to.equal(1);
     });
 
-    for (let i = 0; i < 15; i++) {
-        const pointPosition: number = Math.random();
-        const pointSize: number = Math.round(Math.random() * 10 + 5);
-        const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
+    for (let i = 0; i < 15; i += 1) {
+        const pointPosition = Math.random();
+        const pointSize = Math.round(Math.random() * 10 + 5);
+        const sliderSize = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
 
         it(`Random point position: ${pointPosition}`, () => {
             const packet: SliderPacket = createSlider({
+                pointSize,
                 size: sliderSize,
                 viewName: 'horizontal',
                 pointPosition: [pointPosition],
-                pointSize: pointSize,
             });
 
             $(document.body).append(packet.$slider);
 
             expect(
                 Math.abs(
-                    driver.getPointPosition(packet.points[0], packet.$tooltipContainer) - pointPosition
+                    driver.getPointPosition(packet.points[0], packet.$tooltipContainer) -
+                        pointPosition
                 ) < 0.01
             ).to.be.true;
         });
@@ -68,16 +69,16 @@ describe('DriverHorizontal driver.setPointPosition', () => {
         $(document.body).remove('.slider');
     });
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 15; i += 1) {
         const pointPosition: number = Math.random();
         const pointSize: number = Math.round(Math.random() * 10 + 5);
         const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
         it(`Set random point position: ${pointPosition}`, () => {
             const packet: SliderPacket = createSlider({
+                pointSize,
                 size: sliderSize,
                 viewName: 'horizontal',
                 pointPosition: [0],
-                pointSize: pointSize,
             });
 
             $(document.body).append(packet.$slider);
@@ -96,17 +97,17 @@ describe('DriverHorizontal driver.updateTooltip', () => {
         $(document.body).remove('.slider');
     });
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 20; i += 1) {
         const pointPosition: number = Math.random();
         const pointSize: number = Math.round(Math.random() * 10 + 5);
         const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
         const tooltipSize: number = Math.round(Math.random() * 30 + 16); // minimum tooltip width 16px
         it(`Set random tooltip position and random size: ${pointPosition} ${tooltipSize}`, () => {
             const packet: SliderPacket = createSlider({
+                pointSize,
                 size: sliderSize,
                 viewName: 'horizontal',
                 pointPosition: [0],
-                pointSize: pointSize,
             });
 
             $(document.body).append(packet.$slider);
@@ -127,7 +128,7 @@ describe('DriverHorizontal driver.updateBgLine', () => {
     });
 
     describe('1 point', () => {
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 20; i += 1) {
             const pointPosition: number = Math.random();
             const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
             it(`Set random position: ${pointPosition}`, () => {
@@ -146,13 +147,14 @@ describe('DriverHorizontal driver.updateBgLine', () => {
                     },
                 ]);
 
-                expect(Math.abs(packet.$bgLine.width() - sliderSize * pointPosition) < 1).to.be.true;
+                expect(Math.abs(packet.$bgLine.width() - sliderSize * pointPosition) < 1).to.be
+                    .true;
             });
         }
     });
 
     describe('2 point', () => {
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 20; i += 1) {
             const pointPosition1: number = Math.random() * 0.5;
             const pointPosition2: number = Math.random() * 0.4 + 0.6;
             const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px

@@ -3,18 +3,18 @@ import * as $ from 'jquery';
 import { DriverHorizontal } from './drivers/slider-driver-horizontal';
 import { DriverVertical } from './drivers/slider-driver-vertical';
 
-function createPoint(type?: 'min' | 'max'): JQuery {
+const createPoint = function createPoint(type?: 'min' | 'max'): JQuery {
     return $('<div/>', {
         class: 'slider__point',
         'data-type': type || '',
     });
-}
+};
 
-function createTooltip(): JQuery {
+const createTooltip = function createTooltip(): JQuery {
     return $('<div/>', {
         class: 'slider__tooltip',
     });
-}
+};
 
 interface Flags {
     isShowTooltips: boolean;
