@@ -11,7 +11,9 @@ const numberToPointPosition = function numberToPointPosition(
     value: number,
     dataManager: SliderModelDataManager
 ): number {
-    const { step, range } = dataManager;
+    const {
+        step, range,
+    } = dataManager;
     const minMax: CoupleNum = dataManager.scale as CoupleNum;
 
     if (typeof dataManager.scale[0] === 'string') {
@@ -131,7 +133,12 @@ const updateModel = function updateModel(
 const getModelState = function getModelState(
     dataManager: SliderModelDataManager
 ): SliderModelPointsState {
-    const { pointPositions, scale, step, range } = dataManager;
+    const {
+        pointPositions,
+        scale,
+        step,
+        range,
+    } = dataManager;
     const points: SliderModelPointsState = [];
 
     if (typeof scale[0] === 'string') {
@@ -154,4 +161,9 @@ const getModelState = function getModelState(
     return points;
 };
 
-export { calcRange, valueToPointPosition, updateModel, getModelState };
+export {
+    calcRange,
+    valueToPointPosition,
+    updateModel,
+    getModelState,
+};

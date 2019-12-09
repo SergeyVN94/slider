@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 
-import { DriverHorizontal } from './drivers/slider-driver-horizontal';
-import { DriverVertical } from './drivers/slider-driver-vertical';
+import DriverHorizontal from './drivers/DriverHorizontal';
+import DriverVertical from './drivers/DriverVertical';
 
 const createPoint = function createPoint(type?: 'min' | 'max'): JQuery {
     return $('<div/>', {
@@ -31,7 +31,7 @@ interface DomElements {
     $bgLine: JQuery;
 }
 
-class SliderView implements SliderView {
+class View implements SliderView {
     private readonly _driver: SliderViewDriver;
     private readonly _domElements: DomElements;
     private _flags: Flags;
@@ -45,11 +45,9 @@ class SliderView implements SliderView {
         this._domElements = this._createDomElements(config);
         this._updateEventCallbackList = [];
         this._pointSelected = null;
-        this._prettify =
-            config.prettify ||
-            ((value: string): string => {
-                return value;
-            });
+        this._prettify = config.prettify || ((value: string): string => {
+            return value;
+        });
         this._driver = this._createDriver(config.viewName);
 
         this._initDomElements();
@@ -123,11 +121,15 @@ class SliderView implements SliderView {
             }),
         };
 
-        domElements.points.push(createPoint('min'));
+        domElements.points.push(
+            createPoint('min').css('z-index', 4)
+        );
         domElements.tooltips.push(createTooltip());
 
         if (config.selectMode === 'range') {
-            domElements.points.push(createPoint('max'));
+            domElements.points.push(
+                createPoint('max').css('z-index', 5)
+            );
             domElements.tooltips.push(createTooltip());
         }
 
@@ -169,17 +171,17 @@ class SliderView implements SliderView {
         };
     }
 
-    private _emitSelectEvent(this: SliderView, e: JQuery.Event): void {
+    private _emitSelectEvent(this: View, e: JQuery.Event): void {
         this._updateEventCallbackList.forEach((callback) => {
             callback(this._getViewState(e));
         });
     }
 
-    private _mouseMoveHandler(this: SliderView, e: JQuery.Event): void {
+    private _mouseMoveHandler(this: View, e: JQuery.Event): void {
         this._emitSelectEvent(e);
     }
 
-    private _mouseDownHandler(this: SliderView, e: JQuery.MouseDownEvent): void {
+    private _mouseDownHandler(this: View, e: JQuery.MouseDownEvent): void {
         const target = $(e.target);
 
         if (!target.hasClass('slider__point')) {
@@ -200,7 +202,7 @@ class SliderView implements SliderView {
         }
     }
 
-    private _mouseUpHandler(this: SliderView): void {
+    private _mouseUpHandler(this: View): void {
         this._pointSelected = null;
         $(document).off('mousemove.slider.moveHandler');
     }
@@ -211,7 +213,7 @@ class SliderView implements SliderView {
                 this._domElements.tooltips[index],
                 this._domElements.$tooltipContainer,
                 point.position,
-                this._prettify(point.value.toString())
+                this._prettify(point.value)
             );
         });
     }
@@ -223,4 +225,7 @@ class SliderView implements SliderView {
     }
 }
 
-export { SliderView, createPoint, createTooltip };
+export default View;
+export {
+    createPoint, createTooltip,
+};

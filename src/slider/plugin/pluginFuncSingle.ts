@@ -1,4 +1,4 @@
-const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(
+const pluginFunctionSingle = function pluginFunctionCommandOnly(
     this: JQuery,
     command: Command
 ): SliderPluginResponse {
@@ -15,4 +15,4 @@ const sliderPluginFunctionSingle: SliderPluginFunctionSingle = function(
     }
 };
 
-export { sliderPluginFunctionSingle };
+export default pluginFunctionSingle;

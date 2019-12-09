@@ -1,4 +1,4 @@
-class SliderPresenter {
+class Presenter {
     readonly _view: SliderView;
     readonly _model: SliderModel;
 
@@ -18,4 +18,4 @@ class SliderPresenter {
     }
 }
 
-export { SliderPresenter };
+export default Presenter;

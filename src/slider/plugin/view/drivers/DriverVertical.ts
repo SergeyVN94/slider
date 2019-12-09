@@ -65,4 +65,4 @@ class DriverVertical implements SliderViewDriver {
     }
 }
 
-export { DriverVertical };
+export default DriverVertical;

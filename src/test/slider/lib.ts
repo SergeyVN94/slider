@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import { createPoint } from '../../slider/plugin/view/slider-view';
+import { createPoint } from '../../slider/plugin/view/View';
 
 interface TestSliderConfig {
     size: number;
@@ -73,4 +73,6 @@ const createSlider = function createSlider(config: TestSliderConfig): SliderPack
     };
 };
 
-export { TestSliderConfig, SliderPacket, createSlider };
+export {
+    TestSliderConfig, SliderPacket, createSlider,
+};

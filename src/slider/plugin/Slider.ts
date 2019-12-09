@@ -1,6 +1,6 @@
-import { SliderView } from './view/slider-view';
-import { SliderPresenter } from './view/slider-presenter';
-import { SliderModel } from './domain-model/slider-model';
+import View from './view/View';
+import Presenter from './view/Presenter';
+import Model from './domain-model/Model';
 
 const hasOwnProp = function hasOwnProp(obj: object, field: string | number | symbol): boolean {
     return Object.prototype.hasOwnProperty.apply(obj, [field]);
@@ -52,7 +52,7 @@ const isStartValuesCorrect = function isStartValuesCorrect(
     if (selectModeRange && !typeScaleNumber) {
         if (
             (scale as string[]).indexOf(values[0] as string) >
-            (scale as string[]).indexOf(values[1] as string)
+      (scale as string[]).indexOf(values[1] as string)
         ) {
             isCorrect = false;
         }
@@ -62,9 +62,9 @@ const isStartValuesCorrect = function isStartValuesCorrect(
 };
 
 class Slider implements Slider {
-    private readonly _presenter: SliderPresenter;
-    private readonly _model: SliderModel;
-    private readonly _view: SliderView;
+    private readonly _presenter: Presenter;
+    private readonly _model: Model;
+    private readonly _view: View;
     private readonly _callbackList: HandlerSliderSelect[];
 
     constructor(slider: JQuery, config: SliderConfig) {
@@ -81,7 +81,7 @@ class Slider implements Slider {
             start = this._getDefaultStartValues(scale, selectMode),
         } = config;
 
-        this._view = new SliderView({
+        this._view = new View({
             selectMode,
             showTooltips,
             viewName,
@@ -90,13 +90,13 @@ class Slider implements Slider {
             $slider: slider,
         });
 
-        this._model = new SliderModel({
+        this._model = new Model({
             selectMode,
             scale,
             step,
         });
 
-        this._presenter = new SliderPresenter(this._view, this._model);
+        this._presenter = new Presenter(this._view, this._model);
         this._callbackList = [];
 
         this._model.onUpdate(this.__onModelUpdateHandler.bind(this));
@@ -142,10 +142,6 @@ class Slider implements Slider {
         });
     }
 
-    private _isStartValuesCorrect(values: string[] | number[], scale: SliderScale): boolean {
-        return isStartValuesCorrect(values, scale);
-    }
-
     private _getDefaultStartValues(
         scale: SliderScale,
         selectMode: SliderMode
@@ -160,4 +156,7 @@ class Slider implements Slider {
     }
 }
 
-export { Slider, hasOwnProp, isStartValuesCorrect };
+export default Slider;
+export {
+    hasOwnProp, isStartValuesCorrect,
+};

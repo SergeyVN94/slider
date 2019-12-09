@@ -1,22 +1,24 @@
 import { expect } from 'chai';
 import * as $ from 'jquery';
 
-import { DriverVertical } from '../../slider/plugin/view/drivers/slider-driver-vertical';
-import { SliderPacket, createSlider } from './slider-tests-lib';
+import DriverHorizontal from '../../slider/plugin/view/drivers/DriverHorizontal';
+import {
+    SliderPacket, createSlider,
+} from './lib';
 
-const driver: SliderViewDriver = new DriverVertical();
+const driver: SliderViewDriver = new DriverHorizontal();
 
 document.body.style.padding = '50px';
 
-describe('DriverVertical driver.getPointPosition', () => {
+describe('DriverHorizontal driver.getPointPosition', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
 
-    it('Minimum point position', () => {
+    it('Leftmost point position', () => {
         const packet: SliderPacket = createSlider({
             size: 540,
-            viewName: 'vertical',
+            viewName: 'horizontal',
             pointPosition: [0],
             pointSize: 14,
         });
@@ -26,10 +28,10 @@ describe('DriverVertical driver.getPointPosition', () => {
         expect(driver.getPointPosition(packet.points[0], packet.$pointContainer)).to.equal(0);
     });
 
-    it('Maximum point position', () => {
+    it('Rightmost point position', () => {
         const packet: SliderPacket = createSlider({
             size: 640,
-            viewName: 'vertical',
+            viewName: 'horizontal',
             pointPosition: [1],
             pointSize: 16,
         });
@@ -40,15 +42,15 @@ describe('DriverVertical driver.getPointPosition', () => {
     });
 
     for (let i = 0; i < 15; i += 1) {
-        const pointPosition: number = Math.random();
-        const pointSize: number = Math.round(Math.random() * 10 + 5);
-        const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
+        const pointPosition = Math.random();
+        const pointSize = Math.round(Math.random() * 10 + 5);
+        const sliderSize = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
 
         it(`Random point position: ${pointPosition}`, () => {
             const packet: SliderPacket = createSlider({
                 pointSize,
                 size: sliderSize,
-                viewName: 'vertical',
+                viewName: 'horizontal',
                 pointPosition: [pointPosition],
             });
 
@@ -56,15 +58,17 @@ describe('DriverVertical driver.getPointPosition', () => {
 
             expect(
                 Math.abs(
-                    driver.getPointPosition(packet.points[0], packet.$pointContainer) -
-                        pointPosition
+                    driver.getPointPosition(
+                        packet.points[0],
+                        packet.$tooltipContainer
+                    ) - pointPosition
                 ) < 0.01
             ).to.be.true;
         });
     }
 });
 
-describe('DriverVertical driver.setPointPosition', () => {
+describe('DriverHorizontal driver.setPointPosition', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -72,12 +76,13 @@ describe('DriverVertical driver.setPointPosition', () => {
     for (let i = 0; i < 15; i += 1) {
         const pointPosition: number = Math.random();
         const pointSize: number = Math.round(Math.random() * 10 + 5);
-        const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
+        // minimum slider size 100px
+        const sliderSize: number = Math.round(Math.random() * 1000 + 100);
         it(`Set random point position: ${pointPosition}`, () => {
             const packet: SliderPacket = createSlider({
                 pointSize,
                 size: sliderSize,
-                viewName: 'vertical',
+                viewName: 'horizontal',
                 pointPosition: [0],
             });
 
@@ -85,14 +90,14 @@ describe('DriverVertical driver.setPointPosition', () => {
             driver.setPointPosition(packet.points[0], packet.$pointContainer, pointPosition);
 
             const targetPos: number = sliderSize * pointPosition - pointSize / 2;
-            const currentPos: number = parseInt(packet.points[0].css('bottom'), 10);
+            const currentPos: number = parseInt(packet.points[0].css('left'), 10);
 
             expect(Math.abs(targetPos - currentPos) < 1).to.be.true;
         });
     }
 });
 
-describe('DriverVertical driver.updateTooltip', () => {
+describe('DriverHorizontal driver.updateTooltip', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -100,29 +105,31 @@ describe('DriverVertical driver.updateTooltip', () => {
     for (let i = 0; i < 20; i += 1) {
         const pointPosition: number = Math.random();
         const pointSize: number = Math.round(Math.random() * 10 + 5);
-        const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
-        const tooltipSize: number = Math.round(Math.random() * 5 + 16); // minimum tooltip height 16px
+        // minimum slider size 100px
+        const sliderSize: number = Math.round(Math.random() * 1000 + 100);
+        // minimum tooltip width 16px
+        const tooltipSize: number = Math.round(Math.random() * 30 + 16);
         it(`Set random tooltip position and random size: ${pointPosition} ${tooltipSize}`, () => {
             const packet: SliderPacket = createSlider({
                 pointSize,
                 size: sliderSize,
-                viewName: 'vertical',
+                viewName: 'horizontal',
                 pointPosition: [0],
             });
 
             $(document.body).append(packet.$slider);
-            packet.tooltips[0].css('height', `${tooltipSize}px`);
+            packet.tooltips[0].css('width', `${tooltipSize}px`);
             driver.updateTooltip(packet.tooltips[0], packet.$tooltipContainer, pointPosition, '');
 
             const targetPos: number = sliderSize * pointPosition - tooltipSize / 2;
-            const currentPos: number = parseInt(packet.tooltips[0].css('bottom'), 10);
+            const currentPos: number = parseInt(packet.tooltips[0].css('left'), 10);
 
             expect(Math.abs(targetPos - currentPos) < 1).to.be.true;
         });
     }
 });
 
-describe('DriverVertical driver.updateBgLine', () => {
+describe('DriverHorizontal driver.updateBgLine', () => {
     afterEach((): void => {
         $(document.body).remove('.slider');
     });
@@ -130,11 +137,12 @@ describe('DriverVertical driver.updateBgLine', () => {
     describe('1 point', () => {
         for (let i = 0; i < 20; i += 1) {
             const pointPosition: number = Math.random();
-            const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
+            // minimum slider size 100px
+            const sliderSize: number = Math.round(Math.random() * 1000 + 100);
             it(`Set random position: ${pointPosition}`, () => {
                 const packet: SliderPacket = createSlider({
                     size: sliderSize,
-                    viewName: 'vertical',
+                    viewName: 'horizontal',
                     pointPosition: [1],
                     pointSize: 10,
                 });
@@ -147,8 +155,9 @@ describe('DriverVertical driver.updateBgLine', () => {
                     },
                 ]);
 
-                expect(Math.abs(packet.$bgLine.height() - sliderSize * pointPosition) < 1).to.be
-                    .true;
+                expect(
+                    Math.abs(packet.$bgLine.width() - sliderSize * pointPosition) < 1
+                ).to.be.true;
             });
         }
     });
@@ -157,11 +166,12 @@ describe('DriverVertical driver.updateBgLine', () => {
         for (let i = 0; i < 20; i += 1) {
             const pointPosition1: number = Math.random() * 0.5;
             const pointPosition2: number = Math.random() * 0.4 + 0.6;
-            const sliderSize: number = Math.round(Math.random() * 1000 + 100); // minimum slider size 100px
+            // minimum slider size 100px
+            const sliderSize: number = Math.round(Math.random() * 1000 + 100);
             it(`Set random positions: ${pointPosition1} ${pointPosition2}`, () => {
                 const packet: SliderPacket = createSlider({
                     size: sliderSize,
-                    viewName: 'vertical',
+                    viewName: 'horizontal',
                     pointPosition: [1],
                     pointSize: 10,
                 });
@@ -179,7 +189,7 @@ describe('DriverVertical driver.updateBgLine', () => {
 
                 expect(
                     Math.abs(
-                        packet.$bgLine.height() - sliderSize * (pointPosition2 - pointPosition1)
+                        packet.$bgLine.width() - sliderSize * (pointPosition2 - pointPosition1)
                     ) < 1
                 ).to.be.true;
             });

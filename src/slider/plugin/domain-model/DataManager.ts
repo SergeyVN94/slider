@@ -1,4 +1,4 @@
-class SliderModelDataManager implements SliderModelDataManager {
+class DataManager implements SliderModelDataManager {
     private _range: number;
     private _scale: SliderScale;
     private _step: number;
@@ -44,4 +44,4 @@ class SliderModelDataManager implements SliderModelDataManager {
     }
 }
 
-export { SliderModelDataManager };
+export default DataManager;

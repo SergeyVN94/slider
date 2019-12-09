@@ -4,11 +4,11 @@ import {
     calcRange,
     valueToPointPosition,
     updateModel,
-} from '../../slider/plugin/domain-model/slider-model-lib';
-import { SliderModelDataManager } from '../../slider/plugin/domain-model/slider-data-manager';
+} from '../../slider/plugin/domain-model/lib';
+import DataManager from '../../slider/plugin/domain-model/DataManager';
 
-const getManager = function getManager(scale: SliderScale, step?: number): SliderModelDataManager {
-    return new SliderModelDataManager({
+const getManager = function getManager(scale: SliderScale, step?: number): DataManager {
+    return new DataManager({
         scale,
         step,
         range: calcRange(scale, step),

@@ -1,7 +1,12 @@
-import { SliderModelDataManager } from './slider-data-manager';
-import { calcRange, valueToPointPosition, updateModel, getModelState } from './slider-model-lib';
+import DataManager from './DataManager';
+import {
+    calcRange,
+    valueToPointPosition,
+    updateModel,
+    getModelState,
+} from './lib';
 
-class SliderModel implements SliderModel {
+class Model implements SliderModel {
     private readonly _dataManager: SliderModelDataManager;
     private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
 
@@ -12,7 +17,7 @@ class SliderModel implements SliderModel {
             step: config.step,
         };
 
-        this._dataManager = new SliderModelDataManager(managerConfig);
+        this._dataManager = new DataManager(managerConfig);
         this._updateEventCallbackList = [];
     }
 
@@ -107,4 +112,4 @@ class SliderModel implements SliderModel {
     }
 }
 
-export { SliderModel };
+export default Model;

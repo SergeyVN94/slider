@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { isStartValuesCorrect } from '../../slider/plugin/slider';
+import { isStartValuesCorrect } from '../../slider/plugin/Slider';
 
 describe('Slider isStartValuesCorrect.', () => {
     describe('Scale range number.', () => {
@@ -94,8 +94,9 @@ describe('Slider isStartValuesCorrect.', () => {
             });
 
             it('Minimum and maximum are swapped.', () => {
-                expect(isStartValuesCorrect([scale[scale.length - 1], scale[0]], scale)).to.be
-                    .false;
+                expect(
+                    isStartValuesCorrect([scale[scale.length - 1], scale[0]], scale)
+                ).to.be.false;
             });
 
             it('Incorrect value types.', () => {

@@ -8,21 +8,23 @@ class DemoPanel {
     private readonly _$inputStep: JQuery;
     private readonly _$checkboxShowTooltips: JQuery;
     private readonly _inputsSliderValue: JQuery[];
-    private readonly _selectMode: SliderMode;
     private readonly _scaleType: 'string' | 'number';
 
     constructor(config: DemoPanelConfig) {
-        const { $slider, selector, selectMode, scale = [0, 100] } = config;
+        const {
+            $slider, selector, selectMode, scale = [0, 100],
+        } = config;
 
         this._$panel = $(selector);
         this._$slider = $slider;
-        this._selectMode = selectMode;
         this._inputsSliderValue = this._createInputsSliderValue(selectMode);
         this._$inputStep = this._$panel.find('.js-demo-panel__input-step');
         this._$checkboxShowTooltips = this._$panel.find('.js-demo-panel__show-tooltips');
         this._scaleType = typeof scale[0] as 'string' | 'number';
 
-        this._$panel.find('.js-demo-panel__setting').append(this._inputsSliderValue);
+        this._$panel
+            .find('.js-demo-panel__setting')
+            .append(this._wrapInputsSliderValue(this._inputsSliderValue).reverse());
 
         this._$slider.slider('onSelect', this._sliderSelectHandler.bind(this));
         this._$inputStep.on('input.sliderDemoPanel.updateStep', this.__inputStepHandler.bind(this));
@@ -58,15 +60,23 @@ class DemoPanel {
         const result: JQuery[] = [this._createInputSliderValue()];
 
         if (mode === 'range') {
-            result.push(this._createInputSliderValue());
+            result.push(this._createInputSliderValue('max'));
         }
 
         return result;
     }
 
+    private _wrapInputsSliderValue(inputs: JQuery[]): JQuery[] {
+        return inputs.map(
+            (input): JQuery => {
+                return $(`<label>${input.attr('data-type')}: </label>`).append(input);
+            }
+        );
+    }
+
     private _focusOutHandler(): void {
         const values = this._inputsSliderValue.map((input) => {
-            const val = input.val().toString();
+            const val = String(input.val());
 
             if (this._scaleType === 'number') {
                 return Number(val);

@@ -19,7 +19,7 @@
     height: 100%;
     width: $tooltip-height;
     top: -100%;
-    left: -$tooltip-container-offset;
+    left: -$tooltip-container-offset + 10px;
   }
 
   .slider__tooltip {

@@ -1,11 +1,11 @@
-const sliderPluginFunction: SliderPluginFunction = function(
+const pluginFunction = function defaultPluginFunction(
     this: JQuery,
     command: Command,
     params: SliderPluginParams
 ): SliderPluginResponse {
     if (command === 'onSelect') {
         if (typeof params !== 'function') {
-            throw TypeError('For "onSelect" command expected HandlerSliderPluginSelect');
+            throw new TypeError('For "onSelect" command expected HandlerSliderPluginSelect');
         }
 
         this.get()[0].slider.onSelect(params);
@@ -20,10 +20,10 @@ const sliderPluginFunction: SliderPluginFunction = function(
     }
 
     if (command === 'step') {
-        return this.get()[0].slider.step = params as number;
+        return (this.get()[0].slider.step = params as number);
     }
 
     return this;
 };
 
-export { sliderPluginFunction };
+export default pluginFunction;

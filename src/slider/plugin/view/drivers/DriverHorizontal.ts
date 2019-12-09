@@ -62,4 +62,4 @@ class DriverHorizontal implements SliderViewDriver {
     }
 }
 
-export { DriverHorizontal };
+export default DriverHorizontal;

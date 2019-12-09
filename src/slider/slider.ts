@@ -1,1 +1,1 @@
-import './plugin/slider-plugin';
+import './plugin/plugin';
