@@ -1,7 +1,6 @@
 'use strict';
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     context: `${__dirname}/src`,
@@ -18,14 +17,15 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     module: {
-        rules: [{
+        rules: [
+            {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
             {
                 test: /\.pug$/,
-                loader: 'pug-loader'
+                loader: 'pug-loader',
             },
             {
                 test: /\.(sa|sc|c)ss$/,
@@ -37,17 +37,17 @@ module.exports = {
             },
             {
                 test: /\.node$/,
-                use: 'node-loader'
-            }
-        ]
+                use: 'node-loader',
+            },
+        ],
     },
     watchOptions: {
-        aggregateTimeout: 100
+        aggregateTimeout: 100,
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.pug',
-            filename: 'index.html'
-        })
-    ]
+            filename: 'index.html',
+        }),
+    ],
 };

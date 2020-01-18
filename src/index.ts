@@ -63,22 +63,20 @@ import { DemoPanel } from './demo-panel/demo-panel';
     const $slider1: JQuery = $('#slider1');
 
     $slider1.slider('init', {
-        selectMode: 'single',
+        start: ['Январь'],
         scale: scale1,
     });
 
     new DemoPanel({
         $slider: $slider1,
-        selector: '#panel1',
-        selectMode: 'single',
-        scale: scale1,
+        $panel: $('#panel1'),
     });
 
     // slider 2
     const $slider2: JQuery = $('#slider2');
 
     $slider2.slider('init', {
-        selectMode: 'range',
+        start: [-444, 777],
         scale: scale2,
         prettify: (value: number) => {
             return `${value} -> ${value / 10}`;
@@ -87,9 +85,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
 
     new DemoPanel({
         $slider: $slider2,
-        selector: '#panel2',
-        selectMode: 'range',
-        scale: scale2,
+        $panel: $('#panel2'),
     });
 
     // slider 3
@@ -97,19 +93,16 @@ import { DemoPanel } from './demo-panel/demo-panel';
 
     $slider3.slider('init', {
         viewName: 'vertical',
-        selectMode: 'single',
-        scale: [0, 1000],
-        start: [1000],
-        prettify: (value: string | number): string => {
+        start: [555],
+        scale: scale3,
+        prettify: (value: number): string => {
             return `${value} $`;
         },
     });
 
     new DemoPanel({
         $slider: $slider3,
-        selector: '#panel3',
-        selectMode: 'single',
-        scale: scale3,
+        $panel: $('#panel3'),
     });
 
     // slider 4
@@ -117,7 +110,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
 
     $slider4.slider('init', {
         viewName: 'vertical',
-        selectMode: 'range',
+        start: ['Ю', 'М'],
         scale: scale4,
         prettify: (value: string) => {
             return `${value} -> ${value.toLowerCase()}`;
@@ -126,8 +119,6 @@ import { DemoPanel } from './demo-panel/demo-panel';
 
     new DemoPanel({
         $slider: $slider4,
-        selector: '#panel4',
-        selectMode: 'range',
-        scale: scale4,
+        $panel: $('#panel4'),
     });
 });

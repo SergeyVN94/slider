@@ -1,7 +1,13 @@
+import CLASSES from '../classes';
+
 class DriverVertical implements SliderViewDriver {
-    public getTargetPosition(e: JQuery.Event, $pointContainer: JQuery): number {
+    constructor($slider: JQuery) {
+        $slider.addClass(CLASSES.THEME.VERTICAL);
+    }
+
+    public getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
         const sliderHeight = $pointContainer.outerHeight();
-        const globalMousePosition = e.pageY;
+        const globalMousePosition = ev.pageY;
         const mousePosition = globalMousePosition - $pointContainer.offset().top;
         const targetPosition = 1 - mousePosition / sliderHeight;
 
@@ -49,7 +55,7 @@ class DriverVertical implements SliderViewDriver {
     public updateBgLine(
         $bgLine: JQuery,
         $pointContainer: JQuery,
-        points: SliderModelPointsState
+        points: SliderPointState[]
     ): void {
         const sliderHeight = $pointContainer.outerHeight();
 

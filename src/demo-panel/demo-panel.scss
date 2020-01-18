@@ -1,5 +1,6 @@
-@import './demo-panel__slider-container.scss';
-@import './demo-panel__setting.scss';
+@import './demo-panel__slider.scss';
+@import './demo-panel__config-panel.scss';
+@import './demo-panel__input-step.scss';
 
 $max-size: 700px;
 
@@ -14,8 +15,4 @@ $max-size: 700px;
   align-items: center;
 }
 
-input[type='number'] {
-  margin: 3px;
-  padding: 3px;
-  box-sizing: border-box;
-}
+

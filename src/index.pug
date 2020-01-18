@@ -1,3 +1,5 @@
+include ./demo-panel/demo-panel.pug
+
 <!DOCTYPE html>
 html(lang="ru")
     head
@@ -5,41 +7,32 @@ html(lang="ru")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         meta(http-equiv="X-UA-Compatible", content="ie=edge")
         title Slider
-    body.demo-page
-        include ./demo-panel/demo-panel.pug
-        +demo-panel({
-            classes: [
-                'demo-page__demo-panel'
-            ],
-            id: 'panel1',
-            slider: {
-                id: 'slider1'
-            }
-        })
-        +demo-panel({
-            classes: [
-                'demo-page__demo-panel'
-            ],
-            id: 'panel2',
-            slider: {
-                id: 'slider2'
-            }
-        })
-        +demo-panel({
-            classes: [
-                'demo-page__demo-panel'
-            ],
-            id: 'panel3',
-            slider: {
-                id: 'slider3'
-            }
-        })
-        +demo-panel({
-            classes: [
-                'demo-page__demo-panel'
-            ],
-            id: 'panel4',
-            slider: {
-                id: 'slider4'
-            }
-        })
+    body.page
+        .page__demo-panel
+            +demo-panel({
+                id: 'panel1',
+                slider: {
+                    id: 'slider1',
+                },
+            })
+        .demo-page__demo-panel
+            +demo-panel({
+                id: 'panel2',
+                slider: {
+                    id: 'slider2',
+                },
+            })
+        .demo-page__demo-panel
+            +demo-panel({
+                id: 'panel3',
+                slider: {
+                    id: 'slider3',
+                },
+            })
+        .demo-page__demo-panel
+            +demo-panel({
+                id: 'panel4',
+                slider: {
+                    id: 'slider4',
+                },
+            })

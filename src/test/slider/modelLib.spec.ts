@@ -1,9 +1,7 @@
 import { expect } from 'chai';
 
 import {
-    calcRange,
-    valueToPointPosition,
-    updateModel,
+    getAllSteps,
 } from '../../slider/plugin/domain-model/lib';
 import DataManager from '../../slider/plugin/domain-model/DataManager';
 

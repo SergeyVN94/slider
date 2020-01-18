@@ -1,7 +1,7 @@
 class DriverHorizontal implements SliderViewDriver {
-    public getTargetPosition(e: JQuery.Event, pointContainer: JQuery): number {
+    public getTargetPosition(ev: JQuery.Event, pointContainer: JQuery): number {
         const sliderWidth = pointContainer.width();
-        const globalMousePosition = e.pageX;
+        const globalMousePosition = ev.pageX;
         const mousePosition = globalMousePosition - pointContainer.offset().left;
         const targetPosition = mousePosition / sliderWidth;
 
@@ -47,7 +47,7 @@ class DriverHorizontal implements SliderViewDriver {
     public updateBgLine(
         bgLine: JQuery,
         pointContainer: JQuery,
-        points: SliderModelPointsState
+        points: SliderPointState[]
     ): void {
         const sliderWidth = pointContainer.outerWidth();
         const offsetMin = points[0].position * sliderWidth;

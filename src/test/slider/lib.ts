@@ -32,11 +32,9 @@ const createSlider = function createSlider(config: TestSliderConfig): SliderPack
         tooltips.push($('<div class="slider__tooltip"></div>'));
     }
 
-    if (amountPoints === 1) {
-        points.push(createPoint());
-    } else {
-        points.push(createPoint('min'));
-        points.push(createPoint('max'));
+    points.push(createPoint(0));
+    if (amountPoints > 1) {
+        points.push(createPoint(1));
     }
 
     let marginName = '';

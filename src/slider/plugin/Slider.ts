@@ -62,97 +62,78 @@ const isStartValuesCorrect = function isStartValuesCorrect(
 };
 
 class Slider implements Slider {
-    private readonly _presenter: Presenter;
-    private readonly _model: Model;
-    private readonly _view: View;
-    private readonly _callbackList: HandlerSliderSelect[];
+    private readonly presenter: Presenter;
+    private readonly model: Model;
+    private readonly view: View;
+    private updateEventCallback: HandlerSliderSelect;
 
-    constructor(slider: JQuery, config: SliderConfig) {
+    constructor(config: {
+        readonly $slider: JQuery;
+        readonly start?: string[] | number[];
+        readonly scale?: SliderScale;
+        readonly viewName?: SliderViewName;
+        readonly showTooltips?: boolean;
+        readonly step?: number;
+        readonly prettify?: PrettifyFunc;
+        readonly showBgLine?: boolean;
+    }) {
         const {
-            selectMode = 'single',
-            showTooltips = true,
-            viewName = 'horizontal',
             scale = [0, 100] as CoupleNum,
             step = 1,
-            showBgLine = true,
-            prettify = (value: string): string => {
-                return value;
-            },
-            start = this._getDefaultStartValues(scale, selectMode),
+            start = [scale[0]] as string[] | number[],
         } = config;
 
-        this._view = new View({
-            selectMode,
-            showTooltips,
-            viewName,
-            prettify,
-            showBgLine,
-            $slider: slider,
+        this.view = new View({
+            points: start.length,
+            ...config,
         });
-
-        this._model = new Model({
-            selectMode,
+        this.model = new Model({
+            start,
             scale,
             step,
         });
 
-        this._presenter = new Presenter(this._view, this._model);
-        this._callbackList = [];
-
-        this._model.onUpdate(this.__onModelUpdateHandler.bind(this));
-
-        this._model.value = start;
+        this.presenter = new Presenter(this.view, this.model);
+        this.updateEventCallback = null;
+        this.model.onUpdate(this.onModelUpdateHandler.bind(this));
     }
 
     public get value(): string[] | number[] {
-        return this._model.value;
+        return this.model.value;
     }
 
     public set value(value: string[] | number[]) {
-        this._model.value = value;
+        this.model.value = value;
     }
 
     public get step(): number {
-        return this._model.step;
+        return this.model.step;
     }
 
     public set step(value: number) {
-        this._model.step = value;
+        this.model.step = value;
     }
 
     public get isShowTooltips(): boolean {
-        return this._view.isShowTooltips;
+        return this.view.showTooltips;
     }
 
     public set isShowTooltips(state: boolean) {
-        this._view.isShowTooltips = state;
+        this.view.showTooltips = state;
     }
 
     public onSelect(callback: HandlerSliderSelect): void {
-        this._callbackList.push(callback);
+        this.updateEventCallback = callback;
     }
 
-    private __onModelUpdateHandler(points: SliderModelPointsState): void {
+    private onModelUpdateHandler(points: SliderPointState[]): void {
         const values = points.map((point) => {
             return point.value;
         });
 
-        this._callbackList.forEach((callback: HandlerSliderSelect): void => {
-            callback(values as string[] | number[]);
-        });
-    }
-
-    private _getDefaultStartValues(
-        scale: SliderScale,
-        selectMode: SliderMode
-    ): string[] | number[] {
-        const result = [scale[0]];
-
-        if (selectMode === 'range') {
-            result.push(scale[scale.length - 1]);
+        if (this.updateEventCallback !== null) {
+            this.updateEventCallback(values as string[] | number[]);
         }
-
-        return result as string[] | number[];
     }
 }
 

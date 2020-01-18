@@ -5,7 +5,7 @@ module.exports = function(config) {
         frameworks: ['mocha', 'chai', 'sinon'],
         files: ['dist/style.js', 'src/test/**/*.spec.ts'],
         preprocessors: {
-            'src/test/**/*.spec.ts': ['webpack', 'sourcemap'],
+            'src/**/*.spec.ts': ['webpack', 'sourcemap'],
         },
         webpack: {
             module: webpackConfig.module,

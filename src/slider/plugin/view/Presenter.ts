@@ -1,19 +1,17 @@
 class Presenter {
-    readonly _view: SliderView;
-    readonly _model: SliderModel;
+    readonly view: SliderView;
+    readonly model: SliderModel;
 
     constructor(view: SliderView, model: SliderModel) {
-        this._view = view;
-        this._model = model;
+        this.view = view;
+        this.model = model;
 
-        this._view.onSelect((viewState: SliderViewState): void => {
-            // console.log(viewState);
-            this._model.setState(viewState);
+        this.view.onSelect((viewState: SliderViewState): void => {
+            this.model.update(viewState);
         });
 
-        this._model.onUpdate((modelState: SliderModelPointsState) => {
-            // console.log(modelState);
-            this._view.update(modelState);
+        this.model.onUpdate((pints: SliderPointState[]) => {
+            this.view.update(pints);
         });
     }
 }
