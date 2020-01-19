@@ -53,6 +53,10 @@ const createSlider = function createSlider(config: {
 
     $slider.css(viewName === 'horizontal' ? 'width' : 'height', `${sliderSize}px`);
 
+    if (viewName === 'vertical') {
+        $slider.addClass('slider_theme_vertical');
+    }
+
     $tooltipContainer.append(tooltips);
     $pointContainer.append(points).append($bgLine);
     $slider.append($pointContainer, $tooltipContainer);

@@ -6,10 +6,10 @@ class DriverVertical implements SliderViewDriver {
     }
 
     public getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
-        const sliderHeight = $pointContainer.outerHeight();
+        const containerHeight = $pointContainer.outerHeight();
         const globalMousePosition = ev.pageY;
         const mousePosition = globalMousePosition - $pointContainer.offset().top;
-        const targetPosition = 1 - mousePosition / sliderHeight;
+        const targetPosition = 1 - mousePosition / containerHeight;
 
         if (targetPosition < 0) {
             return 0;
@@ -23,18 +23,17 @@ class DriverVertical implements SliderViewDriver {
     }
 
     public getPointPosition($point: JQuery, $pointContainer: JQuery): number {
-        const sliderHeight = $pointContainer.outerHeight();
-        const sliderBottom = $pointContainer.offset().top + sliderHeight;
+        const containerHeight = $pointContainer.outerHeight();
         const pointOffset = $point.outerHeight() / 2;
-        const pointBottom = sliderBottom - $point.offset().top - pointOffset;
+        const pointBottom = parseInt($point.css('bottom'), 10) + pointOffset;
 
-        return pointBottom / sliderHeight;
+        return pointBottom / containerHeight;
     }
 
     public setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void {
-        const sliderHeight = $pointContainer.outerHeight();
+        const containerHeight = $pointContainer.outerHeight();
         const pointOffset = $point.outerHeight() / 2;
-        const marginBottom = position * sliderHeight - pointOffset;
+        const marginBottom = (position * containerHeight) - pointOffset;
         $point.css('bottom', `${marginBottom}px`);
     }
 
@@ -44,11 +43,11 @@ class DriverVertical implements SliderViewDriver {
         position: number,
         value: string
     ): void {
-        const sliderHeight = $tooltipContainer.outerHeight();
+        const containerHeight = $tooltipContainer.outerHeight();
 
         $tooltip.html(value);
 
-        const offset = position * sliderHeight - $tooltip.outerHeight() / 2;
+        const offset = (position * containerHeight) - ($tooltip.outerHeight() / 2);
         $tooltip.css('bottom', `${offset}px`);
     }
 
@@ -57,16 +56,13 @@ class DriverVertical implements SliderViewDriver {
         $pointContainer: JQuery,
         points: SliderPointState[]
     ): void {
-        const sliderHeight = $pointContainer.outerHeight();
+        const containerHeight = $pointContainer.outerHeight();
+        const topMargin = containerHeight - (points[points.length - 1].position * containerHeight);
+        $bgLine.css('top', `${topMargin}px`);
 
-        if (points.length === 1) {
-            const offset = sliderHeight - points[0].position * sliderHeight;
-            $bgLine.css('top', offset);
-        } else {
-            const offsetMin = points[0].position * sliderHeight;
-            const offsetMax = sliderHeight - points[1].position * sliderHeight;
-            $bgLine.css('top', offsetMax);
-            $bgLine.css('bottom', offsetMin);
+        if (points.length > 1) {
+            const bottomMargin = points[0].position * containerHeight;
+            $bgLine.css('bottom', `${bottomMargin}px`);
         }
     }
 }
