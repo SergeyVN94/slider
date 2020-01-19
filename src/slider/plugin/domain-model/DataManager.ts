@@ -3,6 +3,7 @@ class DataManager implements SliderModelDataManager {
     private _scale: SliderScale;
     private _stepSize: number;
     private _pointSteps: number[];
+    private _scaleType: string | number;
 
     constructor(config: {
         stepSize: number;
@@ -21,6 +22,7 @@ class DataManager implements SliderModelDataManager {
         this._steps = steps;
         this._stepSize = stepSize;
         this._pointSteps = pointSteps;
+        this._scaleType = typeof scale[0];
     }
 
     public get stepSize(): number {
@@ -45,6 +47,7 @@ class DataManager implements SliderModelDataManager {
 
     public set scale(scale: SliderScale) {
         this._scale = scale;
+        this._scaleType = typeof scale[0];
     }
 
     public get steps(): number {
@@ -53,6 +56,10 @@ class DataManager implements SliderModelDataManager {
 
     public set steps(steps: number) {
         this._steps = steps;
+    }
+
+    public get scaleType(): number | string {
+        return this._scaleType;
     }
 }
 

@@ -14,9 +14,40 @@ const valueToStep = function valueToStep(
     value: string | number,
     dataManager: SliderModelDataManager
 ): number {
-    value;
-    dataManager;
-    return 1;
+    const {
+        scale,
+        scaleType,
+        stepSize,
+    } = dataManager;
+
+    if (scaleType !== typeof value) {
+        console.error(new TypeError(`Unable to compute step "${value}". The value type should be the same as the slider scale.`));
+        return -1;
+    }
+
+    if (scaleType === 'string') {
+        return (scale as string[]).indexOf(value as string);
+    }
+
+    const [
+        rangeMin,
+        rangeMax,
+    ] = scale as [number, number];
+
+    if (value < rangeMin) {
+        return -1;
+    }
+
+    if (value > rangeMax) {
+        return -1;
+    }
+
+    const valueInRange =
+        value < 0 ? Math.abs(value as number) : ((value as number) + Math.abs(rangeMin));
+
+    return Math.round(
+        valueInRange / stepSize
+    );
 };
 
 const updateStepSize = function updateStepSize(
