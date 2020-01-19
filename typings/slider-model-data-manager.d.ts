@@ -1,6 +1,6 @@
 interface SliderModelDataManager {
     scale: SliderScale;
-    scaleType: string | number;
+    scaleType: 'string' | 'number';
     pointSteps: number[];
     stepSize: number;
     steps: number;

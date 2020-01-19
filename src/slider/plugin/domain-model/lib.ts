@@ -50,14 +50,35 @@ const valueToStep = function valueToStep(
     );
 };
 
+// TODO: Доделать
 const updateStepSize = function updateStepSize(
     step: number,
     dataManager: SliderModelDataManager
 ): void {
-    step;
-    dataManager;
+    const {
+        scaleType,
+        scale,
+    } = dataManager;
+
+    if (step < 1) {
+        console.error(new Error('Slider step size must be greater than 0.'));
+    } else if (scaleType === 'string') {
+        console.error(new Error('You cannot change the step size for a scale from strings.'));
+    } else {
+        const [
+            rangeMin,
+            rangeMax,
+        ] = scale as [number, number];
+
+        if (step > (rangeMax - rangeMin)) {
+            console.error(new Error('The step size should be less than the range of the slider.'));
+        } else {
+            dataManager.stepSize = step;
+        }
+    }
 };
 
+// TODO: Доделать
 const updateModel = function updateModel(
     state: SliderViewState,
     dataManager: SliderModelDataManager
@@ -66,6 +87,7 @@ const updateModel = function updateModel(
     dataManager;
 };
 
+// TODO: Доделать
 const getPointStates = function getPointStates(
     dataManager: SliderModelDataManager
 ): SliderPointState[] {
@@ -77,6 +99,7 @@ const getPointStates = function getPointStates(
     ];
 };
 
+// TODO: Доделать
 const getModelValues = function getModelValues(
     dataManager: SliderModelDataManager
 ): number[] | string[] {
@@ -84,6 +107,7 @@ const getModelValues = function getModelValues(
     return [1, 2, 3];
 };
 
+// TODO: Доделать
 const setModelValues = function setModelValues(
     values: number[] | string[],
     dataManager: SliderModelDataManager

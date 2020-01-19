@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import {
     getAllSteps,
     valueToStep,
+    updateStepSize,
 } from '../../slider/plugin/domain-model/lib';
 import DataManager from '../../slider/plugin/domain-model/DataManager';
 
@@ -88,6 +89,59 @@ describe('[Domain model lib]', () => {
 
             it('[value string "fds"]', () => {
                 expect(valueToStep('fds', dataManager)).to.equal(-1);
+            });
+        });
+    });
+
+    describe('[updateStepSize]', () => {
+        const scala1 = ['a', 'b', 'c', 'd', 'e'];
+        const scala2 = [-1000, 1000] as [number, number];
+
+        describe(`[scala: (${scala1.join(',')})]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 1,
+                steps: 5,
+                scale: scala1,
+                pointSteps: [1, 3],
+            });
+
+            it('[step 3]', () => {
+                updateStepSize(3, dataManager);
+                expect(dataManager.stepSize).to.equal(1);
+            });
+        });
+
+        describe(`[scala: (${scala2.join(',')})]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 10,
+                steps: 5,
+                scale: scala2,
+                pointSteps: [1, 3],
+            });
+
+            it('[step -3]', () => {
+                updateStepSize(-3, dataManager);
+                expect(dataManager.stepSize).to.equal(10);
+            });
+
+            it('[step -0]', () => {
+                updateStepSize(0, dataManager);
+                expect(dataManager.stepSize).to.equal(10);
+            });
+
+            it('[step 2345]', () => {
+                updateStepSize(2345, dataManager);
+                expect(dataManager.stepSize).to.equal(10);
+            });
+
+            it('[step 1000]', () => {
+                updateStepSize(1000, dataManager);
+                expect(dataManager.stepSize).to.equal(1000);
+            });
+
+            it('[step 33]', () => {
+                updateStepSize(33, dataManager);
+                expect(dataManager.stepSize).to.equal(33);
             });
         });
     });
