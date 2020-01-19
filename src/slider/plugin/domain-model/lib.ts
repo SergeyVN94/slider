@@ -1,4 +1,4 @@
-const getAllSteps = function getAllSteps(scale: SliderScale, step = 1): number {
+const getAllSteps = function getAllSteps(scale: SliderScale, stepSize = 1): number {
     if (typeof scale[0] === 'string') {
         return scale.length - 1;
     }
@@ -7,7 +7,7 @@ const getAllSteps = function getAllSteps(scale: SliderScale, step = 1): number {
         rangeMin,
         rangeMax,
     ] = scale as [number, number];
-    return Math.floor((rangeMax - rangeMin) / step);
+    return Math.floor((rangeMax - rangeMin) / stepSize);
 };
 
 const valueToStep = function valueToStep(

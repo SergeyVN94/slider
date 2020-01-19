@@ -21,7 +21,7 @@ class Model implements SliderModel {
         const {
             scale,
             start,
-            step,
+            step: stepSize,
         } = config;
 
         const pointSteps: number[] = [];
@@ -34,8 +34,8 @@ class Model implements SliderModel {
         this._dataManager = new DataManager({
             scale,
             pointSteps,
-            stepSize: step,
-            steps: getAllSteps(scale, step),
+            stepSize,
+            steps: getAllSteps(scale, stepSize),
         });
         this._updateEventCallbackList = [];
     }

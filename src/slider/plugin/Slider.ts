@@ -36,7 +36,6 @@ class Slider implements Slider {
 
         this.presenter = new Presenter(this.view, this.model);
         this.updateEventCallback = null;
-        this.model.onUpdate(this.onModelUpdateHandler.bind(this));
     }
 
     public get value(): string[] | number[] {
@@ -65,16 +64,6 @@ class Slider implements Slider {
 
     public onSelect(callback: HandlerSliderSelect): void {
         this.updateEventCallback = callback;
-    }
-
-    private onModelUpdateHandler(points: SliderPointState[]): void {
-        const values = points.map((point) => {
-            return point.value;
-        });
-
-        if (this.updateEventCallback !== null) {
-            this.updateEventCallback(values as string[] | number[]);
-        }
     }
 }
 
