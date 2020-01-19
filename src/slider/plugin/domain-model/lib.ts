@@ -50,9 +50,8 @@ const valueToStep = function valueToStep(
     );
 };
 
-// TODO: Доделать
 const updateStepSize = function updateStepSize(
-    step: number,
+    stepSize: number,
     dataManager: SliderModelDataManager
 ): void {
     const {
@@ -60,8 +59,8 @@ const updateStepSize = function updateStepSize(
         scale,
     } = dataManager;
 
-    if (step < 1) {
-        console.error(new Error('Slider step size must be greater than 0.'));
+    if (stepSize < 1) {
+        console.error(new Error('Slider step size must be greater than 1.'));
     } else if (scaleType === 'string') {
         console.error(new Error('You cannot change the step size for a scale from strings.'));
     } else {
@@ -70,10 +69,10 @@ const updateStepSize = function updateStepSize(
             rangeMax,
         ] = scale as [number, number];
 
-        if (step > (rangeMax - rangeMin)) {
+        if (stepSize > (rangeMax - rangeMin)) {
             console.error(new Error('The step size should be less than the range of the slider.'));
         } else {
-            dataManager.stepSize = step;
+            dataManager.stepSize = stepSize;
         }
     }
 };
@@ -85,6 +84,35 @@ const updateModel = function updateModel(
 ): void {
     state;
     dataManager;
+};
+
+const stepToValue = function stepToValue(
+    step: number,
+    dataManager: SliderModelDataManager,
+): string | number | null {
+    const {
+        scale,
+        steps,
+        stepSize,
+        scaleType,
+    } = dataManager;
+
+    if (step < 0) {
+        console.error(new Error('Slider step size must be greater than 0.'));
+        return null;
+    }
+
+    if (step >= steps) {
+        console.error(new Error('The step exceeds the maximum number of steps for a given slider scale.'));
+        return null;
+    }
+
+    if (scaleType === 'string') {
+        return (scale as string[])[step];
+    }
+
+    const [rangeMin] = scale as [number, number];
+    return (step * stepSize) + rangeMin;
 };
 
 // TODO: Доделать
@@ -124,4 +152,5 @@ export {
     getModelValues,
     setModelValues,
     getPointStates,
+    stepToValue,
 };

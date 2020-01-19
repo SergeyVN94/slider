@@ -4,6 +4,7 @@ import {
     getAllSteps,
     valueToStep,
     updateStepSize,
+    stepToValue,
 } from '../../slider/plugin/domain-model/lib';
 import DataManager from '../../slider/plugin/domain-model/DataManager';
 
@@ -142,6 +143,69 @@ describe('[Domain model lib]', () => {
             it('[step 33]', () => {
                 updateStepSize(33, dataManager);
                 expect(dataManager.stepSize).to.equal(33);
+            });
+        });
+    });
+
+    describe('[stepToValue]', () => {
+        const scala1 = ['a', 'b', 'c', 'd', 'e'];
+        const scala2 = [-1000, 1000] as [number, number];
+
+        describe(`[scala: (${scala1.join(',')})]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 1,
+                steps: 5,
+                scale: scala1,
+                pointSteps: [1, 3],
+            });
+
+            it('[step 33]', () => {
+                expect(stepToValue(33, dataManager)).to.equal(null);
+            });
+
+            it('[step -123]', () => {
+                expect(stepToValue(-123, dataManager)).to.equal(null);
+            });
+
+            it('[step 0]', () => {
+                expect(stepToValue(0, dataManager)).to.equal('a');
+            });
+
+            it('[step 1]', () => {
+                expect(stepToValue(1, dataManager)).to.equal('b');
+            });
+
+            it('[step 4]', () => {
+                expect(stepToValue(4, dataManager)).to.equal('e');
+            });
+        });
+
+        describe(`[scala: (${scala2.join(',')})]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 100,
+                steps: 20,
+                scale: scala2,
+                pointSteps: [1, 3],
+            });
+
+            it('[step 33]', () => {
+                expect(stepToValue(33, dataManager)).to.equal(null);
+            });
+
+            it('[step -123]', () => {
+                expect(stepToValue(-123, dataManager)).to.equal(null);
+            });
+
+            it('[step 0]', () => {
+                expect(stepToValue(0, dataManager)).to.equal(-1000);
+            });
+
+            it('[step 8]', () => {
+                expect(stepToValue(8, dataManager)).to.equal(-200);
+            });
+
+            it('[step 15]', () => {
+                expect(stepToValue(15, dataManager)).to.equal(500);
             });
         });
     });
