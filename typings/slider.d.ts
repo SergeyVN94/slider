@@ -8,7 +8,7 @@ type CoupleNum = [number, number];
 type HandlerSliderSelect = (values: string[] | number[]) => void;
 
 interface SliderConfig {
-    readonly $slider: JQuery;
+    readonly $slider?: JQuery;
     readonly start?: string[] | number[];
     readonly scale?: SliderScale;
     readonly viewName?: SliderViewName;

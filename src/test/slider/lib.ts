@@ -1,61 +1,57 @@
 import * as $ from 'jquery';
 
-import { createPoint } from '../../slider/plugin/view/View';
+import {
+    createPoint,
+    createTooltip,
+} from '../../slider/plugin/view/View';
 
-interface TestSliderConfig {
-    size: number;
-    viewName: 'horizontal' | 'vertical';
-    pointPosition: number[];
+const createSlider = function createSlider(config: {
     pointSize: number;
-}
-
-interface SliderPacket {
-    $slider: JQuery;
-    points: JQuery[];
-    tooltips: JQuery[];
-    $pointContainer: JQuery;
-    $tooltipContainer: JQuery;
-    $bgLine: JQuery;
-}
-
-const createSlider = function createSlider(config: TestSliderConfig): SliderPacket {
-    const $slider: JQuery = $('<div class="slider"></div>');
-    const $pointContainer: JQuery = $('<div class="slider__point-container"></div>');
-    const $tooltipContainer: JQuery = $('<div class="slider__tooltip-container"></div>');
-    const $bgLine: JQuery = $('<div class="slider__bg-line"></div>');
+    sliderSize: number;
+    points: number[];
+    viewName?: 'horizontal' | 'vertical';
+}): {
+        $slider: JQuery;
+        $bgLine: JQuery;
+        $pointContainer: JQuery;
+        $tooltipContainer: JQuery;
+        points: JQuery[];
+        tooltips: JQuery[];
+    } {
+    const $slider = $('<div class="slider"></div>');
+    const $pointContainer = $('<div class="slider__point-container"></div>');
+    const $tooltipContainer = $('<div class="slider__tooltip-container"></div>');
+    const $bgLine = $('<div class="slider__bg-line"></div>');
     const tooltips: JQuery[] = [];
     const points: JQuery[] = [];
 
-    const amountPoints = config.pointPosition.length;
+    const {
+        pointSize,
+        sliderSize,
+        points: pointsPositions,
+        viewName = 'horizontal',
+    } = config;
 
-    for (let i = 0; i < amountPoints; i += 1) {
-        tooltips.push($('<div class="slider__tooltip"></div>'));
-    }
+    const pointOffset = pointSize / 2;
+    const indentSide = viewName === 'horizontal' ? 'left' : 'bottom';
 
-    points.push(createPoint(0));
-    if (amountPoints > 1) {
-        points.push(createPoint(1));
-    }
+    pointsPositions.forEach((position, index) => {
+        points.push(
+            createPoint(index)
+        );
+        tooltips.push(
+            createTooltip()
+        );
 
-    let marginName = '';
-    if (config.viewName === 'horizontal') {
-        $slider.css('width', `${config.size}px`);
-        marginName = 'left';
-    } else {
-        $slider.addClass('slider_theme_vertical');
-        $slider.css('height', `${config.size}px`);
-        marginName = 'bottom';
-    }
+        points[index]
+            .css('width', `${pointSize}px`)
+            .css('height', `${pointSize}px`);
 
-    const psize = `${config.pointSize}px`;
-    config.pointPosition.forEach((position: number, index: number): void => {
-        const newPos: number = position * config.size - config.pointSize / 2;
-        points[index].css(marginName, `${newPos}px`);
-        points[index].css({
-            width: psize,
-            height: psize,
-        });
+        const margin = (position * sliderSize) - pointOffset;
+        points[index].css(indentSide, `${margin}px`);
     });
+
+    $slider.css(viewName === 'horizontal' ? 'width' : 'height', `${sliderSize}px`);
 
     $tooltipContainer.append(tooltips);
     $pointContainer.append(points).append($bgLine);
@@ -71,6 +67,4 @@ const createSlider = function createSlider(config: TestSliderConfig): SliderPack
     };
 };
 
-export {
-    TestSliderConfig, SliderPacket, createSlider,
-};
+export { createSlider };

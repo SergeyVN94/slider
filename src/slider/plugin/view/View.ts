@@ -211,5 +211,6 @@ class View implements SliderView {
 
 export default View;
 export {
-    createPoint, createTooltip,
+    createPoint,
+    createTooltip,
 };

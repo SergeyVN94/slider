@@ -2,65 +2,6 @@ import View from './view/View';
 import Presenter from './view/Presenter';
 import Model from './domain-model/Model';
 
-const hasOwnProp = function hasOwnProp(obj: object, field: string | number | symbol): boolean {
-    return Object.prototype.hasOwnProperty.apply(obj, [field]);
-};
-
-const isStartValuesCorrect = function isStartValuesCorrect(
-    values: string[] | number[],
-    scale: SliderScale
-): boolean {
-    const typeScaleNumber = (typeof scale[0] as 'string' | 'number') === 'number';
-    const selectModeRange = values.length === 2;
-    let isCorrect = true;
-
-    values.forEach((val: string | number) => {
-        const typeValNumber = (typeof val as 'string' | 'number') === 'number';
-        const typesMatch = typeValNumber === typeScaleNumber;
-
-        if (!typesMatch) {
-            isCorrect = false;
-        }
-
-        if (typeValNumber) {
-            if (val < scale[0] || val > scale[1]) {
-                isCorrect = false;
-            }
-        }
-
-        if (!typeValNumber) {
-            let itemFound = false;
-
-            (scale as string[]).forEach((scaleItem) => {
-                if (scaleItem === val) {
-                    itemFound = true;
-                }
-            });
-
-            if (!itemFound) {
-                isCorrect = false;
-            }
-        }
-    });
-
-    if (selectModeRange && typeScaleNumber) {
-        if (values[0] > values[1]) {
-            isCorrect = false;
-        }
-    }
-
-    if (selectModeRange && !typeScaleNumber) {
-        if (
-            (scale as string[]).indexOf(values[0] as string) >
-      (scale as string[]).indexOf(values[1] as string)
-        ) {
-            isCorrect = false;
-        }
-    }
-
-    return isCorrect;
-};
-
 class Slider implements Slider {
     private readonly presenter: Presenter;
     private readonly model: Model;
@@ -138,6 +79,3 @@ class Slider implements Slider {
 }
 
 export default Slider;
-export {
-    hasOwnProp, isStartValuesCorrect,
-};
