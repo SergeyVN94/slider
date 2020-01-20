@@ -102,7 +102,7 @@ const stepToValue = function stepToValue(
         return null;
     }
 
-    if (step >= steps) {
+    if (step > steps) {
         console.error(new Error('The step exceeds the maximum number of steps for a given slider scale.'));
         return null;
     }
@@ -115,16 +115,24 @@ const stepToValue = function stepToValue(
     return (step * stepSize) + rangeMin;
 };
 
-// TODO: Доделать
 const getPointStates = function getPointStates(
     dataManager: SliderModelDataManager
 ): SliderPointState[] {
-    dataManager;
-    return [
-        {
-            position: 0.23423,
-        },
-    ];
+    const {
+        pointSteps,
+        steps,
+    } = dataManager;
+
+    const pointStates: SliderPointState[] = [];
+
+    pointSteps.forEach((pointStep) => {
+        pointStates.push({
+            position: pointStep / steps,
+            value: stepToValue(pointStep, dataManager),
+        });
+    });
+
+    return pointStates;
 };
 
 // TODO: Доделать

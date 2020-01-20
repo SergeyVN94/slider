@@ -5,6 +5,7 @@ import {
     valueToStep,
     updateStepSize,
     stepToValue,
+    getPointStates,
 } from '../../slider/plugin/domain-model/lib';
 import DataManager from '../../slider/plugin/domain-model/DataManager';
 
@@ -42,7 +43,7 @@ describe('[Domain model lib]', () => {
         describe(`[scala: (${scala1.join(',')})]`, () => {
             const dataManager = new DataManager({
                 stepSize: 1,
-                steps: 5,
+                steps: 4,
                 scale: scala1,
                 pointSteps: [1, 3],
             });
@@ -101,7 +102,7 @@ describe('[Domain model lib]', () => {
         describe(`[scala: (${scala1.join(',')})]`, () => {
             const dataManager = new DataManager({
                 stepSize: 1,
-                steps: 5,
+                steps: 4,
                 scale: scala1,
                 pointSteps: [1, 3],
             });
@@ -154,7 +155,7 @@ describe('[Domain model lib]', () => {
         describe(`[scala: (${scala1.join(',')})]`, () => {
             const dataManager = new DataManager({
                 stepSize: 1,
-                steps: 5,
+                steps: 4,
                 scale: scala1,
                 pointSteps: [1, 3],
             });
@@ -206,6 +207,100 @@ describe('[Domain model lib]', () => {
 
             it('[step 15]', () => {
                 expect(stepToValue(15, dataManager)).to.equal(500);
+            });
+        });
+    });
+
+    describe('[getPointStates]', () => {
+        const scala1 = ['a', 'b', 'c', 'd', 'e'];
+        const scala2 = [-1000, 1000] as [number, number];
+
+        const arraysSame = function arraysSame(
+            arr1: SliderPointState[],
+            arr2: SliderPointState[]
+        ): boolean {
+            let isCorrectStates = true;
+
+            arr1.forEach((state, index) => {
+                const isCorrectPosition = state.position === arr2[index].position;
+                const isCorrectValue = state.value === arr2[index].value;
+                isCorrectStates = isCorrectPosition && isCorrectValue;
+            });
+
+            return isCorrectStates;
+        };
+
+        describe(`[scala: (${scala1.join(',')})]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 1,
+                steps: 4,
+                scale: scala1,
+                pointSteps: [0, 2, 3],
+            });
+
+            it('[pointSteps: (0, 2, 3)]', () => {
+                const targetStates = [
+                    {
+                        position: 0,
+                        value: 'a',
+                    },
+                    {
+                        position: 2 / 4,
+                        value: 'c',
+                    },
+                    {
+                        position: 3 / 4,
+                        value: 'd',
+                    },
+                ];
+                const pointStates = getPointStates(dataManager);
+
+                expect(arraysSame(targetStates, pointStates)).to.equal(true);
+            });
+        });
+
+        describe(`[scala: (${scala2.join(',')})]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 100,
+                steps: 20,
+                scale: scala2,
+                pointSteps: [1, 3, 7, 13, 16, 17, 20],
+            });
+
+            it('[pointSteps: (1, 3, 7, 13, 16, 17, 20)]', () => {
+                const targetStates = [
+                    {
+                        position: 1 / 20,
+                        value: -900,
+                    },
+                    {
+                        position: 3 / 20,
+                        value: -700,
+                    },
+                    {
+                        position: 7 / 20,
+                        value: -300,
+                    },
+                    {
+                        position: 13 / 20,
+                        value: 300,
+                    },
+                    {
+                        position: 16 / 20,
+                        value: 600,
+                    },
+                    {
+                        position: 17 / 20,
+                        value: 700,
+                    },
+                    {
+                        position: 20 / 20,
+                        value: 1000,
+                    },
+                ];
+                const pointStates = getPointStates(dataManager);
+
+                expect(arraysSame(targetStates, pointStates)).to.equal(true);
             });
         });
     });
