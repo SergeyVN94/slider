@@ -42,12 +42,7 @@ const valueToStep = function valueToStep(
         return -1;
     }
 
-    const valueInRange =
-        value < 0 ? Math.abs(value as number) : ((value as number) + Math.abs(rangeMin));
-
-    return Math.round(
-        valueInRange / stepSize
-    );
+    return Math.round(((value as number) - rangeMin) / stepSize);
 };
 
 const updateStepSize = function updateStepSize(

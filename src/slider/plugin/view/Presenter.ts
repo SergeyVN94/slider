@@ -13,6 +13,10 @@ class Presenter {
         this._model.onUpdate((pints: SliderPointState[]) => {
             this._view.update(pints);
         });
+
+        this._view.update(
+            this._model.getPointStates()
+        );
     }
 }
 

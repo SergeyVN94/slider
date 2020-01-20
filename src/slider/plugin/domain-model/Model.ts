@@ -24,6 +24,13 @@ class Model implements SliderModel {
             step: stepSize,
         } = config;
 
+        this._dataManager = new DataManager({
+            scale,
+            pointSteps: [],
+            stepSize,
+            steps: getAllSteps(scale, stepSize),
+        });
+
         const pointSteps: number[] = [];
         start.forEach((startValue: string | number): void => {
             pointSteps.push(
@@ -31,12 +38,8 @@ class Model implements SliderModel {
             );
         });
 
-        this._dataManager = new DataManager({
-            scale,
-            pointSteps,
-            stepSize,
-            steps: getAllSteps(scale, stepSize),
-        });
+        this._dataManager.pointSteps = pointSteps;
+
         this._updateEventCallbackList = [];
     }
 
@@ -63,6 +66,10 @@ class Model implements SliderModel {
 
     public set value(values: string[] | number[]) {
         setModelValues(values, this._dataManager);
+    }
+
+    public getPointStates(): SliderPointState[] {
+        return getPointStates(this._dataManager);
     }
 
     private _toggleUpdateEvent(): void {

@@ -65,10 +65,10 @@ describe('[Domain model lib]', () => {
             });
         });
 
-        describe(`[scala: (${scala2.join(',')})]`, () => {
+        describe(`[scala: (${scala2.join(',')}), step 10]`, () => {
             const dataManager = new DataManager({
                 stepSize: 10,
-                steps: 5,
+                steps: 200,
                 scale: scala2,
                 pointSteps: [1, 3],
             });
@@ -78,7 +78,11 @@ describe('[Domain model lib]', () => {
             });
 
             it('[value -554.6546]', () => {
-                expect(valueToStep(-554.6546, dataManager)).to.equal(55);
+                expect(valueToStep(-554.6546, dataManager)).to.equal(45);
+            });
+
+            it('[value -444]', () => {
+                expect(valueToStep(-444, dataManager)).to.equal(56);
             });
 
             it('[value -1001]', () => {
@@ -91,6 +95,23 @@ describe('[Domain model lib]', () => {
 
             it('[value string "fds"]', () => {
                 expect(valueToStep('fds', dataManager)).to.equal(-1);
+            });
+        });
+
+        describe(`[scala: (${scala2.join(',')}), step 1]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 1,
+                steps: 2000,
+                scale: scala2,
+                pointSteps: [1, 3],
+            });
+
+            it('[value 222]', () => {
+                expect(valueToStep(222, dataManager)).to.equal(1222);
+            });
+
+            it('[value -444]', () => {
+                expect(valueToStep(-444, dataManager)).to.equal(556);
             });
         });
     });

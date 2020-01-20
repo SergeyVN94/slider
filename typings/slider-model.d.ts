@@ -5,4 +5,5 @@ interface SliderModel {
     value: string[] | number[];
     update(state: SliderViewState): void;
     onUpdate(callback: HandlerSliderModelUpdate): void;
+    getPointStates(): SliderPointState[];
 }
