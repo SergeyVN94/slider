@@ -130,12 +130,23 @@ const getPointStates = function getPointStates(
     return pointStates;
 };
 
-// TODO: Доделать
 const getModelValues = function getModelValues(
     dataManager: SliderModelDataManager
 ): number[] | string[] {
-    dataManager;
-    return [1, 2, 3];
+    const {
+        pointSteps,
+        scaleType,
+    } = dataManager;
+
+    if (scaleType === 'string') {
+        return pointSteps.map<number>((step): number => {
+            return stepToValue(step, dataManager) as number;
+        });
+    }
+
+    return pointSteps.map<string>((step): string => {
+        return stepToValue(step, dataManager) as string;
+    });
 };
 
 // TODO: Доделать
