@@ -22,5 +22,4 @@ interface Slider {
     value: string[] | number[];
     step: number;
     isShowTooltips: boolean;
-    onSelect(callback: HandlerSliderSelect): void;
 }

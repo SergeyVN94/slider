@@ -6,7 +6,6 @@ class Slider implements Slider {
     private readonly presenter: Presenter;
     private readonly model: Model;
     private readonly view: View;
-    private updateEventCallback: HandlerSliderSelect;
 
     constructor(config: {
         readonly $slider: JQuery;
@@ -35,7 +34,6 @@ class Slider implements Slider {
         });
 
         this.presenter = new Presenter(this.view, this.model);
-        this.updateEventCallback = null;
     }
 
     public get value(): string[] | number[] {
@@ -60,10 +58,6 @@ class Slider implements Slider {
 
     public set isShowTooltips(state: boolean) {
         this.view.showTooltips = state;
-    }
-
-    public onSelect(callback: HandlerSliderSelect): void {
-        this.updateEventCallback = callback;
     }
 }
 
