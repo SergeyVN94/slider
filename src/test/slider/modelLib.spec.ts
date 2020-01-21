@@ -7,6 +7,7 @@ import {
     stepToValue,
     getPointStates,
     getModelValues,
+    setModelValues,
 } from '../../slider/plugin/domain-model/lib';
 import DataManager from '../../slider/plugin/domain-model/DataManager';
 
@@ -366,6 +367,51 @@ describe('[Domain model lib]', () => {
                 ] = getModelValues(dataManager);
 
                 expect(value1 === -650 && value2 === -350 && value3 === 600).to.equal(true);
+            });
+        });
+    });
+
+    describe('[setModelValues]', () => {
+        const scala1 = ['a', 'b', 'c', 'd', 'e'];
+        const scala2 = [-1000, 1000] as [number, number];
+
+        describe(`[scala: (${scala1.join(',')})]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 1,
+                steps: 4,
+                scale: scala1,
+                pointSteps: [0],
+            });
+
+            it('[values: ("a", "c")]', () => {
+                setModelValues(['a', 'c'], dataManager);
+
+                const [
+                    step1,
+                    step2,
+                ] = dataManager.pointSteps;
+
+                expect(step1 === 0 && step2 === 2).to.equal(true);
+            });
+        });
+
+        describe(`[scala: (${scala2.join(',')})]`, () => {
+            const dataManager = new DataManager({
+                stepSize: 50,
+                steps: 40,
+                scale: scala2,
+                pointSteps: [0],
+            });
+
+            it('[values: (-777, 754)]', () => {
+                setModelValues([-777, 754], dataManager);
+
+                const [
+                    step1,
+                    step2,
+                ] = dataManager.pointSteps;
+
+                expect(step1 === 4 && step2 === 35).to.equal(true);
             });
         });
     });

@@ -149,13 +149,21 @@ const getModelValues = function getModelValues(
     });
 };
 
-// TODO: Доделать
 const setModelValues = function setModelValues(
     values: number[] | string[],
     dataManager: SliderModelDataManager
 ): void {
-    values;
-    dataManager;
+    const { scaleType } = dataManager;
+
+    if (scaleType === 'number') {
+        dataManager.pointSteps = (values as number[]).map((value) => {
+            return valueToStep(value, dataManager);
+        });
+    } else {
+        dataManager.pointSteps = (values as string[]).map((value) => {
+            return valueToStep(value, dataManager);
+        });
+    }
 };
 
 export {
