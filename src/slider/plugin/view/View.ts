@@ -181,8 +181,8 @@ class View implements SliderView {
             this._pointSelected = parseInt($target.attr('data-index'), 10);
 
             this._domElements.$document
-                .on('mousemove.slider.moveHandler', (): void => {
-                    this._triggerSelectEvent(ev);
+                .on('mousemove.slider.moveHandler', (_ev: JQuery.MouseMoveEvent): void => {
+                    this._triggerSelectEvent(_ev);
                 })
                 .one('mouseup.slider.upHandler', (): void => {
                     this._pointSelected = -1;
