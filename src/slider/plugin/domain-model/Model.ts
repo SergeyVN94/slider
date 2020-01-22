@@ -2,7 +2,7 @@ import DataManager from './DataManager';
 import {
     getAllSteps,
     valueToStep,
-    updateModel,
+    updatePointSteps,
     updateStepSize,
     getModelValues,
     setModelValues,
@@ -44,7 +44,7 @@ class Model implements SliderModel {
     }
 
     public update(state: SliderViewState): void {
-        updateModel(state, this._dataManager);
+        updatePointSteps(state, this._dataManager);
         this._toggleUpdateEvent();
     }
 

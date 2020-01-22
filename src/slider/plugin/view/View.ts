@@ -185,7 +185,7 @@ class View implements SliderView {
                     this._triggerSelectEvent(ev);
                 })
                 .one('mouseup.slider.upHandler', (): void => {
-                    this._pointSelected = null;
+                    this._pointSelected = -1;
                     this._domElements.$document.off('mousemove.slider.moveHandler');
                 });
         }
