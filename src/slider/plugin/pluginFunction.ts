@@ -55,11 +55,8 @@ const pluginFunction = function pluginMainFunction(
                 return slider.step;
             }
 
-            if (typeof args !== 'number') {
-                throw new TypeError('Expected number.');
-            }
+            slider.step = parseInt(args as string, 10);
 
-            slider.step = args;
             return this;
 
         case 'value':

@@ -1,7 +1,7 @@
 import * as jQuery from 'jquery';
 
 import './slider/slider';
-import { DemoPanel } from './demo-panel/demo-panel';
+import ConfigPanel from './config-panel/config-panel';
 
 ((fun: Function): void => {
     jQuery(fun(jQuery));
@@ -67,7 +67,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
         scale: scale1,
     });
 
-    new DemoPanel({
+    new ConfigPanel({
         $slider: $slider1,
         $panel: $('#panel1'),
     });
@@ -83,7 +83,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
         },
     });
 
-    new DemoPanel({
+    new ConfigPanel({
         $slider: $slider2,
         $panel: $('#panel2'),
     });
@@ -100,7 +100,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
         },
     });
 
-    new DemoPanel({
+    new ConfigPanel({
         $slider: $slider3,
         $panel: $('#panel3'),
     });
@@ -117,7 +117,7 @@ import { DemoPanel } from './demo-panel/demo-panel';
         },
     });
 
-    new DemoPanel({
+    new ConfigPanel({
         $slider: $slider4,
         $panel: $('#panel4'),
     });

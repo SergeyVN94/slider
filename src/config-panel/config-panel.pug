@@ -1,0 +1,29 @@
+mixin config-panel(options={})
+    -
+        const {
+            id,
+        } = options;
+    
+    .config-panel(id=id)
+        .config-panel__step
+            label Шаг
+                input.config-panel__step-input.js-config-panel__step-input(type="number", min=0)
+
+        .config-panel__view
+            h4.config-panel__view-title Вид
+            -const inputName = `${id}-view`;
+            .config-panel__view-item
+                input.config-panel__view-input.js-config-panel__view-input(type="radio", name=inputName, value="horizontal")
+                label Горизонтальный
+            .config-panel__view-item
+                input.config-panel__view-input.js-config-panel__view-input(type="radio", name=inputName, value="vertical")
+                label Вертикальный
+
+        .config-panel__values
+            .config-panel__points
+                label Количество ползунков
+                input.config-panel__points-input.js-config-panel__points-input(type="number", min=0)
+            .config-panel__value-items
+                .config-panel__value-item
+                    label Ползунок 1
+                    input.config-panel__value-input.js-config-panel__value-input(type="text")

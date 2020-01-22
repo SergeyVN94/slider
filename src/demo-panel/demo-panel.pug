@@ -1,4 +1,5 @@
 include ../slider/slider.pug
+include ../config-panel/config-panel.pug
 
 mixin demo-panel(options={})
     -
@@ -10,5 +11,7 @@ mixin demo-panel(options={})
     .demo-panel.js-demo-panel(id=id)
         .demo-panel__slider
             +slider(slider)
-        .demo-panel__config-panel.js-demo-panel__config-panel
-            
+        .demo-panel__config-panel
+            +config-panel({
+                id,
+            })

@@ -57,7 +57,14 @@ class Model implements SliderModel {
     }
 
     public set step(step: number) {
+        const values = getModelValues(this._dataManager);
         updateStepSize(step, this._dataManager);
+        this._dataManager.steps = getAllSteps(
+            this._dataManager.scale,
+            this._dataManager.stepSize
+        );
+        this.value = values;
+        this._toggleUpdateEvent();
     }
 
     public get value(): string[] | number[] {
@@ -66,6 +73,7 @@ class Model implements SliderModel {
 
     public set value(values: string[] | number[]) {
         setModelValues(values, this._dataManager);
+        this._toggleUpdateEvent();
     }
 
     public getPointStates(): SliderPointState[] {

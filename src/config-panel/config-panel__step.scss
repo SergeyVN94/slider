@@ -1,0 +1,10 @@
+.config-panel__step {
+  margin-bottom: 20px;
+  width: 100%;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
