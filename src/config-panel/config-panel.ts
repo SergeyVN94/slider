@@ -18,7 +18,7 @@ class ConfigPanel {
     private readonly _$inputStep: JQuery;
     private readonly _$viewInputs: JQuery;
     private readonly _$points: JQuery;
-    private readonly _valueInputs: JQuery[];
+    private _valueInputs: JQuery[];
     private readonly _$tooltipInput: JQuery;
     private readonly _$bgLine: JQuery;
     private readonly _$valueItemsContainer: JQuery;
@@ -41,7 +41,6 @@ class ConfigPanel {
         this._$tooltipInput = $panel.find(`.${CLASSES.TOOLTIP_INPUT}`);
         this._$bgLine = $panel.find(`.${CLASSES.BG_LINE_INPUT}`);
         this._$valueItemsContainer = $panel.find(`.${CLASSES.VALUES_ITEMS_CONTAINER}`);
-        this._valueInputs = [];
 
         const [sliderValue] = $slider.slider('value');
         this._sliderValueType = typeof sliderValue as 'number' | 'string';
@@ -68,16 +67,7 @@ class ConfigPanel {
         const isShowBgLine = this._$slider.slider('bg-line');
         this._$bgLine.prop('checked', isShowBgLine);
 
-        const values = this._$slider.slider('value');
-        this._$points.val(values.length);
-        this._$valueItemsContainer.html('');
-        for (let i = 0; i < values.length; i += 1) {
-            const $valueItem = createValueItem(i);
-            const $valueInput = $valueItem.find('input');
-            $valueInput.val(values[i]);
-            this._valueInputs.push($valueInput);
-            this._$valueItemsContainer.append($valueItem);
-        }
+        this._recreateInputValues();
     }
 
     private _initEventHandlers(): void {
@@ -91,6 +81,46 @@ class ConfigPanel {
             this._valueInputHandler.bind(this)
         );
         this._$slider.on('select', this._sliderSelectHandler.bind(this));
+        this._$points.on('input.points.changeCount', this._pointsInputHandler.bind(this));
+    }
+
+    private _pointsInputHandler(ev: JQuery.EventBase): void {
+        const $input = $(ev.target);
+        const points = parseInt($input.val() as string, 10);
+        const values = this._$slider.slider('value');
+
+        if (points < values.length) {
+            this._$slider.slider('value', values.slice(0, points));
+        }
+
+        if (points > values.length) {
+            const lastElement = values[values.length - 1];
+
+            for (let i = values.length; values.length < points; i += 1) {
+                values[i] = lastElement;
+            }
+
+            this._$slider.slider('value', values);
+        }
+
+        this._recreateInputValues();
+    }
+
+    private _recreateInputValues(): void {
+        const values = this._$slider.slider('value');
+        this._$points.val(values.length);
+        this._$valueItemsContainer.html('');
+        this._valueInputs = [];
+
+        for (let i = 0; i < values.length; i += 1) {
+            const $valueItem = createValueItem(i);
+            const $valueInput = $valueItem.find('input');
+
+            $valueInput.val(values[i]);
+
+            this._valueInputs.push($valueInput);
+            this._$valueItemsContainer.append($valueItem);
+        }
     }
 
     private _sliderSelectHandler(ev: JQuery.EventBase, ...values: string[] | number[]): void {

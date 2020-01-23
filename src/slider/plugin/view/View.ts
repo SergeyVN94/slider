@@ -117,6 +117,10 @@ class View implements SliderView {
     public update(points: SliderPointState[]): void {
         this._pointStates = points;
 
+        if (points.length !== this._domElements.points.length) {
+            this._updateDomElements(points);
+        }
+
         points.forEach((point, index) => {
             this._driver.setPointPosition(
                 this._domElements.points[index],
@@ -140,6 +144,34 @@ class View implements SliderView {
         this._domElements.$slider.trigger('select', points.map((point) => {
             return point.value;
         }));
+    }
+
+    private _updateDomElements(points: SliderPointState[]): void {
+        this._domElements.$bgLine.removeAttr('style');
+
+        this._domElements.points.forEach(($point) => {
+            $point.remove();
+        });
+        this._domElements.tooltips.forEach(($tooltip) => {
+            $tooltip.remove();
+        });
+
+        this._domElements.points = [];
+        this._domElements.tooltips = [];
+
+        for (let i = 0; i < points.length; i += 1) {
+            this._domElements.points.push(
+                createPoint(i).css('z-index', i + 4)
+            );
+            this._domElements.tooltips.push(createTooltip());
+        }
+
+        this._domElements.$pointContainer.append(
+            this._domElements.points
+        );
+        this._domElements.$tooltipContainer.append(
+            this._domElements.tooltips
+        );
     }
 
     private _initDomElements(): void {

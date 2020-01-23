@@ -2,7 +2,9 @@ $size: 340px;
 
 .demo-panel__slider {
   width: $size;
-  height: $size / 2 + 20;
+  height: $size;
+  min-width: $size;
+  min-height: $size;
   padding: 20px;
   display: -webkit-box;
   display: -ms-flexbox;

@@ -7,7 +7,7 @@ mixin config-panel(options={})
     .config-panel(id=id)
         .config-panel__step
             label Шаг
-                input.config-panel__step-input.js-config-panel__step-input(type="number", min=0, autocomplete="off")
+                input.config-panel__step-input.js-config-panel__step-input(type="number", min=1, autocomplete="off")
 
         .config-panel__view
             h4.config-panel__view-title Вид
@@ -32,7 +32,7 @@ mixin config-panel(options={})
         .config-panel__values
             .config-panel__points
                 label Количество ползунков
-                input.config-panel__points-input.js-config-panel__points-input(type="number", min=0, autocomplete="off")
+                input.config-panel__points-input.js-config-panel__points-input(type="number", min=1, autocomplete="off")
             .config-panel__value-items
                 .config-panel__value-item
                     label Ползунок 1
