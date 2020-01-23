@@ -28,7 +28,7 @@ interface DomElements {
 }
 
 class View implements SliderView {
-    private readonly _driver: SliderViewDriver;
+    private _driver: SliderViewDriver;
     private readonly _domElements: DomElements;
     private _flags: {
         showTooltips: boolean;
@@ -38,6 +38,7 @@ class View implements SliderView {
     private _pointSelected: number;
     private _pointStates: SliderPointState[];
     private readonly _prettify: PrettifyFunc;
+    private _viewName: 'horizontal' | 'vertical';
 
     constructor(config: {
         $slider: JQuery;
@@ -67,6 +68,7 @@ class View implements SliderView {
         this._updateEventCallback = null;
         this._pointSelected = -1;
         this._driver = this._createDriver(viewName);
+        this._viewName = viewName;
 
         this._initDomElements();
         this._showTooltips(this._flags.showTooltips);
@@ -83,6 +85,19 @@ class View implements SliderView {
         if (state && this._pointStates) {
             this._updateTooltips(this._pointStates);
         }
+    }
+
+    public get viewName(): 'horizontal' | 'vertical' {
+        return this._viewName;
+    }
+
+    public set viewName(viewName: 'horizontal' | 'vertical') {
+        this._domElements.$slider.removeClass(CLASSES.VIEW_NAMES);
+        this._domElements.$slider.find('*').removeAttr('style');
+
+        this._viewName = viewName;
+        this._driver = this._createDriver(viewName);
+        this.update(this._pointStates);
     }
 
     public onSelect(callback: HandlerSliderViewSelect): void {

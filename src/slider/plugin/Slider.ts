@@ -59,6 +59,14 @@ class Slider implements Slider {
     public set isShowTooltips(state: boolean) {
         this.view.showTooltips = state;
     }
+
+    public get viewName(): 'horizontal' | 'vertical' {
+        return this.view.viewName;
+    }
+
+    public set viewName(viewName: 'horizontal' | 'vertical') {
+        this.view.viewName = viewName;
+    }
 }
 
 export default Slider;

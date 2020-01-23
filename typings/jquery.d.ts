@@ -38,4 +38,14 @@ interface JQuery {
         command: 'showTooltips',
         isShow: boolean
     ): JQuery;
+
+    slider(
+        this: JQuery,
+        command: 'viewName'
+    ): 'horizontal' | 'vertical';
+    slider(
+        this: JQuery,
+        command: 'viewName',
+        name: 'horizontal' | 'vertical'
+    ): JQuery;
 }

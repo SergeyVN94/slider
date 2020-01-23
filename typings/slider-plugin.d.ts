@@ -1,24 +1,3 @@
-type Command = 'init' | 'value' | 'showTooltips' | 'step';
-
-type SliderPluginResponse = void | boolean | string[] | number[] | string | number | JQuery;
-
-type SliderPluginParams =
-    | boolean
-    | string[]
-    | number
-    | number[]
-    | SliderConfig;
-
-type SliderPluginFunctionInit = (this: JQuery, params: SliderConfig) => void;
-
-type SliderPluginFunctionSingle = (this: JQuery, command: Command) => SliderPluginResponse;
-
-// type SliderPluginFunction = (
-//     this: JQuery,
-//     command: Command,
-//     params: SliderPluginParams
-// ) => SliderPluginResponse;
-
 interface SliderPluginFunction {
     (
         this: JQuery,
@@ -59,6 +38,15 @@ interface SliderPluginFunction {
         this: JQuery,
         command: 'showTooltips',
         isShow: boolean
+    ): JQuery;
+    (
+        this: JQuery,
+        command: 'viewName'
+    ): 'horizontal' | 'vertical';
+    (
+        this: JQuery,
+        command: 'viewName',
+        isShow: 'horizontal' | 'vertical'
     ): JQuery;
 }
 

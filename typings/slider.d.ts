@@ -22,4 +22,5 @@ interface Slider {
     value: string[] | number[];
     step: number;
     isShowTooltips: boolean;
+    viewName: 'horizontal' | 'vertical';
 }

@@ -4,6 +4,7 @@ const CLASSES = {
     THEME: {
         VERTICAL: 'slider_theme_vertical',
     },
+    VIEW_NAMES: ['slider_theme_vertical'],
     HIDE_TOOLTIPS: 'slider__tooltip_hide',
     POINT: 'js-slider__point',
 };

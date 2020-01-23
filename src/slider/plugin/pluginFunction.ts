@@ -10,7 +10,7 @@ const initSlider = function initSliderDomElement($slider: JQuery, params: Slider
 
 const pluginFunction = function pluginMainFunction(
     this: JQuery,
-    command: 'init' | 'step' | 'value' | 'showTooltips',
+    command: 'init' | 'step' | 'value' | 'showTooltips' | 'viewName',
     args: {
         readonly start?: string[] | number[];
         readonly scale?: SliderScale;
@@ -24,8 +24,10 @@ const pluginFunction = function pluginMainFunction(
     | string[]
     | number[]
     | boolean
+    | 'horizontal'
+    | 'vertical'
     = null
-): JQuery | number | string[] | number[] | boolean {
+): JQuery | number | string[] | number[] | boolean | 'horizontal' | 'vertical' {
     const [domElementSlider] = this.get();
     const { slider } = domElementSlider;
 
@@ -65,6 +67,14 @@ const pluginFunction = function pluginMainFunction(
             }
 
             slider.value = args as string[] | number[];
+            return this;
+
+        case 'viewName':
+            if (args === null) {
+                return slider.viewName;
+            }
+
+            slider.viewName = args as 'horizontal' | 'vertical';
             return this;
 
         default:

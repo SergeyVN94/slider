@@ -33,6 +33,13 @@ class ConfigPanel {
         this._$inputStep.val(step);
         this._$inputStep.on('input.step.update', this._updateStep.bind(this));
 
+        const viewName = this._$slider.slider('viewName');
+        this._$viewInputs.each(function() {
+            const $radio = $(this);
+            if ($radio.attr('value') === viewName) {
+                $radio.attr('checked', 1);
+            }
+        });
         this._$viewInputs.on('input.view.changeView', this._updateView.bind(this));
     }
 
@@ -44,6 +51,7 @@ class ConfigPanel {
     private _updateView(ev: JQuery.EventBase): void {
         const $input = $(ev.currentTarget);
         const viewName = $input.val() as 'horizontal' | 'vertical';
+        this._$slider.slider('viewName', viewName);
     }
 }
 

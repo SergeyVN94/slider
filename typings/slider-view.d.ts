@@ -12,6 +12,7 @@ type HandlerSliderViewSelect = (state: SliderViewState) => void;
 
 interface SliderView {
     showTooltips: boolean;
+    viewName: 'horizontal' | 'vertical';
     onSelect(callback: HandlerSliderViewSelect): void;
     update(points: SliderPointState[]): void;
 }
