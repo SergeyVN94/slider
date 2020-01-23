@@ -9,6 +9,7 @@ class ConfigPanel {
     private readonly _$viewInputs: JQuery;
     private readonly _$points: JQuery;
     private readonly _valueInputs: JQuery[];
+    private readonly _$tooltipInput: JQuery;
 
     constructor(config: {
         $slider: JQuery;
@@ -24,6 +25,7 @@ class ConfigPanel {
         this._$inputStep = $panel.find(`.${CLASSES.STEP_INPUT}`);
         this._$viewInputs = $panel.find(`.${CLASSES.VIEW_INPUT}`);
         this._$points = $panel.find(`.${CLASSES.POINTS_INPUT}`);
+        this._$tooltipInput = $panel.find(`.${CLASSES.TOOLTIP_INPUT}`);
 
         this._initDomElements();
     }
@@ -37,10 +39,14 @@ class ConfigPanel {
         this._$viewInputs.each(function() {
             const $radio = $(this);
             if ($radio.attr('value') === viewName) {
-                $radio.attr('checked', 1);
+                $radio.prop('checked', true);
             }
         });
         this._$viewInputs.on('input.view.changeView', this._updateView.bind(this));
+
+        const isShowTooltip = this._$slider.slider('showTooltips');
+        this._$tooltipInput.attr('checked', Number(isShowTooltip));
+        this._$tooltipInput.on('input.view.showTooltips', this._showTooltips.bind(this));
     }
 
     private _updateStep(): void {
@@ -52,6 +58,12 @@ class ConfigPanel {
         const $input = $(ev.currentTarget);
         const viewName = $input.val() as 'horizontal' | 'vertical';
         this._$slider.slider('viewName', viewName);
+    }
+
+    private _showTooltips(ev: JQuery.EventBase): void {
+        const $input = $(ev.currentTarget);
+        const isShowTooltip = $input.prop('checked');
+        this._$slider.slider('showTooltips', isShowTooltip);
     }
 }
 

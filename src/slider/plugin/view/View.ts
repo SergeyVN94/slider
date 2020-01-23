@@ -218,9 +218,7 @@ class View implements SliderView {
     }
 
     private _showTooltips(state: boolean): void {
-        this._domElements.tooltips.forEach((tooltip) => {
-            tooltip.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
-        });
+        this._domElements.$slider.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
     }
 }
 
