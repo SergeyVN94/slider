@@ -74,6 +74,16 @@ class View implements SliderView {
         this._showTooltips(this._flags.showTooltips);
     }
 
+    public get showBgLine(): boolean {
+        return this._flags.showBgLine;
+    }
+
+    public set showBgLine(state: boolean) {
+        this._flags.showBgLine = state;
+        this._domElements.$slider.toggleClass(CLASSES.HIDE_BG_LINE, !state);
+        this.update(this._pointStates);
+    }
+
     public get showTooltips(): boolean {
         return this._flags.showTooltips;
     }

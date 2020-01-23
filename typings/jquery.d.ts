@@ -48,4 +48,14 @@ interface JQuery {
         command: 'viewName',
         name: 'horizontal' | 'vertical'
     ): JQuery;
+
+    slider(
+        this: JQuery,
+        command: 'bg-line'
+    ): boolean;
+    slider(
+        this: JQuery,
+        command: 'bg-line',
+        isShow: boolean
+    ): JQuery;
 }

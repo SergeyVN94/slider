@@ -10,7 +10,7 @@ const initSlider = function initSliderDomElement($slider: JQuery, params: Slider
 
 const pluginFunction = function pluginMainFunction(
     this: JQuery,
-    command: 'init' | 'step' | 'value' | 'showTooltips' | 'viewName',
+    command: 'init' | 'step' | 'value' | 'showTooltips' | 'viewName' | 'bg-line',
     args: {
         readonly start?: string[] | number[];
         readonly scale?: SliderScale;
@@ -75,6 +75,14 @@ const pluginFunction = function pluginMainFunction(
             }
 
             slider.viewName = args as 'horizontal' | 'vertical';
+            return this;
+
+        case 'bg-line':
+            if (args === null) {
+                return slider.isShowBgLine;
+            }
+
+            slider.isShowBgLine = args as boolean;
             return this;
 
         default:

@@ -23,4 +23,5 @@ interface Slider {
     step: number;
     isShowTooltips: boolean;
     viewName: 'horizontal' | 'vertical';
+    isShowBgLine: boolean;
 }

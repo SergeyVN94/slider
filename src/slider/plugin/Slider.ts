@@ -60,6 +60,14 @@ class Slider implements Slider {
         this.view.showTooltips = state;
     }
 
+    public get isShowBgLine(): boolean {
+        return this.view.showBgLine;
+    }
+
+    public set isShowBgLine(state: boolean) {
+        this.view.showBgLine = state;
+    }
+
     public get viewName(): 'horizontal' | 'vertical' {
         return this.view.viewName;
     }

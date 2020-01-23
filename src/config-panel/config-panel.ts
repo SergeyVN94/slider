@@ -10,6 +10,7 @@ class ConfigPanel {
     private readonly _$points: JQuery;
     private readonly _valueInputs: JQuery[];
     private readonly _$tooltipInput: JQuery;
+    private readonly _$bgLine: JQuery;
 
     constructor(config: {
         $slider: JQuery;
@@ -26,14 +27,15 @@ class ConfigPanel {
         this._$viewInputs = $panel.find(`.${CLASSES.VIEW_INPUT}`);
         this._$points = $panel.find(`.${CLASSES.POINTS_INPUT}`);
         this._$tooltipInput = $panel.find(`.${CLASSES.TOOLTIP_INPUT}`);
+        this._$bgLine = $panel.find(`.${CLASSES.BG_LINE_INPUT}`);
 
         this._initDomElements();
+        this._initEventHandlers();
     }
 
     private _initDomElements(): void {
         const step = this._$slider.slider('step');
         this._$inputStep.val(step);
-        this._$inputStep.on('input.step.update', this._updateStep.bind(this));
 
         const viewName = this._$slider.slider('viewName');
         this._$viewInputs.each(function() {
@@ -42,11 +44,25 @@ class ConfigPanel {
                 $radio.prop('checked', true);
             }
         });
-        this._$viewInputs.on('input.view.changeView', this._updateView.bind(this));
 
         const isShowTooltip = this._$slider.slider('showTooltips');
-        this._$tooltipInput.attr('checked', Number(isShowTooltip));
+        this._$tooltipInput.prop('checked', isShowTooltip);
+
+        const isShowBgLine = this._$slider.slider('bg-line');
+        this._$bgLine.prop('checked', isShowBgLine);
+    }
+
+    private _initEventHandlers(): void {
+        this._$inputStep.on('input.step.update', this._updateStep.bind(this));
+        this._$viewInputs.on('input.view.changeView', this._updateView.bind(this));
         this._$tooltipInput.on('input.view.showTooltips', this._showTooltips.bind(this));
+        this._$bgLine.on('input.view.showBgLine', this._bgLineInputSelectHandler.bind(this));
+    }
+
+    private _bgLineInputSelectHandler(ev: JQuery.EventBase): void {
+        const $input = $(ev.currentTarget);
+        const isShowBgLine = $input.prop('checked');
+        this._$slider.slider('bg-line', isShowBgLine);
     }
 
     private _updateStep(): void {

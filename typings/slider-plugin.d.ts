@@ -48,6 +48,15 @@ interface SliderPluginFunction {
         command: 'viewName',
         isShow: 'horizontal' | 'vertical'
     ): JQuery;
+    (
+        this: JQuery,
+        command: 'bg-line'
+    ): boolean;
+    (
+        this: JQuery,
+        command: 'bg-line',
+        isShow: boolean
+    ): JQuery;
 }
 
 interface Element {
