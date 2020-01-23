@@ -2,6 +2,16 @@ import * as $ from 'jquery';
 
 import CLASSES from './classes';
 
+const createValueItem = function createValueItem(index: number): JQuery {
+    return $(
+        `<div class='config-panel__value-item'>
+            <label> Ползунок ${index}
+                <input class='config-panel__value-input js-config-panel__value-input' type='text' autocomplete='off' data-index=${index}>
+            </label>
+        </div>`
+    );
+};
+
 class ConfigPanel {
     private readonly _$slider: JQuery;
     private readonly _$panel: JQuery;
@@ -11,6 +21,8 @@ class ConfigPanel {
     private readonly _valueInputs: JQuery[];
     private readonly _$tooltipInput: JQuery;
     private readonly _$bgLine: JQuery;
+    private readonly _$valueItemsContainer: JQuery;
+    private readonly _sliderValueType: 'string' | 'number';
 
     constructor(config: {
         $slider: JQuery;
@@ -28,6 +40,11 @@ class ConfigPanel {
         this._$points = $panel.find(`.${CLASSES.POINTS_INPUT}`);
         this._$tooltipInput = $panel.find(`.${CLASSES.TOOLTIP_INPUT}`);
         this._$bgLine = $panel.find(`.${CLASSES.BG_LINE_INPUT}`);
+        this._$valueItemsContainer = $panel.find(`.${CLASSES.VALUES_ITEMS_CONTAINER}`);
+        this._valueInputs = [];
+
+        const [sliderValue] = $slider.slider('value');
+        this._sliderValueType = typeof sliderValue as 'number' | 'string';
 
         this._initDomElements();
         this._initEventHandlers();
@@ -50,6 +67,17 @@ class ConfigPanel {
 
         const isShowBgLine = this._$slider.slider('bg-line');
         this._$bgLine.prop('checked', isShowBgLine);
+
+        const values = this._$slider.slider('value');
+        this._$points.val(values.length);
+        this._$valueItemsContainer.html('');
+        for (let i = 0; i < values.length; i += 1) {
+            const $valueItem = createValueItem(i);
+            const $valueInput = $valueItem.find('input');
+            $valueInput.val(values[i]);
+            this._valueInputs.push($valueInput);
+            this._$valueItemsContainer.append($valueItem);
+        }
     }
 
     private _initEventHandlers(): void {
@@ -57,6 +85,32 @@ class ConfigPanel {
         this._$viewInputs.on('input.view.changeView', this._updateView.bind(this));
         this._$tooltipInput.on('input.view.showTooltips', this._showTooltips.bind(this));
         this._$bgLine.on('input.view.showBgLine', this._bgLineInputSelectHandler.bind(this));
+        this._$valueItemsContainer.on(
+            'focusout.sliderValues.update',
+            `.${CLASSES.VALUE_INPUT}`,
+            this._valueInputHandler.bind(this)
+        );
+        this._$slider.on('select', this._sliderSelectHandler.bind(this));
+    }
+
+    private _sliderSelectHandler(ev: JQuery.EventBase, ...values: string[] | number[]): void {
+        this._valueInputs.forEach(($input, index) => {
+            $input.val(values[index]);
+        });
+    }
+
+    private _valueInputHandler(): void {
+        const values = this._valueInputs.map(($input) => {
+            return $input.val();
+        });
+
+        if (this._sliderValueType === 'number') {
+            this._$slider.slider('value', values.map((value: string) => {
+                return parseInt(value, 10);
+            }));
+        } else {
+            this._$slider.slider('value', values as string[]);
+        }
     }
 
     private _bgLineInputSelectHandler(ev: JQuery.EventBase): void {

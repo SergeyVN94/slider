@@ -136,6 +136,10 @@ class View implements SliderView {
                 points
             );
         }
+
+        this._domElements.$slider.trigger('select', points.map((point) => {
+            return point.value;
+        }));
     }
 
     private _initDomElements(): void {

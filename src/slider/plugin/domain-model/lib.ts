@@ -289,21 +289,59 @@ const getModelValues = function getModelValues(
     });
 };
 
+const isCorrectSteps = function isCorrectSteps(
+    steps: number[],
+    dataManager: SliderModelDataManager
+): boolean {
+    const { steps: maxSteps } = dataManager;
+    let isCorrect = true;
+    let lastStep = 0;
+
+    steps.forEach((step): boolean => {
+        if (step < 0) {
+            isCorrect = false;
+            return false;
+        }
+
+        if (step > maxSteps) {
+            isCorrect = false;
+            return false;
+        }
+
+        if (step < lastStep) {
+            isCorrect = false;
+            return false;
+        }
+
+        lastStep = step;
+
+        return true;
+    });
+
+    return isCorrect;
+};
+
 const setModelValues = function setModelValues(
     values: number[] | string[],
     dataManager: SliderModelDataManager
-): void {
-    const { scaleType } = dataManager;
-
-    if (scaleType === 'number') {
-        dataManager.pointSteps = (values as number[]).map((value) => {
-            return valueToStep(value, dataManager);
-        });
-    } else {
-        dataManager.pointSteps = (values as string[]).map((value) => {
-            return valueToStep(value, dataManager);
-        });
+): boolean {
+    if (values.length < 1) {
+        console.error(new Error('At least one value must be passed.'));
     }
+
+    const steps: number[] = [];
+    values.forEach((value: string | number) => {
+        steps.push(valueToStep(value, dataManager));
+    });
+
+    if (isCorrectSteps(steps, dataManager)) {
+        dataManager.pointSteps = steps;
+        return true;
+    }
+
+    console.error(new Error(`[${values.join(',')}] values are not valid.`));
+
+    return false;
 };
 
 export {
@@ -315,4 +353,5 @@ export {
     setModelValues,
     getPointStates,
     stepToValue,
+    isCorrectSteps,
 };

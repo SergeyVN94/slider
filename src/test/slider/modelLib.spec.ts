@@ -9,6 +9,7 @@ import {
     getModelValues,
     setModelValues,
     updatePointSteps,
+    isCorrectSteps,
 } from '../../slider/plugin/domain-model/lib';
 import DataManager from '../../slider/plugin/domain-model/DataManager';
 
@@ -703,6 +704,55 @@ describe('[Domain model lib]', () => {
 
                     expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
                 });
+            });
+        });
+    });
+
+    describe('[isCorrectSteps]', () => {
+        const dataManager = new DataManager({
+            stepSize: 1,
+            scale: [-1000, 1000],
+            steps: 2000,
+            pointSteps: [0, 333, 555],
+        });
+
+        const template = [
+            {
+                steps: [0, 345, 2222],
+                result: false,
+            },
+            {
+                steps: [-34, 345, 111],
+                result: false,
+            },
+            {
+                steps: [34, -1, 111],
+                result: false,
+            },
+            {
+                steps: [1, 44, 111, 110],
+                result: false,
+            },
+            {
+                steps: [1, 3, 111, 2000],
+                result: true,
+            },
+            {
+                steps: [3],
+                result: true,
+            },
+            {
+                steps: [3, 8, 1166],
+                result: true,
+            },
+        ];
+
+        template.forEach(({
+            steps,
+            result,
+        }) => {
+            it(`[steps: (${steps.join(',')}), result: ${result}]`, () => {
+                expect(isCorrectSteps(steps, dataManager)).to.equal(result);
             });
         });
     });
