@@ -1,6 +1,7 @@
 'use strict';
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     context: `${__dirname}/src`,
@@ -49,5 +50,11 @@ module.exports = {
             template: 'index.pug',
             filename: 'index.html',
         }),
+        new CopyPlugin([
+            {
+                from: 'chunks/favicons',
+                to: '',
+            },
+        ]),
     ],
 };

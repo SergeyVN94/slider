@@ -1,8 +1,8 @@
 # slider - виджет для сайта, оформленный в JQuery плагин.
 
 ### Установка
-npm i - Установка зависимостей.  
-npm build - Cборка проекта. Результат сборки помещяется в папку dist.  
+git clone https://github.com/SergeyVN94/slider.git && npm i && npm build 
+ 
 npm test - Запуск тестов с помощью KarmaJS и PhantomJS.  
 
 
