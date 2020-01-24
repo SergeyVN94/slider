@@ -1,9 +1,9 @@
 # slider - виджет для сайта, оформленный в JQuery плагин.
 
 ### Установка
-git clone https://github.com/SergeyVN94/slider.git && npm i && npm build 
+git clone https://github.com/SergeyVN94/slider.git && cd slider && npm i && npm run-script build
  
-npm test - Запуск тестов с помощью KarmaJS и PhantomJS.  
+npm run-script test - Запуск тестов с помощью KarmaJS и PhantomJS.  
 
 
 ![alt text](/docs/uml.png)
