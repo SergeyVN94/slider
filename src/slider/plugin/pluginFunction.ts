@@ -8,6 +8,15 @@ const initSlider = function initSliderDomElement($slider: JQuery, params: Slider
     $slider.get()[0].slider = slider;
 };
 
+const COMMANDS = {
+    INIT: 'init',
+    STEP: 'step',
+    VALUE: 'value',
+    SHOW_TOOLTIPS: 'showTooltips',
+    VIEW_NAME: 'viewName',
+    BG_LINE: 'bg-line',
+};
+
 const pluginFunction = function pluginMainFunction(
     this: JQuery,
     command: 'init' | 'step' | 'value' | 'showTooltips' | 'viewName' | 'bg-line',
@@ -32,7 +41,7 @@ const pluginFunction = function pluginMainFunction(
     const { slider } = domElementSlider;
 
     switch (command) {
-        case 'init':
+        case COMMANDS.INIT:
             if (args === null) {
                 throw new TypeError('Configuration object expected.');
             }
@@ -40,7 +49,7 @@ const pluginFunction = function pluginMainFunction(
             initSlider(this, args as SliderConfig);
             return this;
 
-        case 'showTooltips':
+        case COMMANDS.SHOW_TOOLTIPS:
             if (args === null) {
                 return slider.isShowTooltips;
             }
@@ -52,7 +61,7 @@ const pluginFunction = function pluginMainFunction(
             slider.isShowTooltips = args;
             return this;
 
-        case 'step':
+        case COMMANDS.STEP:
             if (args === null) {
                 return slider.step;
             }
@@ -61,7 +70,7 @@ const pluginFunction = function pluginMainFunction(
 
             return this;
 
-        case 'value':
+        case COMMANDS.VALUE:
             if (args === null) {
                 return slider.value;
             }
@@ -69,7 +78,7 @@ const pluginFunction = function pluginMainFunction(
             slider.value = args as string[] | number[];
             return this;
 
-        case 'viewName':
+        case COMMANDS.VIEW_NAME:
             if (args === null) {
                 return slider.viewName;
             }
@@ -77,7 +86,7 @@ const pluginFunction = function pluginMainFunction(
             slider.viewName = args as 'horizontal' | 'vertical';
             return this;
 
-        case 'bg-line':
+        case COMMANDS.BG_LINE:
             if (args === null) {
                 return slider.isShowBgLine;
             }

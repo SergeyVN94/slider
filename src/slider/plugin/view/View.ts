@@ -17,6 +17,13 @@ const createTooltip = function createTooltip(): JQuery {
     });
 };
 
+const VIEW_NAMES: {
+    [index: string]: 'horizontal' | 'vertical';
+} = {
+    HORIZONTAL: 'horizontal',
+    VERTICAL: 'vertical',
+};
+
 interface DomElements {
     $slider: JQuery;
     points: JQuery[];
@@ -56,7 +63,7 @@ class View implements SliderView {
             prettify = (value: string): string => {
                 return value;
             },
-            viewName = 'horizontal',
+            viewName = VIEW_NAMES.HORIZONTAL,
         } = config;
 
         this._flags = {
@@ -212,7 +219,7 @@ class View implements SliderView {
 
     private _createDriver(viewName: SliderViewName): SliderViewDriver {
         switch (viewName) {
-            case 'vertical':
+            case VIEW_NAMES.VERTICAL:
                 return new _DriverVertical(this._domElements.$slider);
             // default - 'horizontal'
             default:

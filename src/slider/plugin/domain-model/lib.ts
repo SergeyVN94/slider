@@ -1,5 +1,9 @@
+const SCALE_TYPES = {
+    STRING: 'string',
+};
+
 const getAllSteps = function getAllSteps(scale: SliderScale, stepSize = 1): number {
-    if (typeof scale[0] === 'string') {
+    if (typeof scale[0] === SCALE_TYPES.STRING) {
         return scale.length - 1;
     }
 
@@ -25,7 +29,7 @@ const valueToStep = function valueToStep(
         return -1;
     }
 
-    if (scaleType === 'string') {
+    if (scaleType === SCALE_TYPES.STRING) {
         return (scale as string[]).indexOf(value as string);
     }
 
@@ -56,7 +60,7 @@ const updateStepSize = function updateStepSize(
 
     if (stepSize < 1) {
         console.error(new Error('Slider step size must be greater than 1.'));
-    } else if (scaleType === 'string') {
+    } else if (scaleType === SCALE_TYPES.STRING) {
         console.error(new Error('You cannot change the step size for a scale from strings.'));
     } else {
         const [
@@ -242,7 +246,7 @@ const stepToValue = function stepToValue(
         return null;
     }
 
-    if (scaleType === 'string') {
+    if (scaleType === SCALE_TYPES.STRING) {
         return (scale as string[])[step];
     }
 
@@ -278,7 +282,7 @@ const getModelValues = function getModelValues(
         scaleType,
     } = dataManager;
 
-    if (scaleType === 'string') {
+    if (scaleType === SCALE_TYPES.STRING) {
         return pointSteps.map<number>((step): number => {
             return stepToValue(step, dataManager) as number;
         });
