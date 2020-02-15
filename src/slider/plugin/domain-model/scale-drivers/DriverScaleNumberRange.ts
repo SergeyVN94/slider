@@ -58,6 +58,23 @@ class DriverScaleNumberRange implements ScaleDriver {
 
         return true;
     }
+
+    stepToValue(step: number, dataManager: SliderModelDataManager): number | null {
+        const {
+            scale,
+            steps,
+            stepSize,
+        } = dataManager;
+
+        const isCorrectStep = (step >= 0) && (step <= steps);
+
+        if (!isCorrectStep) {
+            return null;
+        }
+
+        const [rangeMin] = scale as [number, number];
+        return (step * stepSize) + rangeMin;
+    }
 }
 
 export default DriverScaleNumberRange;

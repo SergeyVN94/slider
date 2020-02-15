@@ -147,4 +147,51 @@ describe('[DriverScaleNumberRange]', () => {
             });
         });
     });
+
+    describe('[stepToValue]', () => {
+        const dataManager = new DataManager({
+            scale,
+            pointSteps: [0],
+            stepSize: 100,
+            steps: scaleDriver.getAllSteps(scale, 100),
+        });
+
+        const template = [
+            {
+                step: -1,
+                value: null,
+            },
+            {
+                step: 31,
+                value: null,
+            },
+            {
+                step: 0,
+                value: -1000,
+            },
+            {
+                step: 30,
+                value: 2000,
+            },
+            {
+                step: 22,
+                value: 1200,
+            },
+            {
+                step: 6,
+                value: -400,
+            },
+        ];
+
+        template.forEach((
+            {
+                step,
+                value,
+            }
+        ) => {
+            it(`[range: (${scale.join(',')}); step: ${step}]`, () => {
+                expect(scaleDriver.stepToValue(step, dataManager)).to.equal(value);
+            });
+        });
+    });
 });
