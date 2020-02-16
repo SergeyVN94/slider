@@ -1,4 +1,4 @@
-class DriverScaleNumberRange implements ScaleDriver {
+class DriverScaleNumberRange implements SliderScaleDriver {
     getAllSteps(scale: [number, number], stepSize: number): number {
         const [
             rangeMin,
