@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 
-import DriverScaleRangeArray from '../../slider/plugin/domain-model/scale-drivers/DriverScaleStringArray';
+import DriverScaleStringArray from '../../slider/plugin/domain-model/scale-drivers/DriverScaleStringArray';
 import DataManager from '../../slider/plugin/domain-model/DataManager';
 
-const scaleDriver = new DriverScaleRangeArray();
+const scaleDriver = new DriverScaleStringArray();
 const scale: string[] = [
     'a',
     'b',
@@ -14,7 +14,7 @@ const scale: string[] = [
     'g',
 ];
 
-describe('[DriverScaleRangeArray]', () => {
+describe('[DriverScaleStringArray]', () => {
     describe('[getAllSteps]', () => {
         const template = [
             {

@@ -1,4 +1,4 @@
-class DriverScaleRangeArray implements SliderScaleDriver {
+class DriverScaleStringArray implements SliderScaleDriver {
     getAllSteps(scale: string[]): number {
         return scale.length - 1;
     }
@@ -33,4 +33,4 @@ class DriverScaleRangeArray implements SliderScaleDriver {
     }
 }
 
-export default DriverScaleRangeArray;
+export default DriverScaleStringArray;
