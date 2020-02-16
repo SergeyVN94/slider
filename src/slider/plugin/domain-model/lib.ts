@@ -2,80 +2,6 @@ const SCALE_TYPES = {
     STRING: 'string',
 };
 
-const getAllSteps = function getAllSteps(scale: SliderScale, stepSize = 1): number {
-    if (typeof scale[0] === SCALE_TYPES.STRING) {
-        return scale.length - 1;
-    }
-
-    const [
-        rangeMin,
-        rangeMax,
-    ] = scale as [number, number];
-    return Math.floor((rangeMax - rangeMin) / stepSize);
-};
-
-const valueToStep = function valueToStep(
-    value: string | number,
-    dataManager: SliderModelDataManager
-): number {
-    const {
-        scale,
-        scaleType,
-        stepSize,
-    } = dataManager;
-
-    if (scaleType !== typeof value) {
-        console.error(new TypeError(`Unable to compute step "${value}". The value type should be the same as the slider scale.`));
-        return -1;
-    }
-
-    if (scaleType === SCALE_TYPES.STRING) {
-        return (scale as string[]).indexOf(value as string);
-    }
-
-    const [
-        rangeMin,
-        rangeMax,
-    ] = scale as [number, number];
-
-    if (value < rangeMin) {
-        return -1;
-    }
-
-    if (value > rangeMax) {
-        return -1;
-    }
-
-    return Math.round(((value as number) - rangeMin) / stepSize);
-};
-
-const updateStepSize = function updateStepSize(
-    stepSize: number,
-    dataManager: SliderModelDataManager
-): void {
-    const {
-        scaleType,
-        scale,
-    } = dataManager;
-
-    if (stepSize < 1) {
-        console.error(new Error('Slider step size must be greater than 1.'));
-    } else if (scaleType === SCALE_TYPES.STRING) {
-        console.error(new Error('You cannot change the step size for a scale from strings.'));
-    } else {
-        const [
-            rangeMin,
-            rangeMax,
-        ] = scale as [number, number];
-
-        if (stepSize > (rangeMax - rangeMin)) {
-            console.error(new Error('The step size should be less than the range of the slider.'));
-        } else {
-            dataManager.stepSize = stepSize;
-        }
-    }
-};
-
 const updatePointStepsForNull = function updatePointStepsForNull(
     state: SliderViewState,
     dataManager: SliderModelDataManager
@@ -225,37 +151,9 @@ const updatePointSteps = function updatePointSteps(
     }
 };
 
-const stepToValue = function stepToValue(
-    step: number,
-    dataManager: SliderModelDataManager,
-): string | number | null {
-    const {
-        scale,
-        steps,
-        stepSize,
-        scaleType,
-    } = dataManager;
-
-    if (step < 0) {
-        console.error(new Error('Slider step size must be greater than 0.'));
-        return null;
-    }
-
-    if (step > steps) {
-        console.error(new Error('The step exceeds the maximum number of steps for a given slider scale.'));
-        return null;
-    }
-
-    if (scaleType === SCALE_TYPES.STRING) {
-        return (scale as string[])[step];
-    }
-
-    const [rangeMin] = scale as [number, number];
-    return (step * stepSize) + rangeMin;
-};
-
 const getPointStates = function getPointStates(
-    dataManager: SliderModelDataManager
+    dataManager: SliderModelDataManager,
+    scaleDriver: SliderScaleDriver,
 ): SliderPointState[] {
     const {
         pointSteps,
@@ -267,7 +165,7 @@ const getPointStates = function getPointStates(
     pointSteps.forEach((pointStep) => {
         pointStates.push({
             position: pointStep / steps,
-            value: stepToValue(pointStep, dataManager),
+            value: scaleDriver.stepToValue(pointStep, dataManager),
         });
     });
 
@@ -275,7 +173,8 @@ const getPointStates = function getPointStates(
 };
 
 const getModelValues = function getModelValues(
-    dataManager: SliderModelDataManager
+    dataManager: SliderModelDataManager,
+    scaleDriver: SliderScaleDriver,
 ): number[] | string[] {
     const {
         pointSteps,
@@ -284,12 +183,12 @@ const getModelValues = function getModelValues(
 
     if (scaleType === SCALE_TYPES.STRING) {
         return pointSteps.map<number>((step): number => {
-            return stepToValue(step, dataManager) as number;
+            return scaleDriver.stepToValue(step, dataManager) as number;
         });
     }
 
     return pointSteps.map<string>((step): string => {
-        return stepToValue(step, dataManager) as string;
+        return scaleDriver.stepToValue(step, dataManager) as string;
     });
 };
 
@@ -327,7 +226,8 @@ const isCorrectSteps = function isCorrectSteps(
 
 const setModelValues = function setModelValues(
     values: number[] | string[],
-    dataManager: SliderModelDataManager
+    dataManager: SliderModelDataManager,
+    scaleDriver: SliderScaleDriver
 ): boolean {
     if (values.length < 1) {
         console.error(new Error('At least one value must be passed.'));
@@ -335,7 +235,7 @@ const setModelValues = function setModelValues(
 
     const steps: number[] = [];
     values.forEach((value: string | number) => {
-        steps.push(valueToStep(value, dataManager));
+        steps.push(scaleDriver.valueToStep(value, dataManager));
     });
 
     if (isCorrectSteps(steps, dataManager)) {
@@ -349,13 +249,9 @@ const setModelValues = function setModelValues(
 };
 
 export {
-    getAllSteps,
-    valueToStep,
     updatePointSteps,
-    updateStepSize,
     getModelValues,
     setModelValues,
     getPointStates,
-    stepToValue,
     isCorrectSteps,
 };

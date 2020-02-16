@@ -1,17 +1,17 @@
 import DataManager from './DataManager';
 import {
-    getAllSteps,
-    valueToStep,
     updatePointSteps,
-    updateStepSize,
     getModelValues,
     setModelValues,
     getPointStates,
 } from './lib';
+import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
+import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
 
 class Model implements SliderModel {
     private readonly _dataManager: SliderModelDataManager;
     private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
+    private readonly _scaleDriver: SliderScaleDriver;
 
     constructor(config: {
         scale: [number, number] | string[];
@@ -24,17 +24,23 @@ class Model implements SliderModel {
             step: stepSize,
         } = config;
 
+        if (typeof scale[0] === 'number') {
+            this._scaleDriver = new DriverScaleNumberRange();
+        } else {
+            this._scaleDriver = new DriverScaleStringArray();
+        }
+
         this._dataManager = new DataManager({
             scale,
             pointSteps: [],
             stepSize,
-            steps: getAllSteps(scale, stepSize),
+            steps: this._scaleDriver.getAllSteps(scale, stepSize),
         });
 
         const pointSteps: number[] = [];
         start.forEach((startValue: string | number): void => {
             pointSteps.push(
-                valueToStep(startValue, this._dataManager)
+                this._scaleDriver.valueToStep(startValue, this._dataManager)
             );
         });
 
@@ -56,32 +62,33 @@ class Model implements SliderModel {
         return this._dataManager.stepSize;
     }
 
-    public set step(step: number) {
-        const values = getModelValues(this._dataManager);
-        updateStepSize(step, this._dataManager);
-        this._dataManager.steps = getAllSteps(
-            this._dataManager.scale,
-            this._dataManager.stepSize
-        );
-        this.value = values;
-        this._toggleUpdateEvent();
+    public set step(newStepSize: number) {
+        const values = getModelValues(this._dataManager, this._scaleDriver);
+        const { scale } = this._dataManager;
+
+        if (this._scaleDriver.isCorrectStepSize(scale, newStepSize)) {
+            this._dataManager.stepSize = newStepSize;
+            this._dataManager.steps = this._scaleDriver.getAllSteps(scale, newStepSize);
+            this.value = values;
+            this._toggleUpdateEvent();
+        }
     }
 
     public get value(): string[] | number[] {
-        return getModelValues(this._dataManager);
+        return getModelValues(this._dataManager, this._scaleDriver);
     }
 
     public set value(values: string[] | number[]) {
-        setModelValues(values, this._dataManager);
+        setModelValues(values, this._dataManager, this._scaleDriver);
         this._toggleUpdateEvent();
     }
 
     public getPointStates(): SliderPointState[] {
-        return getPointStates(this._dataManager);
+        return getPointStates(this._dataManager, this._scaleDriver);
     }
 
     private _toggleUpdateEvent(): void {
-        const pointStates = getPointStates(this._dataManager);
+        const pointStates = getPointStates(this._dataManager, this._scaleDriver);
 
         this._updateEventCallbackList.forEach((callback) => {
             callback(pointStates);
