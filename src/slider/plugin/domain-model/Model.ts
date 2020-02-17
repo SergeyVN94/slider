@@ -1,17 +1,18 @@
 import DataManager from './DataManager';
 import {
-    updatePointSteps,
     getModelValues,
     setModelValues,
     getPointStates,
 } from './lib';
 import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
+import Core from './Core';
 
 class Model implements SliderModel {
     private readonly _dataManager: SliderModelDataManager;
     private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
     private readonly _scaleDriver: SliderScaleDriver;
+    private readonly _core: SliderModelCore;
 
     constructor(config: {
         scale: [number, number] | string[];
@@ -37,6 +38,8 @@ class Model implements SliderModel {
             steps: this._scaleDriver.getAllSteps(scale, stepSize),
         });
 
+        this._core = new Core();
+
         const pointSteps: number[] = [];
         start.forEach((startValue: string | number): void => {
             pointSteps.push(
@@ -50,7 +53,7 @@ class Model implements SliderModel {
     }
 
     public update(state: SliderViewState): void {
-        updatePointSteps(state, this._dataManager);
+        this._core.updatePointSteps(state, this._dataManager);
         this._toggleUpdateEvent();
     }
 
