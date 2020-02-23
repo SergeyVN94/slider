@@ -3,7 +3,7 @@ import * as $ from 'jquery';
 import {
     createPoint,
     createTooltip,
-} from '../../slider/plugin/view/View';
+} from '../../desktop.blocks/slider/plugin/view/View';
 
 const createSlider = function createSlider(config: {
     pointSize: number;

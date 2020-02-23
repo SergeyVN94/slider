@@ -1,7 +1,13 @@
 import * as jQuery from 'jquery';
 
-import './slider/slider';
-import ConfigPanel from './config-panel/config-panel';
+import './desktop.blocks/slider/slider';
+import ConfigPanel from './desktop.blocks/config-panel/config-panel';
+
+const importAll = function importAll(resolve: __WebpackModuleApi.RequireContext): void {
+    resolve.keys().forEach(resolve);
+};
+
+importAll(require.context('./desktop.blocks', true, /.(sa|sc|c)ss$/));
 
 ((fun: Function): void => {
     jQuery(fun(jQuery));

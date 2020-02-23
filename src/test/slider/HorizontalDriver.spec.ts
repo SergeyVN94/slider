@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as $ from 'jquery';
 
 import { createSlider } from './lib';
-import DriverHorizontal from '../../slider/plugin/view/drivers/DriverHorizontal';
+import DriverHorizontal from '../../desktop.blocks/slider/plugin/view/drivers/DriverHorizontal';
 
 document.body.style.padding = '50px';
 

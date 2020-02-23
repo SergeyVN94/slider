@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import DriverScaleStringArray from '../../slider/plugin/domain-model/scale-drivers/DriverScaleStringArray';
-import DataManager from '../../slider/plugin/domain-model/DataManager';
+import DriverScaleStringArray from '../../desktop.blocks/slider/plugin/domain-model/scale-drivers/DriverScaleStringArray';
+import DataManager from '../../desktop.blocks/slider/plugin/domain-model/DataManager';
 
 const scaleDriver = new DriverScaleStringArray();
 const scale: string[] = [
