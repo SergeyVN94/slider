@@ -3,9 +3,9 @@ import Presenter from './view/Presenter';
 import Model from './domain-model/Model';
 
 class Slider implements Slider {
-    private readonly presenter: Presenter;
-    private readonly model: Model;
-    private readonly view: View;
+    private readonly _presenter: Presenter;
+    private readonly _model: Model;
+    private readonly _view: View;
 
     constructor(config: {
         readonly $slider: JQuery;
@@ -23,57 +23,57 @@ class Slider implements Slider {
             start = [scale[0]] as string[] | number[],
         } = config;
 
-        this.view = new View({
+        this._view = new View({
             points: start.length,
             ...config,
         });
-        this.model = new Model({
+        this._model = new Model({
             start,
             scale,
             step,
         });
 
-        this.presenter = new Presenter(this.view, this.model);
+        this._presenter = new Presenter(this._view, this._model);
     }
 
     public get value(): string[] | number[] {
-        return this.model.value;
+        return this._model.value;
     }
 
     public set value(value: string[] | number[]) {
-        this.model.value = value;
+        this._model.value = value;
     }
 
     public get step(): number {
-        return this.model.step;
+        return this._model.step;
     }
 
     public set step(value: number) {
-        this.model.step = value;
+        this._model.step = value;
     }
 
     public get isShowTooltips(): boolean {
-        return this.view.showTooltips;
+        return this._view.showTooltips;
     }
 
     public set isShowTooltips(state: boolean) {
-        this.view.showTooltips = state;
+        this._view.showTooltips = state;
     }
 
     public get isShowBgLine(): boolean {
-        return this.view.showBgLine;
+        return this._view.showBgLine;
     }
 
     public set isShowBgLine(state: boolean) {
-        this.view.showBgLine = state;
+        this._view.showBgLine = state;
     }
 
     public get viewName(): 'horizontal' | 'vertical' {
-        return this.view.viewName;
+        return this._view.viewName;
     }
 
     public set viewName(viewName: 'horizontal' | 'vertical') {
-        this.view.viewName = viewName;
+        this._view.viewName = viewName;
     }
 }
 
