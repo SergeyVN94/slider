@@ -8,7 +8,7 @@ import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
 import Core from './Core';
 
-class Model implements SliderModel {
+class Model implements SliderModel, SliderModelStateManager {
     private readonly _dataManager: SliderModelDataManager;
     private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
     private readonly _scaleDriver: SliderScaleDriver;

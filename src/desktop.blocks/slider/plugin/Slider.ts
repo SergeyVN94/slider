@@ -4,8 +4,8 @@ import Model from './domain-model/Model';
 
 class Slider implements Slider {
     private readonly _presenter: Presenter;
-    private readonly _model: Model;
-    private readonly _view: View;
+    private readonly _model: SliderModelStateManager;
+    private readonly _view: SliderViewConfigManager;
 
     constructor(config: {
         readonly $slider: JQuery;
@@ -23,17 +23,21 @@ class Slider implements Slider {
             start = [scale[0]] as string[] | number[],
         } = config;
 
-        this._view = new View({
+        const view = new View({
             points: start.length,
             ...config,
         });
-        this._model = new Model({
+
+        const model = new Model({
             start,
             scale,
             step,
         });
 
-        this._presenter = new Presenter(this._view, this._model);
+        this._view = view;
+        this._model = model;
+
+        this._presenter = new Presenter(view, model);
     }
 
     public get value(): string[] | number[] {

@@ -34,7 +34,7 @@ interface DomElements {
     $document: JQuery<Document>;
 }
 
-class View implements SliderView {
+class View implements SliderView, SliderViewConfigManager {
     private _driver: SliderViewDriver;
     private readonly _domElements: DomElements;
     private _flags: {
