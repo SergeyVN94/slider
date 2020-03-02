@@ -8,68 +8,7 @@ document.body.style.padding = '50px';
 
 const driver: SliderViewDriver = new DriverVertical($('')); // $('') - затычка. Драйвер добавляет к слайдеру класс slider_theme_vertical. В тестах это делает функция createSlider.
 
-describe('[DriverHorizontal]', () => {
-    describe('[getPointPosition]', () => {
-        afterEach((): void => {
-            $(document.body).remove('.slider');
-        });
-
-        it('[point position 0]', () => {
-            const packet = createSlider({
-                sliderSize: 540,
-                viewName: 'vertical',
-                points: [0],
-                pointSize: 14,
-            });
-
-            $(document.body).append(packet.$slider);
-
-            expect(driver.getPointPosition(packet.points[0], packet.$pointContainer)).to.equal(0);
-        });
-
-        it('[point position 1]', () => {
-            const packet = createSlider({
-                sliderSize: 640,
-                viewName: 'vertical',
-                points: [1],
-                pointSize: 16,
-            });
-
-            $(document.body).append(packet.$slider);
-
-            expect(driver.getPointPosition(packet.points[0], packet.$pointContainer)).to.equal(1);
-        });
-
-        describe('[Random point position]', () => {
-            for (let i = 0; i < 15; i += 1) {
-                const pointPosition = Math.random();
-                const pointSize = Math.round(Math.random() * 10 + 5);
-                // minimum slider size 100px
-                const sliderSize = Math.round(Math.random() * 1000 + 100);
-
-                it(`[position: ${pointPosition}]`, () => {
-                    const packet = createSlider({
-                        sliderSize,
-                        pointSize,
-                        viewName: 'vertical',
-                        points: [pointPosition],
-                    });
-
-                    $(document.body).append(packet.$slider);
-
-                    expect(
-                        Math.abs(
-                            driver.getPointPosition(
-                                packet.points[0],
-                                packet.$tooltipContainer
-                            ) - pointPosition
-                        ) < 0.01
-                    ).to.be.true;
-                });
-            }
-        });
-    });
-
+describe('[DriverVertical]', () => {
     describe('[setPointPosition]', () => {
         afterEach((): void => {
             $(document.body).remove('.slider');
@@ -81,7 +20,7 @@ describe('[DriverHorizontal]', () => {
                 const sliderSize = Math.round(Math.random() * 1000 + 100);
                 const pointPosition = Math.random();
                 const pointSize = Math.round(Math.random() * 10 + 5);
-                it(`[Set random point position: ${pointPosition}]`, () => {
+                it(`[position: ${pointPosition}]`, () => {
                     const packet = createSlider({
                         pointSize,
                         sliderSize,

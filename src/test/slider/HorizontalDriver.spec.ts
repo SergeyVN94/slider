@@ -4,69 +4,13 @@ import * as $ from 'jquery';
 import { createSlider } from './lib';
 import DriverHorizontal from '../../desktop.blocks/slider/plugin/view/drivers/DriverHorizontal';
 
+import '../../desktop.blocks/slider/slider.scss';
+
 document.body.style.padding = '50px';
 
 const driver: SliderViewDriver = new DriverHorizontal();
 
 describe('[DriverHorizontal]', () => {
-    describe('[getPointPosition]', () => {
-        afterEach((): void => {
-            $(document.body).remove('.slider');
-        });
-
-        it('[Leftmost point position]', () => {
-            const packet = createSlider({
-                sliderSize: 540,
-                points: [0],
-                pointSize: 14,
-            });
-
-            $(document.body).append(packet.$slider);
-
-            expect(driver.getPointPosition(packet.points[0], packet.$pointContainer)).to.equal(0);
-        });
-
-        it('[Rightmost point position]', () => {
-            const packet = createSlider({
-                sliderSize: 640,
-                points: [1],
-                pointSize: 16,
-            });
-
-            $(document.body).append(packet.$slider);
-
-            expect(driver.getPointPosition(packet.points[0], packet.$pointContainer)).to.equal(1);
-        });
-
-        describe('[Random point position]', () => {
-            for (let i = 0; i < 15; i += 1) {
-                const pointPosition = Math.random();
-                const pointSize = Math.round(Math.random() * 10 + 5);
-                // minimum slider size 100px
-                const sliderSize = Math.round(Math.random() * 1000 + 100);
-
-                it(`[position: ${pointPosition}]`, () => {
-                    const packet = createSlider({
-                        sliderSize,
-                        pointSize,
-                        points: [pointPosition],
-                    });
-
-                    $(document.body).append(packet.$slider);
-
-                    expect(
-                        Math.abs(
-                            driver.getPointPosition(
-                                packet.points[0],
-                                packet.$tooltipContainer
-                            ) - pointPosition
-                        ) < 0.01
-                    ).to.be.true;
-                });
-            }
-        });
-    });
-
     describe('[setPointPosition]', () => {
         afterEach((): void => {
             $(document.body).remove('.slider');
@@ -166,7 +110,7 @@ describe('[DriverHorizontal]', () => {
             }
         });
 
-        describe('2 point', () => {
+        describe('[Many points]', () => {
             for (let i = 0; i < 20; i += 1) {
                 // minimum slider size 100px
                 const sliderSize = Math.round(Math.random() * 1000 + 100);
