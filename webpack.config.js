@@ -6,12 +6,11 @@ const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
     context: `${__dirname}/src`,
     entry: {
-        'style.js': './index.scss',
         'index.js': './index.ts',
     },
     output: {
         path: `${__dirname}/dist`,
-        filename: '[name]'
+        filename: '[name]',
     },
     devtool: 'inline-source-map',
     resolve: {

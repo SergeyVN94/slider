@@ -8,6 +8,7 @@ const importAll = function importAll(resolve: __WebpackModuleApi.RequireContext)
 };
 
 importAll(require.context('./desktop.blocks', true, /.(sa|sc|c)ss$/));
+require('./index.scss');
 
 ((fun: Function): void => {
     jQuery(fun(jQuery));
