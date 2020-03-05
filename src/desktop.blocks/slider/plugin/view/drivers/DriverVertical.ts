@@ -22,14 +22,6 @@ class DriverVertical implements SliderViewDriver {
         return targetPosition;
     }
 
-    public getPointPosition($point: JQuery, $pointContainer: JQuery): number {
-        const containerHeight = $pointContainer.outerHeight();
-        const pointOffset = $point.outerHeight() / 2;
-        const pointBottom = parseInt($point.css('bottom'), 10) + pointOffset;
-
-        return pointBottom / containerHeight;
-    }
-
     public setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void {
         const containerHeight = $pointContainer.outerHeight();
         const pointOffset = $point.outerHeight() / 2;

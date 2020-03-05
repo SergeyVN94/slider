@@ -16,13 +16,6 @@ class DriverHorizontal implements SliderViewDriver {
         return targetPosition;
     }
 
-    public getPointPosition($point: JQuery, $pointContainer: JQuery): number {
-        const containerWidth = $pointContainer.outerWidth();
-        const marginLeft = parseInt($point.css('left'), 10) + ($point.outerWidth() / 2);
-
-        return marginLeft / containerWidth;
-    }
-
     public setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void {
         const containerWidth = $pointContainer.outerWidth();
         const offset = $point.outerWidth() / 2;
