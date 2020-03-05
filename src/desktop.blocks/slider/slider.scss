@@ -29,7 +29,7 @@ $tooltip-container-offset: (
   min-width: $point-diameter * 4;
 }
 
-.slider_bg-line-hide {
+.slider__bg-line-hide {
   .slider__bg-line {
     display: none;
   }
@@ -155,7 +155,7 @@ $tooltip-container-offset: (
   }
 }
 
-.slider_tooltips-hide {
+.slider__tooltips-hide {
   .slider__tooltip {
     display: none;
   }
