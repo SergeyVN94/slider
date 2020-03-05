@@ -10,6 +10,8 @@ type SliderViewState = {
 
 type HandlerSliderViewSelect = (state: SliderViewState) => void;
 
+type SliderViewDriverFactory = (viewName: SliderViewName, $slider: JQuery) => SliderViewDriver;
+
 interface SliderView {
     onSelect(callback: HandlerSliderViewSelect): void;
     update(points: SliderPointState[]): void;

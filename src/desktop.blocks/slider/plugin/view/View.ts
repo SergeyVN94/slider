@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 
-import _DriverHorizontal from './drivers/DriverHorizontal';
-import _DriverVertical from './drivers/DriverVertical';
+import DriverHorizontal from './drivers/DriverHorizontal';
+import DriverVertical from './drivers/DriverVertical';
 import CLASSES from './classes';
 
 const createPoint = function createPoint(index: number): JQuery {
@@ -15,6 +15,18 @@ const createTooltip = function createTooltip(): JQuery {
     return $('<div/>', {
         class: 'slider__tooltip',
     });
+};
+
+const createDriver: SliderViewDriverFactory = function viewDriverFactory(
+    viewName: SliderViewName,
+    $slider: JQuery
+): SliderViewDriver {
+    switch (viewName) {
+        case 'vertical':
+            return new DriverVertical($slider);
+        default:
+            return new DriverHorizontal();
+    }
 };
 
 const VIEW_NAMES: {
@@ -74,7 +86,7 @@ class View implements SliderView, SliderViewConfigManager {
         this._domElements = this._createDomElements($slider, points);
         this._updateEventCallback = null;
         this._pointSelected = -1;
-        this._driver = this._createDriver(viewName);
+        this._driver = createDriver(viewName, this._domElements.$slider);
         this._viewName = viewName;
 
         this._initDomElements();
@@ -104,16 +116,16 @@ class View implements SliderView, SliderViewConfigManager {
         }
     }
 
-    public get viewName(): 'horizontal' | 'vertical' {
+    public get viewName(): SliderViewName {
         return this._viewName;
     }
 
-    public set viewName(viewName: 'horizontal' | 'vertical') {
+    public set viewName(viewName: SliderViewName) {
         this._domElements.$slider.removeClass(CLASSES.VIEW_NAMES);
         this._domElements.$slider.find('*').removeAttr('style');
 
         this._viewName = viewName;
-        this._driver = this._createDriver(viewName);
+        this._driver = createDriver(viewName, this._domElements.$slider);
         this.update(this._pointStates);
     }
 
@@ -215,16 +227,6 @@ class View implements SliderView, SliderViewConfigManager {
         }
 
         return _domElements;
-    }
-
-    private _createDriver(viewName: SliderViewName): SliderViewDriver {
-        switch (viewName) {
-            case VIEW_NAMES.VERTICAL:
-                return new _DriverVertical(this._domElements.$slider);
-            // default - 'horizontal'
-            default:
-                return new _DriverHorizontal();
-        }
     }
 
     private _getViewState(ev: JQuery.Event): SliderViewState {
