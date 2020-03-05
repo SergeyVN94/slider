@@ -8,6 +8,14 @@ import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
 import Core from './Core';
 
+const createSliderScale = function sliderScaleFactory(scale: SliderScale): SliderScaleDriver {
+    if (typeof scale[0] === 'number') {
+        return new DriverScaleNumberRange();
+    }
+
+    return new DriverScaleStringArray();
+};
+
 class Model implements SliderModel, SliderModelStateManager {
     private readonly _dataManager: SliderModelDataManager;
     private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
@@ -25,11 +33,7 @@ class Model implements SliderModel, SliderModelStateManager {
             step: stepSize,
         } = config;
 
-        if (typeof scale[0] === 'number') {
-            this._scaleDriver = new DriverScaleNumberRange();
-        } else {
-            this._scaleDriver = new DriverScaleStringArray();
-        }
+        this._scaleDriver = createSliderScale(scale);
 
         this._dataManager = new DataManager({
             scale,
