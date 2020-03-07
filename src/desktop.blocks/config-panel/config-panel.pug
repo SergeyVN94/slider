@@ -1,9 +1,4 @@
-mixin config-panel(options={})
-    -
-        const {
-            id,
-        } = options;
-    
+mixin config-panel(id = "")
     .config-panel(id=id)
         .config-panel__step
             label Шаг

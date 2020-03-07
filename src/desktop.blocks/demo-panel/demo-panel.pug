@@ -1,17 +1,15 @@
 include ../slider/slider.pug
 include ../config-panel/config-panel.pug
 
-mixin demo-panel(options={})
+mixin demo-panel(options = {})
     -
         const {
             id = "",
-            slider = {},
+            sliderId = "",
         } = options;
 
     .demo-panel.js-demo-panel(id=id)
         .demo-panel__slider
-            +slider(slider)
+            +slider(sliderId)
         .demo-panel__config-panel
-            +config-panel({
-                id,
-            })
+            +config-panel(id)
