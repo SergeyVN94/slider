@@ -20,7 +20,7 @@ class Model implements SliderModel, SliderModelStateManager {
     private readonly _dataManager: SliderModelDataManager;
     private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
     private readonly _scaleDriver: SliderScaleDriver;
-    private readonly _core: SliderModelCore;
+    private readonly _core: Core;
 
     constructor(config: {
         scale: [number, number] | string[];

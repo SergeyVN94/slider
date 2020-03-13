@@ -1,4 +1,4 @@
-class Core implements SliderModelCore {
+class Core {
     public updatePointSteps(
         state: SliderViewState,
         dataManager: SliderModelDataManager
