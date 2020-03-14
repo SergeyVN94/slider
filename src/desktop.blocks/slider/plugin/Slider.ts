@@ -3,7 +3,6 @@ import Presenter from './view/Presenter';
 import Model from './domain-model/Model';
 
 class Slider {
-    private readonly _presenter: Presenter;
     private readonly _model: SliderModelStateManager;
     private readonly _view: SliderViewConfigManager;
 
@@ -37,7 +36,7 @@ class Slider {
         this._view = view;
         this._model = model;
 
-        this._presenter = new Presenter(view, model);
+        new Presenter(view, model);
     }
 
     public get value(): string[] | number[] {
