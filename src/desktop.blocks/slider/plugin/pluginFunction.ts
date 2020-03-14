@@ -1,11 +1,11 @@
 import Slider from './Slider';
 
 const initSlider = function initSliderDomElement($slider: JQuery, params: SliderConfig): void {
-    const slider: Slider = new Slider({
+    const slider = new Slider({
         $slider,
         ...params,
     });
-    $slider.get()[0].slider = slider;
+    $slider.data('slider', slider);
 };
 
 const COMMANDS = {
@@ -37,8 +37,7 @@ const pluginFunction = function pluginMainFunction(
     | 'vertical'
     = null
 ): JQuery | number | string[] | number[] | boolean | 'horizontal' | 'vertical' {
-    const [domElementSlider] = this.get();
-    const { slider } = domElementSlider;
+    const slider = this.data('slider') as Slider;
 
     switch (command) {
         case COMMANDS.INIT:

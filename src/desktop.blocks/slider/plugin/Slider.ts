@@ -2,7 +2,7 @@ import View from './view/View';
 import Presenter from './view/Presenter';
 import Model from './domain-model/Model';
 
-class Slider implements Slider {
+class Slider {
     private readonly _presenter: Presenter;
     private readonly _model: SliderModelStateManager;
     private readonly _view: SliderViewConfigManager;

@@ -18,10 +18,3 @@ interface SliderConfig {
     readonly showBgLine?: boolean;
 }
 
-interface Slider {
-    value: string[] | number[];
-    step: number;
-    isShowTooltips: boolean;
-    viewName: 'horizontal' | 'vertical';
-    isShowBgLine: boolean;
-}

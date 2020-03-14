@@ -58,7 +58,3 @@ interface SliderPluginFunction {
         isShow: boolean
     ): JQuery;
 }
-
-interface Element {
-    slider: Slider;
-}
