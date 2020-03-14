@@ -1,5 +1,3 @@
-import * as $ from 'jquery';
-
 import DriverHorizontal from './drivers/DriverHorizontal';
 import DriverVertical from './drivers/DriverVertical';
 import CLASSES from './classes';
