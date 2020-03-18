@@ -3,18 +3,18 @@ type SliderPointState = {
     readonly value?: string | number;
 };
 
-type SliderViewState = {
+type ISliderViewState = {
     readonly targetPosition: number;
     readonly pointSelected: number;
 };
 
-type HandlerSliderViewSelect = (state: SliderViewState) => void;
+type HandlerSliderViewSelect = (state: ISliderViewState) => void;
 
-type SliderViewDriverFactory = (viewName: SliderViewName, $slider: JQuery) => SliderViewDriver;
+type ISliderViewDriverFactory = (viewName: ISliderViewName, $slider: JQuery) => ISliderViewDriver;
 
-interface SliderView {
+interface ISliderView {
     onSelect(callback: HandlerSliderViewSelect): void;
     update(points: SliderPointState[]): void;
 }
 
-type SliderViewName = 'horizontal' | 'vertical';
+type ISliderViewName = 'horizontal' | 'vertical';

@@ -1,9 +1,9 @@
-class DriverScaleStringArray implements SliderScaleDriver {
+class DriverScaleStringArray implements ISliderScaleDriver {
     getAllSteps(scale: string[]): number {
         return scale.length - 1;
     }
 
-    valueToStep(value: string, dataManager: SliderModelDataManager): number {
+    valueToStep(value: string, dataManager: ISliderModelDataManager): number {
         const { scale } = dataManager;
 
         return (scale as string[]).indexOf(value);
@@ -17,7 +17,7 @@ class DriverScaleStringArray implements SliderScaleDriver {
         return false;
     }
 
-    stepToValue(step: number, dataManager: SliderModelDataManager): string | null {
+    stepToValue(step: number, dataManager: ISliderModelDataManager): string | null {
         const {
             scale,
             steps,

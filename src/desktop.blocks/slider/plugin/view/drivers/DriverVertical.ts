@@ -1,6 +1,6 @@
 import CLASSES from '../classes';
 
-class DriverVertical implements SliderViewDriver {
+class DriverVertical implements ISliderViewDriver {
     constructor($slider: JQuery) {
         $slider.addClass(CLASSES.THEME.VERTICAL);
     }

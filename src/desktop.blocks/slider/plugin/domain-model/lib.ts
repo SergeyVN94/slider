@@ -3,8 +3,8 @@ const SCALE_TYPES = {
 };
 
 const getPointStates = function getPointStates(
-    dataManager: SliderModelDataManager,
-    scaleDriver: SliderScaleDriver,
+    dataManager: ISliderModelDataManager,
+    scaleDriver: ISliderScaleDriver,
 ): SliderPointState[] {
     const {
         pointSteps,
@@ -24,8 +24,8 @@ const getPointStates = function getPointStates(
 };
 
 const getModelValues = function getModelValues(
-    dataManager: SliderModelDataManager,
-    scaleDriver: SliderScaleDriver,
+    dataManager: ISliderModelDataManager,
+    scaleDriver: ISliderScaleDriver,
 ): number[] | string[] {
     const {
         pointSteps,
@@ -45,7 +45,7 @@ const getModelValues = function getModelValues(
 
 const isCorrectSteps = function isCorrectSteps(
     steps: number[],
-    dataManager: SliderModelDataManager
+    dataManager: ISliderModelDataManager
 ): boolean {
     const { steps: maxSteps } = dataManager;
     let isCorrect = true;
@@ -77,8 +77,8 @@ const isCorrectSteps = function isCorrectSteps(
 
 const setModelValues = function setModelValues(
     values: number[] | string[],
-    dataManager: SliderModelDataManager,
-    scaleDriver: SliderScaleDriver
+    dataManager: ISliderModelDataManager,
+    scaleDriver: ISliderScaleDriver
 ): boolean {
     if (values.length < 1) {
         console.error(new Error('At least one value must be passed.'));

@@ -1,4 +1,4 @@
-class DriverScaleNumberRange implements SliderScaleDriver {
+class DriverScaleNumberRange implements ISliderScaleDriver {
     getAllSteps(scale: [number, number], stepSize: number): number {
         const [
             rangeMin,
@@ -17,7 +17,7 @@ class DriverScaleNumberRange implements SliderScaleDriver {
         return Math.floor(range / stepSize);
     }
 
-    valueToStep(value: number, dataManager: SliderModelDataManager): number {
+    valueToStep(value: number, dataManager: ISliderModelDataManager): number {
         const {
             scale,
             stepSize,
@@ -59,7 +59,7 @@ class DriverScaleNumberRange implements SliderScaleDriver {
         return true;
     }
 
-    stepToValue(step: number, dataManager: SliderModelDataManager): number | null {
+    stepToValue(step: number, dataManager: ISliderModelDataManager): number | null {
         const {
             scale,
             steps,

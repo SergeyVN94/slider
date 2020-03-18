@@ -3,14 +3,14 @@ import Presenter from './view/Presenter';
 import Model from './domain-model/Model';
 
 class Slider {
-    private readonly _model: SliderModelStateManager;
-    private readonly _view: SliderViewConfigManager;
+    private readonly _model: ISliderModelStateManager;
+    private readonly _view: ISliderViewConfigManager;
 
     constructor(config: {
         readonly $slider: JQuery;
         readonly start?: string[] | number[];
         readonly scale?: SliderScale;
-        readonly viewName?: SliderViewName;
+        readonly viewName?: ISliderViewName;
         readonly showTooltips?: boolean;
         readonly step?: number;
         readonly prettify?: PrettifyFunc;

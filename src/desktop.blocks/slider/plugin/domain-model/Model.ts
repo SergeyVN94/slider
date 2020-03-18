@@ -8,7 +8,7 @@ import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
 import Core from './Core';
 
-const createSliderScale = function sliderScaleFactory(scale: SliderScale): SliderScaleDriver {
+const createSliderScale = function sliderScaleFactory(scale: SliderScale): ISliderScaleDriver {
     if (typeof scale[0] === 'number') {
         return new DriverScaleNumberRange();
     }
@@ -16,10 +16,10 @@ const createSliderScale = function sliderScaleFactory(scale: SliderScale): Slide
     return new DriverScaleStringArray();
 };
 
-class Model implements SliderModel, SliderModelStateManager {
-    private readonly _dataManager: SliderModelDataManager;
+class Model implements ISliderModel, ISliderModelStateManager {
+    private readonly _dataManager: ISliderModelDataManager;
     private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
-    private readonly _scaleDriver: SliderScaleDriver;
+    private readonly _scaleDriver: ISliderScaleDriver;
     private readonly _core: Core;
 
     constructor(config: {
@@ -56,7 +56,7 @@ class Model implements SliderModel, SliderModelStateManager {
         this._updateEventCallbackList = [];
     }
 
-    public update(state: SliderViewState): void {
+    public update(state: ISliderViewState): void {
         this._core.updatePointSteps(state, this._dataManager);
         this._toggleUpdateEvent();
     }

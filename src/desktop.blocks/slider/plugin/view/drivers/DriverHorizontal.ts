@@ -1,4 +1,4 @@
-class DriverHorizontal implements SliderViewDriver {
+class DriverHorizontal implements ISliderViewDriver {
     public getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
         const containerWidth = $pointContainer.width();
         const globalMousePosition = ev.pageX;

@@ -1,4 +1,4 @@
-class DataManager implements SliderModelDataManager {
+class DataManager implements ISliderModelDataManager {
     private _steps: number;
     private _scale: SliderScale;
     private _stepSize: number;

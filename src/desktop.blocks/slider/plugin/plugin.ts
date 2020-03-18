@@ -1,6 +1,6 @@
 import Slider from './Slider';
 
-const initSlider = function initSlider($slider: JQuery, params: SliderConfig): void {
+const initSlider = function initSlider($slider: JQuery, params: ISliderConfig): void {
     const slider = new Slider({
         $slider,
         ...params,
@@ -24,7 +24,7 @@ $.fn.slider = function pluginMainFunction(
     args: {
         readonly start?: string[] | number[];
         readonly scale?: SliderScale;
-        readonly viewName?: SliderViewName;
+        readonly viewName?: ISliderViewName;
         readonly showTooltips?: boolean;
         readonly step?: number;
         readonly prettify?: PrettifyFunc;
@@ -46,7 +46,7 @@ $.fn.slider = function pluginMainFunction(
                 throw new TypeError('Configuration object expected.');
             }
 
-            initSlider(this, args as SliderConfig);
+            initSlider(this, args as ISliderConfig);
             return this;
 
         case COMMANDS.SHOW_TOOLTIPS:
@@ -98,4 +98,4 @@ $.fn.slider = function pluginMainFunction(
             console.error(new Error(`Unknown command ${command}`));
             return this;
     }
-} as SliderPluginFunction;
+} as ISliderPluginFunction;

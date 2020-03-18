@@ -1,4 +1,4 @@
-interface SliderViewDriver {
+interface ISliderViewDriver {
     getTargetPosition($event: JQuery.Event, $pointContainer: JQuery): number;
     setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void;
     updateTooltip(

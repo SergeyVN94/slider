@@ -1,4 +1,4 @@
-interface SliderModelStateManager {
+interface ISliderModelStateManager {
     step: number;
     value: string[] | number[];
 }

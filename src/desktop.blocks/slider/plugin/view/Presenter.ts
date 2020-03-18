@@ -1,12 +1,12 @@
 class Presenter {
-    readonly _view: SliderView;
-    readonly _model: SliderModel;
+    readonly _view: ISliderView;
+    readonly _model: ISliderModel;
 
-    constructor(view: SliderView, model: SliderModel) {
+    constructor(view: ISliderView, model: ISliderModel) {
         this._view = view;
         this._model = model;
 
-        this._view.onSelect((viewState: SliderViewState): void => {
+        this._view.onSelect((viewState: ISliderViewState): void => {
             this._model.update(viewState);
         });
 

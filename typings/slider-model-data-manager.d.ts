@@ -1,4 +1,4 @@
-interface SliderModelDataManager {
+interface ISliderModelDataManager {
     scale: SliderScale;
     scaleType: 'string' | 'number';
     pointSteps: number[];

@@ -15,10 +15,10 @@ const createTooltip = function createTooltip(): JQuery {
     });
 };
 
-const createDriver: SliderViewDriverFactory = function viewDriverFactory(
-    viewName: SliderViewName,
+const createDriver: ISliderViewDriverFactory = function viewDriverFactory(
+    viewName: ISliderViewName,
     $slider: JQuery
-): SliderViewDriver {
+): ISliderViewDriver {
     switch (viewName) {
         case 'vertical':
             return new DriverVertical($slider);
@@ -44,8 +44,8 @@ interface DomElements {
     $document: JQuery<Document>;
 }
 
-class View implements SliderView, SliderViewConfigManager {
-    private _driver: SliderViewDriver;
+class View implements ISliderView, ISliderViewConfigManager {
+    private _driver: ISliderViewDriver;
     private readonly _domElements: DomElements;
     private _flags: {
         showTooltips: boolean;
@@ -114,11 +114,11 @@ class View implements SliderView, SliderViewConfigManager {
         }
     }
 
-    public get viewName(): SliderViewName {
+    public get viewName(): ISliderViewName {
         return this._viewName;
     }
 
-    public set viewName(viewName: SliderViewName) {
+    public set viewName(viewName: ISliderViewName) {
         this._domElements.$slider.removeClass(CLASSES.VIEW_NAMES);
         this._domElements.$slider.find('*').removeAttr('style');
 
@@ -227,7 +227,7 @@ class View implements SliderView, SliderViewConfigManager {
         return _domElements;
     }
 
-    private _getViewState(ev: JQuery.Event): SliderViewState {
+    private _getViewState(ev: JQuery.Event): ISliderViewState {
         return {
             targetPosition: this._driver.getTargetPosition(ev, this._domElements.$pointContainer),
             pointSelected: this._pointSelected,

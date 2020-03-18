@@ -1,9 +1,9 @@
 type HandlerSliderModelUpdate = (points: SliderPointState[]) => void;
 
-type SliderScaleDriverFactory = (scale: SliderScale) => SliderScaleDriver;
+type ISliderScaleDriverFactory = (scale: SliderScale) => ISliderScaleDriver;
 
-interface SliderModel {
-    update(state: SliderViewState): void;
+interface ISliderModel {
+    update(state: ISliderViewState): void;
     onUpdate(callback: HandlerSliderModelUpdate): void;
     getPointStates(): SliderPointState[];
 }

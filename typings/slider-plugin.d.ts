@@ -1,11 +1,11 @@
-interface SliderPluginFunction {
+interface ISliderPluginFunction {
     (
         this: JQuery,
         command: 'init',
         config: {
             readonly start?: string[] | number[];
             readonly scale?: SliderScale;
-            readonly viewName?: SliderViewName;
+            readonly viewName?: ISliderViewName;
             readonly showTooltips?: boolean;
             readonly step?: number;
             readonly prettify?: PrettifyFunc;

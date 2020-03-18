@@ -8,7 +8,7 @@ import '../../desktop.blocks/slider/slider.scss';
 
 document.body.style.padding = '50px';
 
-const driver: SliderViewDriver = new DriverHorizontal();
+const driver: ISliderViewDriver = new DriverHorizontal();
 
 describe('[DriverHorizontal]', () => {
     describe('[setPointPosition]', () => {

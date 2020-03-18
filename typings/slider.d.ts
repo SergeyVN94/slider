@@ -7,11 +7,11 @@ type CoupleNum = [number, number];
 
 type HandlerSliderSelect = (values: string[] | number[]) => void;
 
-interface SliderConfig {
+interface ISliderConfig {
     readonly $slider?: JQuery;
     readonly start?: string[] | number[];
     readonly scale?: SliderScale;
-    readonly viewName?: SliderViewName;
+    readonly viewName?: ISliderViewName;
     readonly showTooltips?: boolean;
     readonly step?: number;
     readonly prettify?: PrettifyFunc;

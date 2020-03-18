@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface JQuery {
     slider(this: JQuery, command: 'init', config: {
         readonly start?: string[] | number[];
