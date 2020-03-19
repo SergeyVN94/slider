@@ -1,5 +1,3 @@
-import * as $ from 'jquery';
-
 import {
     createPoint,
     createTooltip,

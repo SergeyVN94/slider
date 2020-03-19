@@ -1,5 +1,5 @@
+/* eslint-disable no-loop-func */
 import { expect } from 'chai';
-import * as $ from 'jquery';
 
 import { createSlider } from './lib';
 import DriverVertical from '../../desktop.blocks/slider/plugin/view/drivers/DriverVertical';
