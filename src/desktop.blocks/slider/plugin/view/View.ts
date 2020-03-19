@@ -15,8 +15,8 @@ const createTooltip = function createTooltip(): JQuery {
     });
 };
 
-const createDriver: ISliderViewDriverFactory = function viewDriverFactory(
-    viewName: ISliderViewName,
+const createDriver = function viewDriverFactory(
+    viewName: SliderViewName,
     $slider: JQuery
 ): ISliderViewDriver {
     switch (viewName) {
@@ -34,7 +34,7 @@ const VIEW_NAMES: {
     VERTICAL: 'vertical',
 };
 
-interface DomElements {
+interface IDomElements {
     $slider: JQuery;
     points: JQuery[];
     tooltips: JQuery[];
@@ -46,7 +46,7 @@ interface DomElements {
 
 class View implements ISliderView, ISliderViewConfigManager {
     private _driver: ISliderViewDriver;
-    private readonly _domElements: DomElements;
+    private readonly _domElements: IDomElements;
     private _flags: {
         showTooltips: boolean;
         showBgLine: boolean;
@@ -81,13 +81,13 @@ class View implements ISliderView, ISliderViewConfigManager {
             showBgLine,
         };
         this._prettify = prettify;
-        this._domElements = this._createDomElements($slider, points);
+        this._domElements = this._createIDomElements($slider, points);
         this._updateEventCallback = null;
         this._pointSelected = -1;
         this._driver = createDriver(viewName, this._domElements.$slider);
         this._viewName = viewName;
 
-        this._initDomElements();
+        this._initIDomElements();
         this._showTooltips(this._flags.showTooltips);
     }
 
@@ -114,11 +114,11 @@ class View implements ISliderView, ISliderViewConfigManager {
         }
     }
 
-    public get viewName(): ISliderViewName {
+    public get viewName(): SliderViewName {
         return this._viewName;
     }
 
-    public set viewName(viewName: ISliderViewName) {
+    public set viewName(viewName: SliderViewName) {
         this._domElements.$slider.removeClass(CLASSES.VIEW_NAMES);
         this._domElements.$slider.find('*').removeAttr('style');
 
@@ -135,7 +135,7 @@ class View implements ISliderView, ISliderViewConfigManager {
         this._pointStates = points;
 
         if (points.length !== this._domElements.points.length) {
-            this._updateDomElements(points);
+            this._updateIDomElements(points);
         }
 
         points.forEach((point, index) => {
@@ -163,7 +163,7 @@ class View implements ISliderView, ISliderViewConfigManager {
         }));
     }
 
-    private _updateDomElements(points: SliderPointState[]): void {
+    private _updateIDomElements(points: SliderPointState[]): void {
         this._domElements.$bgLine.removeAttr('style');
 
         this._domElements.points.forEach(($point) => {
@@ -191,7 +191,7 @@ class View implements ISliderView, ISliderViewConfigManager {
         );
     }
 
-    private _initDomElements(): void {
+    private _initIDomElements(): void {
         this._domElements.$pointContainer.on(
             'mousedown.slider.update',
             this._mouseDownHandler.bind(this)
@@ -204,8 +204,8 @@ class View implements ISliderView, ISliderViewConfigManager {
         this._domElements.$tooltipContainer.append(this._domElements.tooltips);
     }
 
-    private _createDomElements($slider: JQuery, points: number): DomElements {
-        const _domElements: DomElements = {
+    private _createIDomElements($slider: JQuery, points: number): IDomElements {
+        const _domElements: IDomElements = {
             $slider,
             points: [],
             tooltips: [],
@@ -227,7 +227,7 @@ class View implements ISliderView, ISliderViewConfigManager {
         return _domElements;
     }
 
-    private _getViewState(ev: JQuery.Event): ISliderViewState {
+    private _getViewState(ev: JQuery.Event): SliderViewState {
         return {
             targetPosition: this._driver.getTargetPosition(ev, this._domElements.$pointContainer),
             pointSelected: this._pointSelected,

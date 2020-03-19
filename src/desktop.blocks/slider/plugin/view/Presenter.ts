@@ -6,7 +6,7 @@ class Presenter {
         this._view = view;
         this._model = model;
 
-        this._view.onSelect((viewState: ISliderViewState): void => {
+        this._view.onSelect((viewState: SliderViewState): void => {
             this._model.update(viewState);
         });
 

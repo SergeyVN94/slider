@@ -1,6 +1,6 @@
 class Core {
     public updatePointSteps(
-        state: ISliderViewState,
+        state: SliderViewState,
         dataManager: ISliderModelDataManager
     ): void {
         const { pointSelected } = state;
@@ -13,7 +13,7 @@ class Core {
     }
 
     private _updatePointStepsForPoint(
-        state: ISliderViewState,
+        state: SliderViewState,
         dataManager: ISliderModelDataManager
     ): boolean {
         const {
@@ -72,7 +72,7 @@ class Core {
     }
 
     private _updatePointStepsForNull(
-        state: ISliderViewState,
+        state: SliderViewState,
         dataManager: ISliderModelDataManager
     ): boolean {
         const { targetPosition } = state;

@@ -56,7 +56,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
         this._updateEventCallbackList = [];
     }
 
-    public update(state: ISliderViewState): void {
+    public update(state: SliderViewState): void {
         this._core.updatePointSteps(state, this._dataManager);
         this._toggleUpdateEvent();
     }

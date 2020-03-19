@@ -24,7 +24,7 @@ $.fn.slider = function pluginMainFunction(
     args: {
         readonly start?: string[] | number[];
         readonly scale?: SliderScale;
-        readonly viewName?: ISliderViewName;
+        readonly viewName?: SliderViewName;
         readonly showTooltips?: boolean;
         readonly step?: number;
         readonly prettify?: PrettifyFunc;
@@ -37,7 +37,8 @@ $.fn.slider = function pluginMainFunction(
     | 'horizontal'
     | 'vertical'
     = null
-): JQuery | number | string[] | number[] | boolean | 'horizontal' | 'vertical' {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): JQuery | number | string[] | number[] | boolean | 'horizontal' | 'vertical' | any {
     const slider = this.data('slider') as Slider;
 
     switch (command) {
@@ -98,4 +99,4 @@ $.fn.slider = function pluginMainFunction(
             console.error(new Error(`Unknown command ${command}`));
             return this;
     }
-} as ISliderPluginFunction;
+};

@@ -10,7 +10,7 @@ class Slider {
         readonly $slider: JQuery;
         readonly start?: string[] | number[];
         readonly scale?: SliderScale;
-        readonly viewName?: ISliderViewName;
+        readonly viewName?: SliderViewName;
         readonly showTooltips?: boolean;
         readonly step?: number;
         readonly prettify?: PrettifyFunc;
