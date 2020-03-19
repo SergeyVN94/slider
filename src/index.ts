@@ -1,12 +1,10 @@
-import * as jQuery from 'jquery';
-
-import './desktop.blocks/slider/slider';
 import ConfigPanel from './desktop.blocks/config-panel/config-panel';
 
 const importAll = function importAll(resolve: __WebpackModuleApi.RequireContext): void {
     resolve.keys().forEach(resolve);
 };
 
+importAll(require.context('./desktop.blocks', true, /.ts$/));
 importAll(require.context('./desktop.blocks', true, /.(sa|sc|c)ss$/));
 require('./index.scss');
 

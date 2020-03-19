@@ -1,5 +1,3 @@
-import * as $ from 'jquery';
-
 import CLASSES from './classes';
 
 const createValueItem = function createValueItem(index: number): JQuery {
