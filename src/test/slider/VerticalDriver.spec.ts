@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 
 import { createSlider } from './lib';
-import DriverVertical from '../../desktop.blocks/slider/plugin/view/drivers/DriverVertical';
+import DriverVertical from '../../desktop.blocks/slider/scripts/view/drivers/DriverVertical';
 
 document.body.style.padding = '50px';
 

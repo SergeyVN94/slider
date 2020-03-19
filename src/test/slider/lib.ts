@@ -1,7 +1,7 @@
 import {
     createPoint,
     createTooltip,
-} from '../../desktop.blocks/slider/plugin/view/View';
+} from '../../desktop.blocks/slider/scripts/view/View';
 
 const createSlider = function createSlider(config: {
     pointSize: number;

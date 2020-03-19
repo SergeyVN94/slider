@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import DriverScaleNumberRange from '../../desktop.blocks/slider/plugin/domain-model/scale-drivers/DriverScaleNumberRange';
-import DataManager from '../../desktop.blocks/slider/plugin/domain-model/DataManager';
+import DriverScaleNumberRange from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleNumberRange';
+import DataManager from '../../desktop.blocks/slider/scripts/domain-model/DataManager';
 
 const scaleDriver = new DriverScaleNumberRange();
 const scale: [number, number] = [-1000, 2000];

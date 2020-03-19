@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import DataManager from '../../desktop.blocks/slider/plugin/domain-model/DataManager';
-import Core from '../../desktop.blocks/slider/plugin/domain-model/Core';
+import DataManager from '../../desktop.blocks/slider/scripts/domain-model/DataManager';
+import Core from '../../desktop.blocks/slider/scripts/domain-model/Core';
 
 const core = new Core();
 

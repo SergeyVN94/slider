@@ -5,11 +5,11 @@ import {
     getModelValues,
     setModelValues,
     isCorrectSteps,
-} from '../../desktop.blocks/slider/plugin/domain-model/lib';
-import DataManager from '../../desktop.blocks/slider/plugin/domain-model/DataManager';
-import DriverScaleNumberRange from '../../desktop.blocks/slider/plugin/domain-model/scale-drivers/DriverScaleNumberRange';
-import DriverScaleStringArray from '../../desktop.blocks/slider/plugin/domain-model/scale-drivers/DriverScaleStringArray';
-import Core from '../../desktop.blocks/slider/plugin/domain-model/Core';
+} from '../../desktop.blocks/slider/scripts/domain-model/lib';
+import DataManager from '../../desktop.blocks/slider/scripts/domain-model/DataManager';
+import DriverScaleNumberRange from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleNumberRange';
+import DriverScaleStringArray from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleStringArray';
+import Core from '../../desktop.blocks/slider/scripts/domain-model/Core';
 
 const scaleDriverNumRange = new DriverScaleNumberRange();
 const scaleDriverStrArr = new DriverScaleStringArray();

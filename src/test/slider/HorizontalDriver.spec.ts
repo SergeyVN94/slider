@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 
 import { createSlider } from './lib';
-import DriverHorizontal from '../../desktop.blocks/slider/plugin/view/drivers/DriverHorizontal';
+import DriverHorizontal from '../../desktop.blocks/slider/scripts/view/drivers/DriverHorizontal';
 
 import '../../desktop.blocks/slider/slider.scss';
 

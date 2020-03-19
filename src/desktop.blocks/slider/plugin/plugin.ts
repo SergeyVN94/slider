@@ -1,12 +1,5 @@
-import Slider from './Slider';
-
-const initSlider = function initSlider($slider: JQuery, params: ISliderConfig): void {
-    const slider = new Slider({
-        $slider,
-        ...params,
-    });
-    $slider.data('slider', slider);
-};
+import initSlider from '../scripts/initSlider';
+import Slider from '../scripts/Slider';
 
 const COMMANDS = {
     INIT: 'init',
@@ -47,7 +40,10 @@ $.fn.slider = function pluginMainFunction(
                 throw new TypeError('Configuration object expected.');
             }
 
-            initSlider(this, args as ISliderConfig);
+            this.data('slider', initSlider({
+                $slider: this,
+                ...args as ISliderConfig,
+            }));
             return this;
 
         case COMMANDS.SHOW_TOOLTIPS:
