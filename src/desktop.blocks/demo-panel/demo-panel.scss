@@ -1,9 +1,10 @@
-$max-size: 750px;
+$panel-size: 750px;
+$slider-size: 340px;
 
 .demo-panel {
   width: 100%;
-  max-width: $max-size;
-  max-width: $max-size;
+  max-width: $panel-size;
+  max-width: $panel-size;
   padding-bottom: 15px;
   box-sizing: border-box;
   display: flex;
@@ -11,36 +12,25 @@ $max-size: 750px;
   justify-content: flex-start;
   align-items: center;
   border-bottom: 1px solid #000;
-}
 
-$size: 340px;
+  &__slider {
+    width: $slider-size;
+    height: $slider-size;
+    min-width: $slider-size;
+    min-height: $slider-size;
+    padding: 20px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
 
-.demo-panel__slider {
-  width: $size;
-  height: $size;
-  min-width: $size;
-  min-height: $size;
-  padding: 20px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
-.demo-panel__config-panel {
-  margin-left: 35px;
-}
-
-.demo-panel__config-item {
-  box-sizing: border-box;
-  margin-bottom: 15px;
-
-  &:not(:last-child) {
-    margin-bottom: 15px;
+  &__config-panel {
+    margin-left: 35px;
   }
 }
