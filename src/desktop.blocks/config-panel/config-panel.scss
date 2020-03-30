@@ -15,14 +15,14 @@ $focus: #3a2a74bf;
   font-size: 14px;
 
   &__row {
-    margin-bottom: 10px;
-    padding-bottom: 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
 
     &:not(:last-child) {
       border-bottom: 1px solid $border-light;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
     }
   }
 
