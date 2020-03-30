@@ -47,14 +47,14 @@ $.fn.slider = function pluginMainFunction(
 
         case COMMANDS.SHOW_TOOLTIPS:
             if (args === null) {
-                return slider.isShowTooltips;
+                return slider.showTooltips;
             }
 
             if (typeof args !== 'boolean') {
                 throw new TypeError('Boolean expected.');
             }
 
-            slider.isShowTooltips = args;
+            slider.showTooltips = args;
             return this;
 
         case COMMANDS.STEP:
@@ -84,10 +84,10 @@ $.fn.slider = function pluginMainFunction(
 
         case COMMANDS.BG_LINE:
             if (args === null) {
-                return slider.isShowBgLine;
+                return slider.showBgLine;
             }
 
-            slider.isShowBgLine = args as boolean;
+            slider.showBgLine = args as boolean;
             return this;
 
         default:

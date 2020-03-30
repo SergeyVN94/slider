@@ -23,19 +23,19 @@ class Slider {
         this._model.step = value;
     }
 
-    public get isShowTooltips(): boolean {
+    public get showTooltips(): boolean {
         return this._view.showTooltips;
     }
 
-    public set isShowTooltips(state: boolean) {
+    public set showTooltips(state: boolean) {
         this._view.showTooltips = state;
     }
 
-    public get isShowBgLine(): boolean {
+    public get showBgLine(): boolean {
         return this._view.showBgLine;
     }
 
-    public set isShowBgLine(state: boolean) {
+    public set showBgLine(state: boolean) {
         this._view.showBgLine = state;
     }
 
