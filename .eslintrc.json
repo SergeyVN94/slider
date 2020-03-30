@@ -21,7 +21,7 @@
         "array-bracket-spacing": ["error", "never"],
         "array-callback-return": "error",
         "arrow-parens": ["error", "always"],
-        "arrow-body-style": ["error", "always"],
+        "arrow-body-style": ["error", "as-needed"],
         "block-scoped-var": "error",
         "block-spacing":"error",
         "brace-style": "error",
@@ -170,6 +170,7 @@
         "@typescript-eslint/explicit-function-return-type": ["error", { "allowExpressions": true }],
         "@typescript-eslint/interface-name-prefix": ["error", "always"],
         "@typescript-eslint/no-extra-parens": ["error", "functions"],
+        "@typescript-eslint/unbound-method": "off",
         "@typescript-eslint/no-unused-vars": [
             "error",
             { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_$" }
