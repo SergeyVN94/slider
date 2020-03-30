@@ -72,17 +72,17 @@ class ConfigPanel {
         const step = $slider.slider('step');
         $inputStep.val(step);
 
-        const viewName = $slider.slider('viewName');
+        const viewName = $slider.slider('view-name');
         $radioViewName.each((index, element) => {
             if (element.getAttribute('value') === viewName) {
                 element.setAttribute('checked', 'true');
             }
         });
 
-        const isShowBgLine = $slider.slider('bg-line');
+        const isShowBgLine = $slider.slider('show-bg-line');
         $checkboxBgLine.prop('checked', isShowBgLine);
 
-        const isShowTooltips = $slider.slider('showTooltips');
+        const isShowTooltips = $slider.slider('show-tooltips');
         $checkboxTooltip.prop('checked', isShowTooltips);
 
         const allPoints = $slider.slider('value').length;
@@ -237,7 +237,7 @@ class ConfigPanel {
         } = this._domElements;
 
         const isShowTooltips = Boolean($checkboxTooltip.prop('checked'));
-        $slider.slider('showTooltips', isShowTooltips);
+        $slider.slider('show-tooltips', isShowTooltips);
     }
 
     private _handleCheckboxBgLineInput(): void {
@@ -247,7 +247,7 @@ class ConfigPanel {
         } = this._domElements;
 
         const isShowBgLine = Boolean($checkboxBgLine.prop('checked'));
-        $slider.slider('bg-line', isShowBgLine);
+        $slider.slider('show-bg-line', isShowBgLine);
     }
 
     private _handleInputStepInput(): void {
@@ -267,7 +267,7 @@ class ConfigPanel {
 
     private _handleRadioViewNameInput(ev: JQuery.EventBase): void {
         const viewName = ev.currentTarget.getAttribute('value');
-        this._domElements.$slider.slider('viewName', viewName);
+        this._domElements.$slider.slider('view-name', viewName);
     }
 }
 

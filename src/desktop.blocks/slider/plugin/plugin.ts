@@ -5,15 +5,14 @@ const COMMANDS = {
     INIT: 'init',
     STEP: 'step',
     VALUE: 'value',
-    SHOW_TOOLTIPS: 'showTooltips',
-    VIEW_NAME: 'viewName',
-    BG_LINE: 'bg-line',
+    SHOW_TOOLTIPS: 'show-tooltips',
+    VIEW_NAME: 'view-name',
+    BG_LINE: 'show-bg-line',
 };
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
 $.fn.slider = function pluginMainFunction(
     this: JQuery,
-    command: 'init' | 'step' | 'value' | 'showTooltips' | 'viewName' | 'bg-line',
+    command: 'init' | 'step' | 'value' | 'show-tooltips' | 'view-name' | 'show-bg-line',
     args: {
         readonly start?: string[] | number[];
         readonly scale?: SliderScale;
@@ -31,7 +30,7 @@ $.fn.slider = function pluginMainFunction(
     | 'vertical'
     = null
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): JQuery | number | string[] | number[] | boolean | 'horizontal' | 'vertical' | any {
+): any {
     const slider = this.data('slider') as Slider;
 
     switch (command) {

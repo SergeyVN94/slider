@@ -32,31 +32,21 @@ interface JQuery {
 
     slider(
         this: JQuery,
-        command: 'showTooltips'
+        command: 'show-tooltips' | 'show-bg-line'
     ): boolean;
     slider(
         this: JQuery,
-        command: 'showTooltips',
+        command: 'show-tooltips' | 'show-bg-line',
         isShow: boolean
     ): JQuery;
 
     slider(
         this: JQuery,
-        command: 'viewName'
+        command: 'view-name'
     ): 'horizontal' | 'vertical';
     slider(
         this: JQuery,
-        command: 'viewName',
+        command: 'view-name',
         name: 'horizontal' | 'vertical'
-    ): JQuery;
-
-    slider(
-        this: JQuery,
-        command: 'bg-line'
-    ): boolean;
-    slider(
-        this: JQuery,
-        command: 'bg-line',
-        isShow: boolean
     ): JQuery;
 }
