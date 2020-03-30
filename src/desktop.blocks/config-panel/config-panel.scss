@@ -1,111 +1,72 @@
+$default-border: #3a2a7459;
+$border-light: #3a2a7426;
+$hover: #3a2a74bf;
+$focus: #3a2a74bf;
+
 .config-panel {
   padding: 20px 15px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  border: 1px solid #57e4e4;
+  border: 1px solid #c7e7a3;
+  box-shadow: 0px 0px 5px #6d9669;
   border-radius: 6px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
 
-  &__step {
-    margin-bottom: 20px;
-    width: 100%;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    flex-direction: row;
-    flex-wrap: nowrap;
-  }
-
-  &__step-input {
-    margin-left: 20px;
-    padding: 4px 8px;
-  }
-
-  &__view {
-    margin-bottom: 20px;
-  }
-
-  &__view-title {
+  &__row {
     margin-bottom: 10px;
-  }
-
-  &__view-item {
-    margin-bottom: 5px;
-    display: -webkit-box;
+    padding-bottom: 10px;
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    flex-direction: row;
-    -webkit-box-align: center;
-    align-items: center;
-  }
-
-  &__view-input {
-    margin-right: 10px;
-  }
-
-  &__tooltips {
-    margin-bottom: 20px;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
     flex-direction: row;
     flex-wrap: nowrap;
-  }
 
-  &__tooltip-input {
-    margin-right: 8px;
-  }
-
-  &__bg-line {
-    margin-bottom: 20px;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    flex-direction: row;
-    flex-wrap: nowrap;
-  }
-
-  &__bg-line-input {
-    margin-right: 8px;
-  }
-
-  &__points {
-    margin-bottom: 20px;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    -webkit-box-align: center;
-    align-items: center;
-  }
-
-  &__points-input {
-    margin-left: 8px;
-  }
-
-  &__value-item {
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    -webkit-box-align: center;
-    align-items: center;
-  
     &:not(:last-child) {
-      margin-bottom: 5px;
+      border-bottom: 1px solid $border-light;
     }
   }
 
-  &__value-input {
-    margin-left: 10px;
-    min-width: 50px;
+  &__col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__control {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
+    &-text {
+      margin-right: 10px;
+
+      &_right {
+        margin: 0px 0px 0px 10px;
+      }
+    }
+
+    &-title {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__input {
+    padding: 8px 13px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid $default-border;
+
+    &:focus {
+      border-color: $focus;
+      outline: none;
+    }
+
+    &:hover {
+      box-shadow: 0px 0px 5px $hover;
+    }
   }
 }

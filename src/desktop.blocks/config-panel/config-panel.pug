@@ -1,34 +1,56 @@
 mixin config-panel(id = "")
     .config-panel(id=id)
-        .config-panel__step
-            label Шаг
-                input.config-panel__step-input.js-config-panel__step-input(type="number", min=1, autocomplete="off")
-
-        .config-panel__view
-            h4.config-panel__view-title Вид
-            -const inputName = `${id}-view`;
-            .config-panel__view-item
-                input.config-panel__view-input.js-config-panel__view-input(type="radio", name=inputName, value="horizontal", autocomplete="off")
-                label Горизонтальный
-            .config-panel__view-item
-                input.config-panel__view-input.js-config-panel__view-input(type="radio", name=inputName, value="vertical", autocomplete="off")
-                label Вертикальный
-
-        .config-panel__tooltips
-            label
-            input.config-panel__tooltip-input.js-config-panel__tooltip-input(type="checkbox", name="tooltips", autocomplete="off") 
-            | Показать подсказки
-
-        .config-panel__bg-line
-            label
-            input.config-panel__bg-line-input.js-config-panel__bg-line-input(type="checkbox", name="bg-line", autocomplete="off") 
-            | Показать фоновую линию
-
-        .config-panel__values
-            .config-panel__points
-                label Количество ползунков
-                input.config-panel__points-input.js-config-panel__points-input(type="number", min=1, autocomplete="off")
-            .config-panel__value-items
-                .config-panel__value-item
-                    label Ползунок 1
-                    input.config-panel__value-input.js-config-panel__value-input(type="text", autocomplete="off")
+        .config-panel__row
+            label.config-panel__control
+                span.config-panel__control-text Шаг
+                input.config-panel__input.config-panel__step.js-config-panel__step(
+                    type="number",
+                    min=1,
+                    autocomplete="off"
+                )
+        .config-panel__row
+            .config-panel__col
+                h4.config-panel__control-title Вид
+                -const inputName = `${id}-view`;
+                label.config-panel__control
+                    input.config-panel__view-name.js-config-panel__view-name(
+                        type="radio",
+                        name=inputName,
+                        value="horizontal",
+                        autocomplete="off"
+                    )
+                    span.config-panel__control-text.config-panel__control-text_right Горизонтальный
+                label.config-panel__control
+                    input.config-panel__view-name.js-config-panel__view-name(
+                        type="radio",
+                        name=inputName,
+                        value="vertical",
+                        autocomplete="off"
+                    )
+                    span.config-panel__control-text.config-panel__control-text_right Вертикальный
+        .config-panel__row
+            .config-panel__col
+                label.config-panel__control
+                    input.config-panel__tooltip.js-config-panel__tooltip(
+                        type="checkbox",
+                        name="tooltips",
+                        autocomplete="off"
+                    ) 
+                    span.config-panel__control-text.config-panel__control-text_right Показать подсказки
+                label.config-panel__control
+                    input.config-panel__bg-line.js-config-panel__bg-line(
+                        type="checkbox",
+                        name="bg-line",
+                        autocomplete="off"
+                    ) 
+                    span.config-panel__control-text.config-panel__control-text_right Показать фоновую линию
+        .config-panel__row
+            label.config-panel__control 
+                span.config-panel__control-text Количество ползунков
+                input.config-panel__input.config-panel__points.js-config-panel__points(
+                    type="number",
+                    min=1,
+                    autocomplete="off"
+                )
+        .config-panel__row
+            .config-panel__col.js-config-panel__controls-out

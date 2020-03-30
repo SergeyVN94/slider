@@ -1,4 +1,4 @@
-import ConfigPanel from './desktop.blocks/config-panel/config-panel';
+import initConfigPanel from './desktop.blocks/config-panel/initConfigPanel';
 
 const importAll = function importAll(resolve: __WebpackModuleApi.RequireContext): void {
     resolve.keys().forEach(resolve);
@@ -25,105 +25,44 @@ require('./index.scss');
         'Ноябрь',
         'Декабрь',
     ];
-
     const scale2: SliderScale = [-1000, 1000];
     const scale3: SliderScale = [0, 1000];
-    const scale4: SliderScale = [
-        'А',
-        'Б',
-        'В',
-        'Г',
-        'Д',
-        'Е',
-        'Ё',
-        'Ж',
-        'З',
-        'И',
-        'Й',
-        'К',
-        'Л',
-        'М',
-        'Н',
-        'О',
-        'П',
-        'Р',
-        'С',
-        'Т',
-        'У',
-        'Ф',
-        'Х',
-        'Ц',
-        'Ч',
-        'Ш',
-        'Щ',
-        'Ъ',
-        'Ы',
-        'Ь',
-        'Э',
-        'Ю',
-        'Я',
-    ].reverse();
+    const scale4: SliderScale = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'].reverse();
 
-    // slider 1
-    const $slider1: JQuery = $('#slider1');
+    initConfigPanel(
+        $('#panel1'),
+        $('#slider1').slider('init', {
+            start: ['Январь'],
+            scale: scale1,
+        })
+    );
 
-    $slider1.slider('init', {
-        start: ['Январь'],
-        scale: scale1,
-    });
+    initConfigPanel(
+        $('#panel2'),
+        $('#slider2').slider('init', {
+            start: [-444, 777],
+            scale: scale2,
+            prettify: (value: number) => `${value} -> ${value / 10}`,
+        })
+    );
 
-    new ConfigPanel({
-        $slider: $slider1,
-        $panel: $('#panel1'),
-    });
+    initConfigPanel(
+        $('#panel3'),
+        $('#slider3').slider('init', {
+            viewName: 'vertical',
+            start: [555],
+            scale: scale3,
+            prettify: (value: number) => `${value} $`,
+        })
+    );
 
-    // slider 2
-    const $slider2: JQuery = $('#slider2');
-
-    $slider2.slider('init', {
-        start: [-444, 777],
-        scale: scale2,
-        prettify: (value: number) => {
-            return `${value} -> ${value / 10}`;
-        },
-    });
-
-    new ConfigPanel({
-        $slider: $slider2,
-        $panel: $('#panel2'),
-    });
-
-    // slider 3
-    const $slider3: JQuery = $('#slider3');
-
-    $slider3.slider('init', {
-        viewName: 'vertical',
-        start: [555],
-        scale: scale3,
-        prettify: (value: number): string => {
-            return `${value} $`;
-        },
-    });
-
-    new ConfigPanel({
-        $slider: $slider3,
-        $panel: $('#panel3'),
-    });
-
-    // slider 4
-    const $slider4: JQuery = $('#slider4');
-
-    $slider4.slider('init', {
-        viewName: 'vertical',
-        start: ['Ю', 'М'],
-        scale: scale4,
-        prettify: (value: string) => {
-            return `${value} -> ${value.toLowerCase()}`;
-        },
-    });
-
-    new ConfigPanel({
-        $slider: $slider4,
-        $panel: $('#panel4'),
-    });
+    initConfigPanel(
+        $('#panel4'),
+        $('#slider4').slider('init', {
+            viewName: 'vertical',
+            start: ['Ю', 'М'],
+            scale: scale4,
+            prettify: (value: string) => `${value} -> ${value.toLowerCase()}`,
+        })
+    );
 });
