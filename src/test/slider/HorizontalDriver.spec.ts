@@ -79,9 +79,7 @@ describe('[DriverHorizontal]', () => {
     });
 
     describe('[updateBgLine]', () => {
-        afterEach((): void => {
-            $(document.body).remove('.slider');
-        });
+        afterEach(() => $(document.body).remove('.slider'));
 
         describe('[1 point]', () => {
             for (let i = 0; i < 20; i += 1) {

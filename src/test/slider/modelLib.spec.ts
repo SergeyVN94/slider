@@ -531,9 +531,10 @@ describe('[Domain model lib]', () => {
             steps,
             result,
         }) => {
-            it(`[steps: (${steps.join(',')}), result: ${result}]`, () => {
-                expect(isCorrectSteps(steps, dataManager)).to.equal(result);
-            });
+            it(
+                `[steps: (${steps.join(',')}), result: ${result}]`,
+                () => expect(isCorrectSteps(steps, dataManager)).to.equal(result)
+            );
         });
     });
 });

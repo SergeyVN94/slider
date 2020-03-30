@@ -35,9 +35,10 @@ describe('[DriverScaleStringArray]', () => {
             _scale,
             allSteps,
         }) => {
-            it(`scale: (${_scale.join(',')})`, () => {
-                expect(scaleDriver.getAllSteps(_scale)).to.equal(allSteps);
-            });
+            it(
+                `scale: (${_scale.join(',')})`,
+                () => expect(scaleDriver.getAllSteps(_scale)).to.equal(allSteps)
+            );
         });
     });
 
@@ -76,9 +77,10 @@ describe('[DriverScaleStringArray]', () => {
             step,
             value,
         }) => {
-            it(`value: ${value}`, () => {
-                expect(scaleDriver.valueToStep(value, dataManager)).to.equal(step);
-            });
+            it(
+                `value: ${value}`,
+                () => expect(scaleDriver.valueToStep(value, dataManager)).to.equal(step)
+            );
         });
     });
 
@@ -117,9 +119,10 @@ describe('[DriverScaleStringArray]', () => {
             step,
             value,
         }) => {
-            it(`step: ${step}`, () => {
-                expect(scaleDriver.stepToValue(step, dataManager)).to.equal(value);
-            });
+            it(
+                `step: ${step}`,
+                () => expect(scaleDriver.stepToValue(step, dataManager)).to.equal(value)
+            );
         });
     });
 });

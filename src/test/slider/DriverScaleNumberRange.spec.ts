@@ -43,9 +43,10 @@ describe('[DriverScaleNumberRange]', () => {
             stepSize,
             allSteps,
         }) => {
-            it(`[range: (${scale.join(',')}); stepSize: ${stepSize}]`, () => {
-                expect(scaleDriver.getAllSteps(scale, stepSize)).to.equal(allSteps);
-            });
+            it(
+                `[range: (${scale.join(',')}); stepSize: ${stepSize}]`,
+                () => expect(scaleDriver.getAllSteps(scale, stepSize)).to.equal(allSteps)
+            );
         });
     });
 
@@ -98,9 +99,10 @@ describe('[DriverScaleNumberRange]', () => {
                 step,
             }
         ) => {
-            it(`[range: (${scale.join(',')}); value: ${value}]`, () => {
-                expect(scaleDriver.valueToStep(value, dataManager)).to.equal(step);
-            });
+            it(
+                `[range: (${scale.join(',')}); value: ${value}]`,
+                () => expect(scaleDriver.valueToStep(value, dataManager)).to.equal(step)
+            );
         });
     });
 
@@ -142,9 +144,10 @@ describe('[DriverScaleNumberRange]', () => {
                 isCorrect,
             }
         ) => {
-            it(`[range: (${scale.join(',')}); stepSize: ${stepSize}]`, () => {
-                expect(scaleDriver.isCorrectStepSize(scale, stepSize)).to.equal(isCorrect);
-            });
+            it(
+                `[range: (${scale.join(',')}); stepSize: ${stepSize}]`,
+                () => expect(scaleDriver.isCorrectStepSize(scale, stepSize)).to.equal(isCorrect)
+            );
         });
     });
 
@@ -189,9 +192,10 @@ describe('[DriverScaleNumberRange]', () => {
                 value,
             }
         ) => {
-            it(`[range: (${scale.join(',')}); step: ${step}]`, () => {
-                expect(scaleDriver.stepToValue(step, dataManager)).to.equal(value);
-            });
+            it(
+                `[range: (${scale.join(',')}); step: ${step}]`,
+                () => expect(scaleDriver.stepToValue(step, dataManager)).to.equal(value)
+            );
         });
     });
 });

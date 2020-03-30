@@ -13,12 +13,10 @@ const getPointStates = function getPointStates(
 
     const pointStates: SliderPointState[] = [];
 
-    pointSteps.forEach((pointStep) => {
-        pointStates.push({
-            position: pointStep / steps,
-            value: scaleDriver.stepToValue(pointStep, dataManager),
-        });
-    });
+    pointSteps.forEach((pointStep) => pointStates.push({
+        position: pointStep / steps,
+        value: scaleDriver.stepToValue(pointStep, dataManager),
+    }));
 
     return pointStates;
 };
@@ -33,14 +31,14 @@ const getModelValues = function getModelValues(
     } = dataManager;
 
     if (scaleType === SCALE_TYPES.STRING) {
-        return pointSteps.map<number>((step): number => {
-            return scaleDriver.stepToValue(step, dataManager) as number;
-        });
+        return pointSteps.map<number>(
+            (step): number => scaleDriver.stepToValue(step, dataManager) as number
+        );
     }
 
-    return pointSteps.map<string>((step): string => {
-        return scaleDriver.stepToValue(step, dataManager) as string;
-    });
+    return pointSteps.map<string>(
+        (step): string => scaleDriver.stepToValue(step, dataManager) as string
+    );
 };
 
 const isCorrectSteps = function isCorrectSteps(
@@ -85,9 +83,9 @@ const setModelValues = function setModelValues(
     }
 
     const steps: number[] = [];
-    values.forEach((value: string | number) => {
-        steps.push(scaleDriver.valueToStep(value, dataManager));
-    });
+    values.forEach(
+        (value: string | number) => steps.push(scaleDriver.valueToStep(value, dataManager))
+    );
 
     if (isCorrectSteps(steps, dataManager)) {
         dataManager.pointSteps = steps;

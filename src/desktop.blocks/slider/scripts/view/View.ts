@@ -70,9 +70,7 @@ class View implements ISliderView, ISliderViewConfigManager {
             points = 1,
             showTooltips = true,
             showBgLine = true,
-            prettify = (value: string): string => {
-                return value;
-            },
+            prettify = (value: string): string => value,
             viewName = VIEW_NAMES.HORIZONTAL,
         } = config;
 
@@ -158,9 +156,7 @@ class View implements ISliderView, ISliderViewConfigManager {
             );
         }
 
-        this._domElements.$slider.trigger('select', points.map((point) => {
-            return point.value;
-        }));
+        this._domElements.$slider.trigger('select', points.map((point) => point.value));
     }
 
     private _updateIDomElements(points: SliderPointState[]): void {

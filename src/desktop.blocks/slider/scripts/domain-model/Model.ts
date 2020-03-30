@@ -45,11 +45,9 @@ class Model implements ISliderModel, ISliderModelStateManager {
         this._core = new Core();
 
         const pointSteps: number[] = [];
-        start.forEach((startValue: string | number): void => {
-            pointSteps.push(
-                this._scaleDriver.valueToStep(startValue, this._dataManager)
-            );
-        });
+        start.forEach((startValue: string | number) => pointSteps.push(
+            this._scaleDriver.valueToStep(startValue, this._dataManager)
+        ));
 
         this._dataManager.pointSteps = pointSteps;
 
@@ -96,10 +94,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
 
     private _toggleUpdateEvent(): void {
         const pointStates = getPointStates(this._dataManager, this._scaleDriver);
-
-        this._updateEventCallbackList.forEach((callback) => {
-            callback(pointStates);
-        });
+        this._updateEventCallbackList.forEach((callback) => callback(pointStates));
     }
 }
 
