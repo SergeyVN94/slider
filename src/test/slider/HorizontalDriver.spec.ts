@@ -131,11 +131,9 @@ describe('[DriverHorizontal]', () => {
                     driver.updateBgLine(
                         packet.$bgLine,
                         packet.$pointContainer,
-                        points.map((position) => {
-                            return {
-                                position,
-                            };
-                        })
+                        points.map((position) => ({
+                            position,
+                        }))
                     );
 
                     const bgLineWidth = packet.$bgLine.width();
