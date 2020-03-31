@@ -140,11 +140,9 @@ describe('[DriverVertical]', () => {
                     driver.updateBgLine(
                         packet.$bgLine,
                         packet.$pointContainer,
-                        points.map((position) => {
-                            return {
-                                position,
-                            };
-                        })
+                        points.map((position) => ({
+                            position,
+                        }))
                     );
 
                     const bgLineHeight = packet.$bgLine.height();
