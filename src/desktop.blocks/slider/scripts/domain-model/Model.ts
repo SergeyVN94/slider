@@ -75,7 +75,6 @@ class Model implements ISliderModel, ISliderModelStateManager {
             this._dataManager.stepSize = newStepSize;
             this._dataManager.steps = this._scaleDriver.getAllSteps(scale, newStepSize);
             this.value = values;
-            this._toggleUpdateEvent();
         }
     }
 

@@ -21,6 +21,7 @@ class DriverScaleNumberRange implements ISliderScaleDriver {
         const {
             scale,
             stepSize,
+            steps,
         } = dataManager;
 
         const [
@@ -34,7 +35,13 @@ class DriverScaleNumberRange implements ISliderScaleDriver {
             return -1;
         }
 
-        return Math.round((value - rangeMin) / stepSize);
+        const step = Math.round((value - rangeMin) / stepSize);
+
+        if (step > steps) {
+            return steps;
+        }
+
+        return step;
     }
 
     isCorrectStepSize(scale: [number, number], stepSize: number): boolean {
