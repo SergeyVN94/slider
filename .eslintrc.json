@@ -45,7 +45,7 @@
             }
         ],
         "implicit-arrow-linebreak": "error",
-        "id-length": ["error", { "exceptions": ["i", "j"] }],
+        "id-length": ["error", { "exceptions": ["i", "j", "$"] }],
         "key-spacing": "error",
         "keyword-spacing": "error",
         "max-classes-per-file": ["error", 1],
