@@ -45,11 +45,11 @@
             }
         ],
         "implicit-arrow-linebreak": "error",
-        "id-length": "warn",
+        "id-length": ["error", { "exceptions": ["i", "j"] }],
         "key-spacing": "error",
         "keyword-spacing": "error",
         "max-classes-per-file": ["error", 1],
-        "max-len": ["error", { 
+        "max-len": ["warn", { 
             "code": 100,
             "ignoreUrls": true,
             "ignoreStrings": true,
