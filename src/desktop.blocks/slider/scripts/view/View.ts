@@ -27,12 +27,10 @@ const createDriver = function viewDriverFactory(
     }
 };
 
-const VIEW_NAMES: {
-    [index: string]: 'horizontal' | 'vertical';
-} = {
-    HORIZONTAL: 'horizontal',
-    VERTICAL: 'vertical',
-};
+const enum VIEW_NAMES {
+    HORIZONTAL = 'horizontal',
+    VERTICAL = 'vertical',
+}
 
 interface IDomElements {
     $slider: JQuery;
@@ -117,7 +115,12 @@ class View implements ISliderView, ISliderViewConfigManager {
     }
 
     public set viewName(viewName: SliderViewName) {
-        this._domElements.$slider.removeClass(CLASSES.VIEW_NAMES);
+        this._domElements.$slider.removeClass(
+            (index, classes) => classes
+                .split(' ')
+                .filter((className) => className.includes('slider_view-name_'))
+                .join(' ')
+        );
         this._domElements.$slider.find('*').removeAttr('style');
 
         this._viewName = viewName;

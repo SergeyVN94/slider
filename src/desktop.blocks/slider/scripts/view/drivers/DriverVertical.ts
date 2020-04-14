@@ -2,7 +2,7 @@ import CLASSES from '../classes';
 
 class DriverVertical implements ISliderViewDriver {
     constructor($slider: JQuery) {
-        $slider.addClass(CLASSES.THEME.VERTICAL);
+        $slider.addClass(CLASSES.VIEW_NAME_VERTICAL);
     }
 
     public getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
