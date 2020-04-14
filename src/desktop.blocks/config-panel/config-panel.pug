@@ -3,7 +3,7 @@ mixin config-panel(id = "")
         .config-panel__row
             label.config-panel__control
                 span.config-panel__control-text Шаг
-                input.config-panel__input.config-panel__step.js-config-panel__step(
+                input.config-panel__input.config-panel__input_type_step.js-config-panel__input_type_step(
                     type="number",
                     min=1,
                     autocomplete="off"
@@ -47,10 +47,10 @@ mixin config-panel(id = "")
         .config-panel__row
             label.config-panel__control 
                 span.config-panel__control-text Количество ползунков
-                input.config-panel__input.config-panel__points.js-config-panel__points(
+                input.config-panel__input.config-panel__input_type_points.js-config-panel__input_type_points(
                     type="number",
                     min=1,
                     autocomplete="off"
                 )
         .config-panel__row
-            .config-panel__col.js-config-panel__controls-out
+            .config-panel__col.config-panel__col_type_controls-out.js-config-panel__col_type_controls-out

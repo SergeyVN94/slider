@@ -9,7 +9,7 @@ const createControlValueOut = function createControlValueOut(
         .addClass('config-panel__control-text')
         .text(`Ползунок ${index}`);
     const $controlInput = $('<input/>')
-        .addClass('.config-panel__value-out')
+        .addClass('.config-panel__input_type_value-out')
         .prop('autocomplete', 'off')
         .data('index', index)
         .val(value);
