@@ -5,6 +5,11 @@ const CopyPlugin = require('copy-webpack-plugin');
 const Webpack = require('webpack');
 
 module.exports = {
+    devServer: {
+        contentBase: `${__dirname}/dist`,
+        compress: true,
+        port: 9000,
+    },
     context: `${__dirname}/src`,
     entry: {
         'index.js': './index.ts',

@@ -9,7 +9,8 @@
     "watch": "npx  webpack --mode development --watch",
     "eslint": "eslint --cache --ext .ts,.tsx src",
     "eslint-fix": "eslint --cache --ext .ts,.tsx src --fix",
-    "eslint:dump": "eslint --print-config ./.eslintrc.json"
+    "eslint:dump": "eslint --print-config ./.eslintrc.json",
+    "start:dev": "webpack-dev-server"
   },
   "repository": {
     "type": "git",
@@ -64,7 +65,8 @@
     "tsd": "^0.9.0",
     "typescript": "^3.8.3",
     "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
     "jquery": "^3.4.1",
