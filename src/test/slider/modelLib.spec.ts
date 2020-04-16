@@ -10,8 +10,6 @@ import DataManager from '../../desktop.blocks/slider/scripts/domain-model/DataMa
 import DriverScaleNumberRange from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleStringArray';
 import Core from '../../desktop.blocks/slider/scripts/domain-model/Core';
-
-// TODO: Убрать зависимоть!!!
 import { SliderPointState } from '../../desktop.blocks/slider/scripts/domain-model/Model';
 
 const scaleDriverNumRange = new DriverScaleNumberRange();
@@ -362,10 +360,12 @@ describe('[Domain model lib]', () => {
                         pointSteps,
                         ...dataManagerConfig,
                     });
-                    core.updatePointSteps({
+                    const pointSelected = -1;
+                    core.updatePointSteps(
                         targetPosition,
-                        pointSelected: -1,
-                    }, dataManager);
+                        pointSelected,
+                        dataManager
+                    );
 
                     expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
                 });
@@ -480,10 +480,11 @@ describe('[Domain model lib]', () => {
                         pointSteps,
                         ...dataManagerConfig,
                     });
-                    core.updatePointSteps({
+                    core.updatePointSteps(
                         targetPosition,
                         pointSelected,
-                    }, dataManager);
+                        dataManager
+                    );
 
                     expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
                 });

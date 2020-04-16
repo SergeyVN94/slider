@@ -7,8 +7,6 @@ import {
 import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
 import Core from './Core';
-// TODO: Убрать зависимоть!!!
-import { SliderViewState } from '../view/View';
 
 type SliderScale = [number, number] | string[];
 type HandlerSliderModelUpdate = (points: SliderPointState[]) => void;
@@ -18,8 +16,8 @@ type SliderPointState = {
 };
 
 interface ISliderModel {
-    update(state: SliderViewState): void;
-    onUpdate(callback: HandlerSliderModelUpdate): void;
+    update(targetPosition: number, pointIndex: number): void;
+    onUpdate(callback: (points: SliderPointState[]) => void): void;
     getPointStates(): SliderPointState[];
 }
 
@@ -89,8 +87,12 @@ class Model implements ISliderModel, ISliderModelStateManager {
         this.updateEventCallbackList = [];
     }
 
-    public update(state: SliderViewState): void {
-        this.core.updatePointSteps(state, this.dataManager);
+    public update(targetPosition: number, pointSelected: number): void {
+        this.core.updatePointSteps(
+            targetPosition,
+            pointSelected,
+            this.dataManager
+        );
         this._toggleUpdateEvent();
     }
 

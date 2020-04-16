@@ -2,10 +2,7 @@ import {
     ISliderModel,
     SliderPointState,
 } from './domain-model/Model';
-import {
-    ISliderView,
-    SliderViewState,
-} from './view/View';
+import { ISliderView } from './view/View';
 
 class Presenter {
     readonly view: ISliderView;
@@ -15,8 +12,8 @@ class Presenter {
         this.view = view;
         this.model = model;
 
-        this.view.onSelect((viewState: SliderViewState): void => {
-            this.model.update(viewState);
+        this.view.onSelect((targetPosition, pointSelected): void => {
+            this.model.update(targetPosition, pointSelected);
         });
 
         this.model.onUpdate((pints: SliderPointState[]) => {

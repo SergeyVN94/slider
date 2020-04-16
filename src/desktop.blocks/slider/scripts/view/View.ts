@@ -5,11 +5,7 @@ import CLASSES from './classes';
 
 type SliderViewName = 'horizontal' | 'vertical';
 type PrettifyFunc = (value: number | string) => string;
-type SliderViewState = {
-    readonly targetPosition: number;
-    readonly pointSelected: number;
-};
-type HandlerSliderViewSelect = (state: SliderViewState) => void;
+type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
 
 interface IDomElements {
     $slider: JQuery;
@@ -160,7 +156,7 @@ class View implements ISliderView, ISliderViewConfigManager {
         this.update(this.pointStates);
     }
 
-    public onSelect(callback: HandlerSliderViewSelect): void {
+    public onSelect(callback: (targetPosition: number, pointSelected: number) => void): void {
         this.updateEventCallback = callback;
     }
 
@@ -258,16 +254,13 @@ class View implements ISliderView, ISliderViewConfigManager {
         return domElements;
     }
 
-    private _getViewState(ev: JQuery.Event): SliderViewState {
-        return {
-            targetPosition: this.driver.getTargetPosition(ev, this.domElements.$pointContainer),
-            pointSelected: this.pointSelected,
-        };
-    }
-
     private _triggerSelectEvent(ev: JQuery.Event): void {
         if (this.updateEventCallback !== null) {
-            this.updateEventCallback(this._getViewState(ev));
+            const targetPosition = this.driver.getTargetPosition(
+                ev,
+                this.domElements.$pointContainer
+            );
+            this.updateEventCallback(targetPosition, this.pointSelected);
         }
     }
 
@@ -315,5 +308,4 @@ export {
     ISliderViewConfigManager,
     ISliderView,
     ISliderViewDriver,
-    SliderViewState,
 };

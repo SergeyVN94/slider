@@ -1,37 +1,30 @@
 import { ISliderModelDataManager } from './Model';
-// TODO: Убрать зависимоть!!!
-import { SliderViewState } from '../view/View';
 
 class Core {
     public updatePointSteps(
-        state: SliderViewState,
+        targetPosition: number,
+        pointIndex: number,
         dataManager: ISliderModelDataManager
     ): void {
-        const { pointSelected } = state;
-
-        if (pointSelected === -1) {
-            this._updatePointStepsForNull(state, dataManager);
+        if (pointIndex === -1) {
+            this._updatePointStepsForNull(targetPosition, dataManager);
         } else {
-            this._updatePointStepsForPoint(state, dataManager);
+            this._updatePointStepsForPoint(targetPosition, pointIndex, dataManager);
         }
     }
 
     private _updatePointStepsForPoint(
-        state: SliderViewState,
+        targetPosition: number,
+        pointIndex: number,
         dataManager: ISliderModelDataManager
     ): boolean {
-        const {
-            targetPosition,
-            pointSelected,
-        } = state;
-
         const {
             pointSteps,
             steps,
         } = dataManager;
 
         const targetStep = Math.round(targetPosition * steps);
-        const currentPointStep = pointSteps[pointSelected];
+        const currentPointStep = pointSteps[pointIndex];
 
         if (targetStep === currentPointStep) {
             return true;
@@ -43,43 +36,42 @@ class Core {
         }
 
         if (targetStep > currentPointStep) {
-            if (pointSelected === pointSteps.length - 1) {
-                dataManager.pointSteps[pointSelected] = targetStep;
+            if (pointIndex === pointSteps.length - 1) {
+                dataManager.pointSteps[pointIndex] = targetStep;
                 return true;
             }
 
-            const stepPointRight = pointSteps[pointSelected + 1];
+            const stepPointRight = pointSteps[pointIndex + 1];
 
             if (targetStep > stepPointRight) {
-                dataManager.pointSteps[pointSelected] = stepPointRight;
+                dataManager.pointSteps[pointIndex] = stepPointRight;
                 return true;
             }
 
-            dataManager.pointSteps[pointSelected] = targetStep;
+            dataManager.pointSteps[pointIndex] = targetStep;
             return true;
         }
 
-        if (pointSelected === 0) {
-            dataManager.pointSteps[pointSelected] = targetStep;
+        if (pointIndex === 0) {
+            dataManager.pointSteps[pointIndex] = targetStep;
             return true;
         }
 
-        const stepPointLeft = pointSteps[pointSelected - 1];
+        const stepPointLeft = pointSteps[pointIndex - 1];
 
         if (targetStep < stepPointLeft) {
-            dataManager.pointSteps[pointSelected] = stepPointLeft;
+            dataManager.pointSteps[pointIndex] = stepPointLeft;
             return true;
         }
 
-        dataManager.pointSteps[pointSelected] = targetStep;
+        dataManager.pointSteps[pointIndex] = targetStep;
         return true;
     }
 
     private _updatePointStepsForNull(
-        state: SliderViewState,
+        targetPosition: number,
         dataManager: ISliderModelDataManager
     ): boolean {
-        const { targetPosition } = state;
         const {
             steps,
             pointSteps,

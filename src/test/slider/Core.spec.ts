@@ -167,10 +167,12 @@ describe('[Core]', () => {
                         pointSteps,
                         ...dataManagerConfig,
                     });
-                    core.updatePointSteps({
+                    const pointSelected = -1;
+                    core.updatePointSteps(
                         targetPosition,
-                        pointSelected: -1,
-                    }, dataManager);
+                        pointSelected,
+                        dataManager
+                    );
 
                     expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
                 });
@@ -285,10 +287,11 @@ describe('[Core]', () => {
                         pointSteps,
                         ...dataManagerConfig,
                     });
-                    core.updatePointSteps({
+                    core.updatePointSteps(
                         targetPosition,
                         pointSelected,
-                    }, dataManager);
+                        dataManager
+                    );
 
                     expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
                 });
