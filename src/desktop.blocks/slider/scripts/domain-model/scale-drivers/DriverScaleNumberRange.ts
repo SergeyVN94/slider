@@ -1,3 +1,8 @@
+import {
+    ISliderModelDataManager,
+    ISliderScaleDriver,
+} from '../Model';
+
 class DriverScaleNumberRange implements ISliderScaleDriver {
     getAllSteps(scale: [number, number], stepSize: number): number {
         const [

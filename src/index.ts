@@ -1,3 +1,4 @@
+import { SliderScale } from './desktop.blocks/slider/scripts/domain-model/Model';
 import initConfigPanel from './desktop.blocks/config-panel/initConfigPanel';
 
 const importAll = function importAll(resolve: __WebpackModuleApi.RequireContext): void {

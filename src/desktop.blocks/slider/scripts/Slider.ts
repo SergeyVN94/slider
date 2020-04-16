@@ -1,3 +1,6 @@
+import { ISliderModelStateManager } from './domain-model/Model';
+import { ISliderViewConfigManager } from './view/View';
+
 class Slider {
     private readonly model: ISliderModelStateManager;
     private readonly view: ISliderViewConfigManager;

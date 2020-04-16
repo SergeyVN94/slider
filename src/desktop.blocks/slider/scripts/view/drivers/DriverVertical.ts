@@ -1,4 +1,8 @@
+// TODO: Убрать зависимоть!
+import { SliderPointState } from '../../domain-model/Model';
+
 import CLASSES from '../classes';
+import { ISliderViewDriver } from '../View';
 
 class DriverVertical implements ISliderViewDriver {
     constructor($slider: JQuery) {

@@ -1,3 +1,12 @@
+import {
+    ISliderModel,
+    SliderPointState,
+} from './domain-model/Model';
+import {
+    ISliderView,
+    SliderViewState,
+} from './view/View';
+
 class Presenter {
     readonly view: ISliderView;
     readonly model: ISliderModel;

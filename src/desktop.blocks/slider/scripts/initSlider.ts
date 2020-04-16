@@ -1,6 +1,10 @@
+import View, {
+    PrettifyFunc,
+    SliderViewName,
+} from './view/View';
+import Model, { SliderScale } from './domain-model/Model';
+
 import Slider from './Slider';
-import View from './view/View';
-import Model from './domain-model/Model';
 import Presenter from './Presenter';
 
 const initSlider = function initSlider(config: {
@@ -14,7 +18,7 @@ const initSlider = function initSlider(config: {
     readonly showBgLine?: boolean;
 }): Slider {
     const {
-        scale = [0, 100] as CoupleNum,
+        scale = [0, 100] as [number, number],
         step = 1,
         start = [scale[0]] as string[] | number[],
     } = config;

@@ -1,3 +1,9 @@
+import {
+    ISliderModelDataManager,
+    ISliderScaleDriver,
+    SliderPointState,
+} from './Model';
+
 const SCALE_TYPES = {
     STRING: 'string',
 };

@@ -1,3 +1,8 @@
+import {
+    SliderScale,
+    ISliderModelDataManager,
+} from './Model';
+
 class DataManager implements ISliderModelDataManager {
     private allSteps: number;
     private sliderScale: SliderScale;

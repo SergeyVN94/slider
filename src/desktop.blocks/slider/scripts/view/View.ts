@@ -1,6 +1,48 @@
+import { SliderPointState } from '../domain-model/Model';
 import DriverHorizontal from './drivers/DriverHorizontal';
 import DriverVertical from './drivers/DriverVertical';
 import CLASSES from './classes';
+
+type SliderViewName = 'horizontal' | 'vertical';
+type PrettifyFunc = (value: number | string) => string;
+type SliderViewState = {
+    readonly targetPosition: number;
+    readonly pointSelected: number;
+};
+type HandlerSliderViewSelect = (state: SliderViewState) => void;
+
+interface IDomElements {
+    $slider: JQuery;
+    points: JQuery[];
+    tooltips: JQuery[];
+    $pointContainer: JQuery;
+    $tooltipContainer: JQuery;
+    $bgLine: JQuery;
+    $document: JQuery<Document>;
+}
+
+interface ISliderViewConfigManager {
+    showTooltips: boolean;
+    viewName: 'horizontal' | 'vertical';
+    showBgLine: boolean;
+}
+
+interface ISliderView {
+    onSelect(callback: HandlerSliderViewSelect): void;
+    update(points: SliderPointState[]): void;
+}
+
+interface ISliderViewDriver {
+    getTargetPosition($event: JQuery.Event, $pointContainer: JQuery): number;
+    setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void;
+    updateTooltip(
+        $tooltip: JQuery,
+        $tooltipContainer: JQuery,
+        position: number,
+        value: string
+    ): void;
+    updateBgLine($bgLine: JQuery, $pointContainer: JQuery, points: SliderPointState[]): void;
+}
 
 const createPoint = function createPoint(index: number): JQuery {
     return $('<div/>', {
@@ -30,16 +72,6 @@ const createDriver = function viewDriverFactory(
 const enum VIEW_NAMES {
     HORIZONTAL = 'horizontal',
     VERTICAL = 'vertical',
-}
-
-interface IDomElements {
-    $slider: JQuery;
-    points: JQuery[];
-    tooltips: JQuery[];
-    $pointContainer: JQuery;
-    $tooltipContainer: JQuery;
-    $bgLine: JQuery;
-    $document: JQuery<Document>;
 }
 
 class View implements ISliderView, ISliderViewConfigManager {
@@ -278,4 +310,10 @@ export default View;
 export {
     createPoint,
     createTooltip,
+    PrettifyFunc,
+    SliderViewName,
+    ISliderViewConfigManager,
+    ISliderView,
+    ISliderViewDriver,
+    SliderViewState,
 };

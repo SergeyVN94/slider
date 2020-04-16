@@ -1,3 +1,7 @@
+import { ISliderModelDataManager } from './Model';
+// TODO: Убрать зависимоть!!!
+import { SliderViewState } from '../view/View';
+
 class Core {
     public updatePointSteps(
         state: SliderViewState,

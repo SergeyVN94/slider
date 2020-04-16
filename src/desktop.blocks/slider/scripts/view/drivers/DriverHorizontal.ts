@@ -1,3 +1,8 @@
+// TODO: Убрать зависимоть!
+import { SliderPointState } from '../../domain-model/Model';
+
+import { ISliderViewDriver } from '../View';
+
 class DriverHorizontal implements ISliderViewDriver {
     public getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
         const containerWidth = $pointContainer.width();

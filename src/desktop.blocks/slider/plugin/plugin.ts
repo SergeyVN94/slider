@@ -1,5 +1,21 @@
+import { SliderScale } from '../scripts/domain-model/Model';
+import { PrettifyFunc } from '../scripts/view/View';
+
 import initSlider from '../scripts/initSlider';
 import Slider from '../scripts/Slider';
+
+type SliderViewName = 'horizontal' | 'vertical';
+
+interface ISliderConfig {
+    readonly $slider: JQuery;
+    readonly start?: string[] | number[];
+    readonly scale?: SliderScale;
+    readonly viewName?: SliderViewName;
+    readonly showTooltips?: boolean;
+    readonly step?: number;
+    readonly prettify?: PrettifyFunc;
+    readonly showBgLine?: boolean;
+}
 
 const COMMANDS = {
     INIT: 'init',

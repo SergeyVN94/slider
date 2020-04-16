@@ -11,6 +11,9 @@ import DriverScaleNumberRange from '../../desktop.blocks/slider/scripts/domain-m
 import DriverScaleStringArray from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleStringArray';
 import Core from '../../desktop.blocks/slider/scripts/domain-model/Core';
 
+// TODO: Убрать зависимоть!!!
+import { SliderPointState } from '../../desktop.blocks/slider/scripts/domain-model/Model';
+
 const scaleDriverNumRange = new DriverScaleNumberRange();
 const scaleDriverStrArr = new DriverScaleStringArray();
 const core = new Core();

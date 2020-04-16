@@ -7,6 +7,41 @@ import {
 import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
 import Core from './Core';
+// TODO: Убрать зависимоть!!!
+import { SliderViewState } from '../view/View';
+
+type SliderScale = [number, number] | string[];
+type HandlerSliderModelUpdate = (points: SliderPointState[]) => void;
+type SliderPointState = {
+    readonly position: number;
+    readonly value?: string | number;
+};
+
+interface ISliderModel {
+    update(state: SliderViewState): void;
+    onUpdate(callback: HandlerSliderModelUpdate): void;
+    getPointStates(): SliderPointState[];
+}
+
+interface ISliderModelDataManager {
+    scale: SliderScale;
+    scaleType: 'string' | 'number';
+    pointSteps: number[];
+    stepSize: number;
+    steps: number;
+}
+
+interface ISliderModelStateManager {
+    step: number;
+    value: string[] | number[];
+}
+
+interface ISliderScaleDriver {
+    getAllSteps(scale: SliderScale, stepSize: number): number;
+    valueToStep(value: number | string, dataManager: ISliderModelDataManager): number;
+    isCorrectStepSize(scale: SliderScale, stepSize: number): boolean;
+    stepToValue(step: number, dataManager: ISliderModelDataManager): string | number | null;
+}
 
 const createSliderScale = function sliderScaleFactory(scale: SliderScale): ISliderScaleDriver {
     if (typeof scale[0] === 'number') {
@@ -98,3 +133,11 @@ class Model implements ISliderModel, ISliderModelStateManager {
 }
 
 export default Model;
+export {
+    SliderScale,
+    ISliderModel,
+    ISliderModelDataManager,
+    ISliderModelStateManager,
+    ISliderScaleDriver,
+    SliderPointState,
+};

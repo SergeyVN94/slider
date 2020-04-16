@@ -6,7 +6,7 @@ import DriverVertical from '../../desktop.blocks/slider/scripts/view/drivers/Dri
 
 document.body.style.padding = '50px';
 
-const driver: ISliderViewDriver = new DriverVertical($('')); // $('') - затычка. Драйвер добавляет к слайдеру класс slider_theme_vertical. В тестах это делает функция createSlider.
+const driver = new DriverVertical($('')); // $('') - затычка. Драйвер добавляет к слайдеру класс slider_theme_vertical. В тестах это делает функция createSlider.
 
 describe('[DriverVertical]', () => {
     describe('[setPointPosition]', () => {

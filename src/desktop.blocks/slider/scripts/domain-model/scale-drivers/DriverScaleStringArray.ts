@@ -1,3 +1,8 @@
+import {
+    ISliderModelDataManager,
+    ISliderScaleDriver,
+} from '../Model';
+
 class DriverScaleStringArray implements ISliderScaleDriver {
     getAllSteps(scale: string[]): number {
         return scale.length - 1;
