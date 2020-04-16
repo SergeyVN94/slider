@@ -1,9 +1,9 @@
 class DataManager implements ISliderModelDataManager {
-    private _steps: number;
-    private _scale: SliderScale;
-    private _stepSize: number;
-    private _pointSteps: number[];
-    private _scaleType: 'string' | 'number';
+    private allSteps: number;
+    private sliderScale: SliderScale;
+    private currentStepSize: number;
+    private currentPointSteps: number[];
+    private sliderScaleType: 'string' | 'number';
 
     constructor(config: {
         stepSize: number;
@@ -18,48 +18,48 @@ class DataManager implements ISliderModelDataManager {
             pointSteps,
         } = config;
 
-        this._scale = scale;
-        this._steps = steps;
-        this._stepSize = stepSize;
-        this._pointSteps = pointSteps;
-        this._scaleType = typeof scale[0] as 'string' | 'number';
+        this.sliderScale = scale;
+        this.allSteps = steps;
+        this.currentStepSize = stepSize;
+        this.currentPointSteps = pointSteps;
+        this.sliderScaleType = typeof scale[0] as 'string' | 'number';
     }
 
     public get stepSize(): number {
-        return this._stepSize;
+        return this.currentStepSize;
     }
 
     public set stepSize(step: number) {
-        this._stepSize = step;
+        this.currentStepSize = step;
     }
 
     public get pointSteps(): number[] {
-        return this._pointSteps;
+        return this.currentPointSteps;
     }
 
     public set pointSteps(steps: number[]) {
-        this._pointSteps = steps;
+        this.currentPointSteps = steps;
     }
 
     public get scale(): SliderScale {
-        return this._scale;
+        return this.sliderScale;
     }
 
     public set scale(scale: SliderScale) {
-        this._scale = scale;
-        this._scaleType = typeof scale[0] as 'string' | 'number';
+        this.sliderScale = scale;
+        this.sliderScaleType = typeof scale[0] as 'string' | 'number';
     }
 
     public get steps(): number {
-        return this._steps;
+        return this.allSteps;
     }
 
     public set steps(steps: number) {
-        this._steps = steps;
+        this.allSteps = steps;
     }
 
     public get scaleType(): 'number' | 'string' {
-        return this._scaleType;
+        return this.sliderScaleType;
     }
 }
 

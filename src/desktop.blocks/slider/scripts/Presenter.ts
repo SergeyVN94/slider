@@ -1,21 +1,21 @@
 class Presenter {
-    readonly _view: ISliderView;
-    readonly _model: ISliderModel;
+    readonly view: ISliderView;
+    readonly model: ISliderModel;
 
     constructor(view: ISliderView, model: ISliderModel) {
-        this._view = view;
-        this._model = model;
+        this.view = view;
+        this.model = model;
 
-        this._view.onSelect((viewState: SliderViewState): void => {
-            this._model.update(viewState);
+        this.view.onSelect((viewState: SliderViewState): void => {
+            this.model.update(viewState);
         });
 
-        this._model.onUpdate((pints: SliderPointState[]) => {
-            this._view.update(pints);
+        this.model.onUpdate((pints: SliderPointState[]) => {
+            this.view.update(pints);
         });
 
-        this._view.update(
-            this._model.getPointStates()
+        this.view.update(
+            this.model.getPointStates()
         );
     }
 }

@@ -17,10 +17,10 @@ const createSliderScale = function sliderScaleFactory(scale: SliderScale): ISlid
 };
 
 class Model implements ISliderModel, ISliderModelStateManager {
-    private readonly _dataManager: ISliderModelDataManager;
-    private readonly _updateEventCallbackList: HandlerSliderModelUpdate[];
-    private readonly _scaleDriver: ISliderScaleDriver;
-    private readonly _core: Core;
+    private readonly dataManager: ISliderModelDataManager;
+    private readonly updateEventCallbackList: HandlerSliderModelUpdate[];
+    private readonly scaleDriver: ISliderScaleDriver;
+    private readonly core: Core;
 
     constructor(config: {
         scale: [number, number] | string[];
@@ -33,67 +33,67 @@ class Model implements ISliderModel, ISliderModelStateManager {
             step: stepSize,
         } = config;
 
-        this._scaleDriver = createSliderScale(scale);
+        this.scaleDriver = createSliderScale(scale);
 
-        this._dataManager = new DataManager({
+        this.dataManager = new DataManager({
             scale,
             pointSteps: [],
             stepSize,
-            steps: this._scaleDriver.getAllSteps(scale, stepSize),
+            steps: this.scaleDriver.getAllSteps(scale, stepSize),
         });
 
-        this._core = new Core();
+        this.core = new Core();
 
         const pointSteps: number[] = [];
         start.forEach((startValue: string | number) => pointSteps.push(
-            this._scaleDriver.valueToStep(startValue, this._dataManager)
+            this.scaleDriver.valueToStep(startValue, this.dataManager)
         ));
 
-        this._dataManager.pointSteps = pointSteps;
+        this.dataManager.pointSteps = pointSteps;
 
-        this._updateEventCallbackList = [];
+        this.updateEventCallbackList = [];
     }
 
     public update(state: SliderViewState): void {
-        this._core.updatePointSteps(state, this._dataManager);
+        this.core.updatePointSteps(state, this.dataManager);
         this._toggleUpdateEvent();
     }
 
     public onUpdate(callback: HandlerSliderModelUpdate): void {
-        this._updateEventCallbackList.push(callback);
+        this.updateEventCallbackList.push(callback);
     }
 
     public get step(): number {
-        return this._dataManager.stepSize;
+        return this.dataManager.stepSize;
     }
 
     public set step(newStepSize: number) {
-        const values = getModelValues(this._dataManager, this._scaleDriver);
-        const { scale } = this._dataManager;
+        const values = getModelValues(this.dataManager, this.scaleDriver);
+        const { scale } = this.dataManager;
 
-        if (this._scaleDriver.isCorrectStepSize(scale, newStepSize)) {
-            this._dataManager.stepSize = newStepSize;
-            this._dataManager.steps = this._scaleDriver.getAllSteps(scale, newStepSize);
+        if (this.scaleDriver.isCorrectStepSize(scale, newStepSize)) {
+            this.dataManager.stepSize = newStepSize;
+            this.dataManager.steps = this.scaleDriver.getAllSteps(scale, newStepSize);
             this.value = values;
         }
     }
 
     public get value(): string[] | number[] {
-        return getModelValues(this._dataManager, this._scaleDriver);
+        return getModelValues(this.dataManager, this.scaleDriver);
     }
 
     public set value(values: string[] | number[]) {
-        setModelValues(values, this._dataManager, this._scaleDriver);
+        setModelValues(values, this.dataManager, this.scaleDriver);
         this._toggleUpdateEvent();
     }
 
     public getPointStates(): SliderPointState[] {
-        return getPointStates(this._dataManager, this._scaleDriver);
+        return getPointStates(this.dataManager, this.scaleDriver);
     }
 
     private _toggleUpdateEvent(): void {
-        const pointStates = getPointStates(this._dataManager, this._scaleDriver);
-        this._updateEventCallbackList.forEach((callback) => callback(pointStates));
+        const pointStates = getPointStates(this.dataManager, this.scaleDriver);
+        this.updateEventCallbackList.forEach((callback) => callback(pointStates));
     }
 }
 

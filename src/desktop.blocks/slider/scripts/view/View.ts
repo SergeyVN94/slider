@@ -43,17 +43,17 @@ interface IDomElements {
 }
 
 class View implements ISliderView, ISliderViewConfigManager {
-    private _driver: ISliderViewDriver;
-    private readonly _domElements: IDomElements;
-    private _flags: {
+    private driver: ISliderViewDriver;
+    private readonly domElements: IDomElements;
+    private flags: {
         showTooltips: boolean;
         showBgLine: boolean;
     };
-    private _updateEventCallback: HandlerSliderViewSelect;
-    private _pointSelected: number;
-    private _pointStates: SliderPointState[];
-    private readonly _prettify: PrettifyFunc;
-    private _viewName: 'horizontal' | 'vertical';
+    private updateEventCallback: HandlerSliderViewSelect;
+    private pointSelected: number;
+    private pointStates: SliderPointState[];
+    private readonly prettify: PrettifyFunc;
+    private currentViewName: 'horizontal' | 'vertical';
 
     constructor(config: {
         $slider: JQuery;
@@ -72,139 +72,139 @@ class View implements ISliderView, ISliderViewConfigManager {
             viewName = VIEW_NAMES.HORIZONTAL,
         } = config;
 
-        this._flags = {
+        this.flags = {
             showTooltips,
             showBgLine,
         };
-        this._prettify = prettify;
-        this._domElements = this._createIDomElements($slider, points);
-        this._updateEventCallback = null;
-        this._pointSelected = -1;
-        this._driver = createDriver(viewName, this._domElements.$slider);
-        this._viewName = viewName;
+        this.prettify = prettify;
+        this.domElements = this._createIDomElements($slider, points);
+        this.updateEventCallback = null;
+        this.pointSelected = -1;
+        this.driver = createDriver(viewName, this.domElements.$slider);
+        this.currentViewName = viewName;
 
         this._initIDomElements();
-        this._showTooltips(this._flags.showTooltips);
+        this._showTooltips(this.flags.showTooltips);
     }
 
     public get showBgLine(): boolean {
-        return this._flags.showBgLine;
+        return this.flags.showBgLine;
     }
 
     public set showBgLine(state: boolean) {
-        this._flags.showBgLine = state;
-        this._domElements.$slider.toggleClass(CLASSES.HIDE_BG_LINE, !state);
-        this.update(this._pointStates);
+        this.flags.showBgLine = state;
+        this.domElements.$slider.toggleClass(CLASSES.HIDE_BG_LINE, !state);
+        this.update(this.pointStates);
     }
 
     public get showTooltips(): boolean {
-        return this._flags.showTooltips;
+        return this.flags.showTooltips;
     }
 
     public set showTooltips(state: boolean) {
-        this._flags.showTooltips = state;
-        this._showTooltips(this._flags.showTooltips);
+        this.flags.showTooltips = state;
+        this._showTooltips(this.flags.showTooltips);
 
-        if (state && this._pointStates) {
-            this._updateTooltips(this._pointStates);
+        if (state && this.pointStates) {
+            this._updateTooltips(this.pointStates);
         }
     }
 
     public get viewName(): SliderViewName {
-        return this._viewName;
+        return this.currentViewName;
     }
 
     public set viewName(viewName: SliderViewName) {
-        this._domElements.$slider.removeClass(
+        this.domElements.$slider.removeClass(
             (index, classes) => classes
                 .split(' ')
                 .filter((className) => className.includes('slider_view-name_'))
                 .join(' ')
         );
-        this._domElements.$slider.find('*').removeAttr('style');
+        this.domElements.$slider.find('*').removeAttr('style');
 
-        this._viewName = viewName;
-        this._driver = createDriver(viewName, this._domElements.$slider);
-        this.update(this._pointStates);
+        this.currentViewName = viewName;
+        this.driver = createDriver(viewName, this.domElements.$slider);
+        this.update(this.pointStates);
     }
 
     public onSelect(callback: HandlerSliderViewSelect): void {
-        this._updateEventCallback = callback;
+        this.updateEventCallback = callback;
     }
 
     public update(points: SliderPointState[]): void {
-        this._pointStates = points;
+        this.pointStates = points;
 
-        if (points.length !== this._domElements.points.length) {
+        if (points.length !== this.domElements.points.length) {
             this._updateIDomElements(points);
         }
 
         points.forEach((point, index) => {
-            this._driver.setPointPosition(
-                this._domElements.points[index],
-                this._domElements.$pointContainer,
+            this.driver.setPointPosition(
+                this.domElements.points[index],
+                this.domElements.$pointContainer,
                 point.position
             );
         });
 
-        if (this._flags.showTooltips) {
+        if (this.flags.showTooltips) {
             this._updateTooltips(points);
         }
 
-        if (this._flags.showBgLine) {
-            this._driver.updateBgLine(
-                this._domElements.$bgLine,
-                this._domElements.$pointContainer,
+        if (this.flags.showBgLine) {
+            this.driver.updateBgLine(
+                this.domElements.$bgLine,
+                this.domElements.$pointContainer,
                 points
             );
         }
 
-        this._domElements.$slider.trigger('select', points.map((point) => point.value));
+        this.domElements.$slider.trigger('select', points.map((point) => point.value));
     }
 
     private _updateIDomElements(points: SliderPointState[]): void {
-        this._domElements.$bgLine.removeAttr('style');
+        this.domElements.$bgLine.removeAttr('style');
 
-        this._domElements.points.forEach(($point) => {
+        this.domElements.points.forEach(($point) => {
             $point.remove();
         });
-        this._domElements.tooltips.forEach(($tooltip) => {
+        this.domElements.tooltips.forEach(($tooltip) => {
             $tooltip.remove();
         });
 
-        this._domElements.points = [];
-        this._domElements.tooltips = [];
+        this.domElements.points = [];
+        this.domElements.tooltips = [];
 
         for (let i = 0; i < points.length; i += 1) {
-            this._domElements.points.push(
+            this.domElements.points.push(
                 createPoint(i).css('z-index', i + 4)
             );
-            this._domElements.tooltips.push(createTooltip());
+            this.domElements.tooltips.push(createTooltip());
         }
 
-        this._domElements.$pointContainer.append(
-            this._domElements.points
+        this.domElements.$pointContainer.append(
+            this.domElements.points
         );
-        this._domElements.$tooltipContainer.append(
-            this._domElements.tooltips
+        this.domElements.$tooltipContainer.append(
+            this.domElements.tooltips
         );
     }
 
     private _initIDomElements(): void {
-        this._domElements.$pointContainer.on(
+        this.domElements.$pointContainer.on(
             'mousedown.slider.update',
             this._mouseDownHandler.bind(this)
         );
 
-        this._domElements.$pointContainer.append(
-            this._domElements.points,
-            this._domElements.$bgLine
+        this.domElements.$pointContainer.append(
+            this.domElements.points,
+            this.domElements.$bgLine
         );
-        this._domElements.$tooltipContainer.append(this._domElements.tooltips);
+        this.domElements.$tooltipContainer.append(this.domElements.tooltips);
     }
 
     private _createIDomElements($slider: JQuery, points: number): IDomElements {
-        const _domElements: IDomElements = {
+        const domElements: IDomElements = {
             $slider,
             points: [],
             tooltips: [],
@@ -217,25 +217,25 @@ class View implements ISliderView, ISliderViewConfigManager {
         };
 
         for (let i = 0; i < points; i += 1) {
-            _domElements.points.push(
+            domElements.points.push(
                 createPoint(i).css('z-index', i + 4)
             );
-            _domElements.tooltips.push(createTooltip());
+            domElements.tooltips.push(createTooltip());
         }
 
-        return _domElements;
+        return domElements;
     }
 
     private _getViewState(ev: JQuery.Event): SliderViewState {
         return {
-            targetPosition: this._driver.getTargetPosition(ev, this._domElements.$pointContainer),
-            pointSelected: this._pointSelected,
+            targetPosition: this.driver.getTargetPosition(ev, this.domElements.$pointContainer),
+            pointSelected: this.pointSelected,
         };
     }
 
     private _triggerSelectEvent(ev: JQuery.Event): void {
-        if (this._updateEventCallback !== null) {
-            this._updateEventCallback(this._getViewState(ev));
+        if (this.updateEventCallback !== null) {
+            this.updateEventCallback(this._getViewState(ev));
         }
     }
 
@@ -245,32 +245,32 @@ class View implements ISliderView, ISliderViewConfigManager {
         if (!$target.hasClass(CLASSES.POINT)) {
             this._triggerSelectEvent(ev);
         } else {
-            this._pointSelected = parseInt($target.attr('data-index'), 10);
+            this.pointSelected = parseInt($target.attr('data-index'), 10);
 
-            this._domElements.$document
+            this.domElements.$document
                 .on('mousemove.slider.moveHandler', (_ev: JQuery.MouseMoveEvent): void => {
                     this._triggerSelectEvent(_ev);
                 })
                 .one('mouseup.slider.upHandler', (): void => {
-                    this._pointSelected = -1;
-                    this._domElements.$document.off('mousemove.slider.moveHandler');
+                    this.pointSelected = -1;
+                    this.domElements.$document.off('mousemove.slider.moveHandler');
                 });
         }
     }
 
     private _updateTooltips(points: SliderPointState[]): void {
         points.forEach((point, index) => {
-            this._driver.updateTooltip(
-                this._domElements.tooltips[index],
-                this._domElements.$tooltipContainer,
+            this.driver.updateTooltip(
+                this.domElements.tooltips[index],
+                this.domElements.$tooltipContainer,
                 point.position,
-                this._prettify(point.value)
+                this.prettify(point.value)
             );
         });
     }
 
     private _showTooltips(state: boolean): void {
-        this._domElements.$slider.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
+        this.domElements.$slider.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
     }
 }
 

@@ -30,10 +30,10 @@ interface IConfigPanelDomElements {
 }
 
 class ConfigPanel {
-    private readonly _domElements: IConfigPanelDomElements;
+    private readonly domElements: IConfigPanelDomElements;
 
     constructor($panel: JQuery, $slider: JQuery) {
-        this._domElements = this._getDomElements($panel, $slider);
+        this.domElements = this._getDomElements($panel, $slider);
         this._initDomElements();
         this._initEventListeners();
     }
@@ -67,7 +67,7 @@ class ConfigPanel {
             $checkboxBgLine,
             $checkboxTooltip,
             $inputPoints,
-        } = this._domElements;
+        } = this.domElements;
 
         const step = $slider.slider('step');
         $inputStep.val(step);
@@ -99,7 +99,7 @@ class ConfigPanel {
             $checkboxTooltip,
             $inputPoints,
             $slider,
-        } = this._domElements;
+        } = this.domElements;
 
         $inputStep.on(
             'input.configPanel.updateStep',
@@ -137,7 +137,7 @@ class ConfigPanel {
             $slider,
             inputsValueOut,
             $controlsValueOutContainer,
-        } = this._domElements;
+        } = this.domElements;
 
         $controlsValueOutContainer.html('');
         inputsValueOut.length = 0;
@@ -155,7 +155,7 @@ class ConfigPanel {
     }
 
     private _handleInputValueOutFocusout(ev: JQuery.EventBase): void {
-        const { $slider } = this._domElements;
+        const { $slider } = this.domElements;
         const $input = $(ev.currentTarget);
         const currentValues = $slider.slider('value');
         const inputIndex = parseInt($input.data('index').toString(), 10);
@@ -173,7 +173,7 @@ class ConfigPanel {
         const {
             inputsValueOut,
             $slider,
-        } = this._domElements;
+        } = this.domElements;
 
         const values = $slider.slider('value');
 
@@ -188,7 +188,7 @@ class ConfigPanel {
         const {
             $inputPoints,
             $slider,
-        } = this._domElements;
+        } = this.domElements;
         const points = parseInt($inputPoints.val().toString(), 10);
 
         if (points < 1) {
@@ -234,7 +234,7 @@ class ConfigPanel {
         const {
             $slider,
             $checkboxTooltip,
-        } = this._domElements;
+        } = this.domElements;
 
         const isShowTooltips = Boolean($checkboxTooltip.prop('checked'));
         $slider.slider('show-tooltips', isShowTooltips);
@@ -244,7 +244,7 @@ class ConfigPanel {
         const {
             $slider,
             $checkboxBgLine,
-        } = this._domElements;
+        } = this.domElements;
 
         const isShowBgLine = Boolean($checkboxBgLine.prop('checked'));
         $slider.slider('show-bg-line', isShowBgLine);
@@ -254,7 +254,7 @@ class ConfigPanel {
         const {
             $slider,
             $inputStep,
-        } = this._domElements;
+        } = this.domElements;
 
         const step = $inputStep.val().toString();
 
@@ -267,7 +267,7 @@ class ConfigPanel {
 
     private _handleRadioViewNameInput(ev: JQuery.EventBase): void {
         const viewName = ev.currentTarget.getAttribute('value');
-        this._domElements.$slider.slider('view-name', viewName);
+        this.domElements.$slider.slider('view-name', viewName);
     }
 }
 
