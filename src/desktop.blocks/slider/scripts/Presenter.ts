@@ -1,7 +1,4 @@
-import {
-    ISliderModel,
-    SliderPointState,
-} from './domain-model/Model';
+import { ISliderModel } from './domain-model/Model';
 import { ISliderView } from './view/View';
 
 class Presenter {
@@ -16,12 +13,13 @@ class Presenter {
             this.model.update(targetPosition, pointSelected);
         });
 
-        this.model.onUpdate((pints: SliderPointState[]) => {
-            this.view.update(pints);
+        this.model.onUpdate((pointPositions: number[]) => {
+            this.view.update(pointPositions, model.value);
         });
 
         this.view.update(
-            this.model.getPointStates()
+            this.model.getPointPositions(),
+            model.value
         );
     }
 }

@@ -2,23 +2,20 @@ import DataManager from './DataManager';
 import {
     getModelValues,
     setModelValues,
-    getPointStates,
+    getPointPositions,
 } from './lib';
 import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
 import Core from './Core';
 
 type SliderScale = [number, number] | string[];
-type HandlerSliderModelUpdate = (points: SliderPointState[]) => void;
-type SliderPointState = {
-    readonly position: number;
-    readonly value?: string | number;
-};
+type HandlerSliderModelUpdate = (pointPositions: number[]) => void;
 
 interface ISliderModel {
+    readonly value: string[] | number[];
+    getPointPositions(): number[];
     update(targetPosition: number, pointIndex: number): void;
-    onUpdate(callback: (points: SliderPointState[]) => void): void;
-    getPointStates(): SliderPointState[];
+    onUpdate(callback: (pointPositions: number[]) => void): void;
 }
 
 interface ISliderModelDataManager {
@@ -124,13 +121,14 @@ class Model implements ISliderModel, ISliderModelStateManager {
         this._toggleUpdateEvent();
     }
 
-    public getPointStates(): SliderPointState[] {
-        return getPointStates(this.dataManager, this.scaleDriver);
+    public getPointPositions(): number[] {
+        return getPointPositions(this.dataManager);
     }
 
     private _toggleUpdateEvent(): void {
-        const pointStates = getPointStates(this.dataManager, this.scaleDriver);
-        this.updateEventCallbackList.forEach((callback) => callback(pointStates));
+        this.updateEventCallbackList.forEach(
+            (callback) => callback(getPointPositions(this.dataManager))
+        );
     }
 }
 
@@ -141,5 +139,4 @@ export {
     ISliderModelDataManager,
     ISliderModelStateManager,
     ISliderScaleDriver,
-    SliderPointState,
 };

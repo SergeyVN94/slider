@@ -103,11 +103,7 @@ describe('[DriverVertical]', () => {
 
                     $(document.body).append(packet.$slider);
 
-                    driver.updateBgLine(packet.$bgLine, packet.$pointContainer, [
-                        {
-                            position: pointPosition,
-                        },
-                    ]);
+                    driver.updateBgLine(packet.$bgLine, packet.$pointContainer, [pointPosition]);
 
                     expect(
                         Math.abs(packet.$bgLine.height() - (sliderSize * pointPosition)) < 1
@@ -140,9 +136,7 @@ describe('[DriverVertical]', () => {
                     driver.updateBgLine(
                         packet.$bgLine,
                         packet.$pointContainer,
-                        points.map((position) => ({
-                            position,
-                        }))
+                        points
                     );
 
                     const bgLineHeight = packet.$bgLine.height();

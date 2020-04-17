@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
 import {
-    getPointStates,
     getModelValues,
     setModelValues,
     isCorrectSteps,
@@ -10,107 +9,12 @@ import DataManager from '../../desktop.blocks/slider/scripts/domain-model/DataMa
 import DriverScaleNumberRange from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleNumberRange';
 import DriverScaleStringArray from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleStringArray';
 import Core from '../../desktop.blocks/slider/scripts/domain-model/Core';
-import { SliderPointState } from '../../desktop.blocks/slider/scripts/domain-model/Model';
 
 const scaleDriverNumRange = new DriverScaleNumberRange();
 const scaleDriverStrArr = new DriverScaleStringArray();
 const core = new Core();
 
 describe('[Domain model lib]', () => {
-    describe('[getPointStates]', () => {
-        const scala1 = ['a', 'b', 'c', 'd', 'e'];
-        const scala2 = [-1000, 1000] as [number, number];
-
-        const arraysSame = function arraysSame(
-            arr1: SliderPointState[],
-            arr2: SliderPointState[]
-        ): boolean {
-            let isCorrectStates = true;
-
-            arr1.forEach((state, index) => {
-                const isCorrectPosition = state.position === arr2[index].position;
-                const isCorrectValue = state.value === arr2[index].value;
-                isCorrectStates = isCorrectPosition && isCorrectValue;
-            });
-
-            return isCorrectStates;
-        };
-
-        describe(`[scala: (${scala1.join(',')})]`, () => {
-            const dataManager = new DataManager({
-                stepSize: 1,
-                steps: 4,
-                scale: scala1,
-                pointSteps: [0, 2, 3],
-            });
-
-            it('[pointSteps: (0, 2, 3)]', () => {
-                const targetStates = [
-                    {
-                        position: 0,
-                        value: 'a',
-                    },
-                    {
-                        position: 2 / 4,
-                        value: 'c',
-                    },
-                    {
-                        position: 3 / 4,
-                        value: 'd',
-                    },
-                ];
-                const pointStates = getPointStates(dataManager, scaleDriverStrArr);
-
-                expect(arraysSame(targetStates, pointStates)).to.equal(true);
-            });
-        });
-
-        describe(`[scala: (${scala2.join(',')})]`, () => {
-            const dataManager = new DataManager({
-                stepSize: 100,
-                steps: 20,
-                scale: scala2,
-                pointSteps: [1, 3, 7, 13, 16, 17, 20],
-            });
-
-            it('[pointSteps: (1, 3, 7, 13, 16, 17, 20)]', () => {
-                const targetStates = [
-                    {
-                        position: 1 / 20,
-                        value: -900,
-                    },
-                    {
-                        position: 3 / 20,
-                        value: -700,
-                    },
-                    {
-                        position: 7 / 20,
-                        value: -300,
-                    },
-                    {
-                        position: 13 / 20,
-                        value: 300,
-                    },
-                    {
-                        position: 16 / 20,
-                        value: 600,
-                    },
-                    {
-                        position: 17 / 20,
-                        value: 700,
-                    },
-                    {
-                        position: 20 / 20,
-                        value: 1000,
-                    },
-                ];
-                const pointStates = getPointStates(dataManager, scaleDriverNumRange);
-
-                expect(arraysSame(targetStates, pointStates)).to.equal(true);
-            });
-        });
-    });
-
     describe('[getModelValues]', () => {
         const scala1 = ['a', 'b', 'c', 'd', 'e'];
         const scala2 = [-1000, 1000] as [number, number];

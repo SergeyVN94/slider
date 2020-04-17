@@ -95,11 +95,7 @@ describe('[DriverHorizontal]', () => {
 
                     $(document.body).append(packet.$slider);
 
-                    driver.updateBgLine(packet.$bgLine, packet.$pointContainer, [
-                        {
-                            position: pointPosition,
-                        },
-                    ]);
+                    driver.updateBgLine(packet.$bgLine, packet.$pointContainer, [pointPosition]);
 
                     expect(
                         Math.abs(packet.$bgLine.width() - (sliderSize * pointPosition)) < 1
@@ -131,9 +127,7 @@ describe('[DriverHorizontal]', () => {
                     driver.updateBgLine(
                         packet.$bgLine,
                         packet.$pointContainer,
-                        points.map((position) => ({
-                            position,
-                        }))
+                        points
                     );
 
                     const bgLineWidth = packet.$bgLine.width();

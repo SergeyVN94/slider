@@ -1,6 +1,3 @@
-// TODO: Убрать зависимоть!
-import { SliderPointState } from '../../domain-model/Model';
-
 import CLASSES from '../classes';
 import { ISliderViewDriver } from '../View';
 
@@ -50,14 +47,15 @@ class DriverVertical implements ISliderViewDriver {
     public updateBgLine(
         $bgLine: JQuery,
         $pointContainer: JQuery,
-        points: SliderPointState[]
+        pointPositions: number[]
     ): void {
         const containerHeight = $pointContainer.outerHeight();
-        const topMargin = containerHeight - (points[points.length - 1].position * containerHeight);
+        const lastPosition = pointPositions[pointPositions.length - 1];
+        const topMargin = containerHeight - (lastPosition * containerHeight);
         $bgLine.css('top', `${topMargin}px`);
 
-        if (points.length > 1) {
-            const bottomMargin = points[0].position * containerHeight;
+        if (pointPositions.length > 1) {
+            const bottomMargin = pointPositions[0] * containerHeight;
             $bgLine.css('bottom', `${bottomMargin}px`);
         }
     }

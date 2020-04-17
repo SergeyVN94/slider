@@ -1,30 +1,21 @@
 import {
     ISliderModelDataManager,
     ISliderScaleDriver,
-    SliderPointState,
 } from './Model';
 
 const SCALE_TYPES = {
     STRING: 'string',
 };
 
-const getPointStates = function getPointStates(
+const getPointPositions = function getPointPositions(
     dataManager: ISliderModelDataManager,
-    scaleDriver: ISliderScaleDriver,
-): SliderPointState[] {
+): number[] {
     const {
         pointSteps,
         steps,
     } = dataManager;
 
-    const pointStates: SliderPointState[] = [];
-
-    pointSteps.forEach((pointStep) => pointStates.push({
-        position: pointStep / steps,
-        value: scaleDriver.stepToValue(pointStep, dataManager),
-    }));
-
-    return pointStates;
+    return pointSteps.map((pointStep) => pointStep / steps);
 };
 
 const getModelValues = function getModelValues(
@@ -106,6 +97,6 @@ const setModelValues = function setModelValues(
 export {
     getModelValues,
     setModelValues,
-    getPointStates,
+    getPointPositions,
     isCorrectSteps,
 };
