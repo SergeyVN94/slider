@@ -2,26 +2,27 @@ import { ISliderModel } from './domain-model/Model';
 import { ISliderView } from './view/View';
 
 class Presenter {
-    readonly view: ISliderView;
-    readonly model: ISliderModel;
+  readonly view: ISliderView;
 
-    constructor(view: ISliderView, model: ISliderModel) {
-        this.view = view;
-        this.model = model;
+  readonly model: ISliderModel;
 
-        this.view.onSelect((targetPosition, pointSelected): void => {
-            this.model.update(targetPosition, pointSelected);
-        });
+  constructor(view: ISliderView, model: ISliderModel) {
+    this.view = view;
+    this.model = model;
 
-        this.model.onUpdate((pointPositions: number[]) => {
-            this.view.update(pointPositions, model.value);
-        });
+    this.view.onSelect((targetPosition, pointSelected): void => {
+      this.model.update(targetPosition, pointSelected);
+    });
 
-        this.view.update(
-            this.model.getPointPositions(),
-            model.value
-        );
-    }
+    this.model.onUpdate((pointPositions: number[]) => {
+      this.view.update(pointPositions, model.value);
+    });
+
+    this.view.update(
+      this.model.getPointPositions(),
+      model.value,
+    );
+  }
 }
 
 export default Presenter;

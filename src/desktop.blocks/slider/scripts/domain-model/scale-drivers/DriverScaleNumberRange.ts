@@ -1,92 +1,92 @@
 import {
-    ISliderModelDataManager,
-    ISliderScaleDriver,
+  ISliderModelDataManager,
+  ISliderScaleDriver,
 } from '../Model';
 
 class DriverScaleNumberRange implements ISliderScaleDriver {
-    getAllSteps(scale: [number, number], stepSize: number): number {
-        const [
-            rangeMin,
-            rangeMax,
-        ] = scale;
+  getAllSteps(scale: [number, number], stepSize: number): number {
+    const [
+      rangeMin,
+      rangeMax,
+    ] = scale;
 
-        const range = rangeMax - rangeMin;
+    const range = rangeMax - rangeMin;
 
-        const isStepSizeTooBig = stepSize > range;
-        const isStepSizeLessThan1 = stepSize < 1;
+    const isStepSizeTooBig = stepSize > range;
+    const isStepSizeLessThan1 = stepSize < 1;
 
-        if (isStepSizeTooBig || isStepSizeLessThan1) {
-            return -1;
-        }
-
-        return Math.floor(range / stepSize);
+    if (isStepSizeTooBig || isStepSizeLessThan1) {
+      return -1;
     }
 
-    valueToStep(value: number, dataManager: ISliderModelDataManager): number {
-        const {
-            scale,
-            stepSize,
-            steps,
-        } = dataManager;
+    return Math.floor(range / stepSize);
+  }
 
-        const [
-            rangeMin,
-            rangeMax,
-        ] = scale as [number, number];
+  valueToStep(value: number, dataManager: ISliderModelDataManager): number {
+    const {
+      scale,
+      stepSize,
+      steps,
+    } = dataManager;
 
-        const isValueOutOfRange = (value < rangeMin) || (value > rangeMax);
+    const [
+      rangeMin,
+      rangeMax,
+    ] = scale as [number, number];
 
-        if (isValueOutOfRange) {
-            return -1;
-        }
+    const isValueOutOfRange = (value < rangeMin) || (value > rangeMax);
 
-        const step = Math.round((value - rangeMin) / stepSize);
-
-        if (step > steps) {
-            return steps;
-        }
-
-        return step;
+    if (isValueOutOfRange) {
+      return -1;
     }
 
-    isCorrectStepSize(scale: [number, number], stepSize: number): boolean {
-        const isStepSizeLessThan1 = stepSize < 1;
+    const step = Math.round((value - rangeMin) / stepSize);
 
-        if (isStepSizeLessThan1) {
-            return false;
-        }
-
-        const [
-            rangeMin,
-            rangeMax,
-        ] = scale;
-
-        const range = rangeMax - rangeMin;
-        const isStepSizeTooBig = stepSize > range;
-
-        if (isStepSizeTooBig) {
-            return false;
-        }
-
-        return true;
+    if (step > steps) {
+      return steps;
     }
 
-    stepToValue(step: number, dataManager: ISliderModelDataManager): number | null {
-        const {
-            scale,
-            steps,
-            stepSize,
-        } = dataManager;
+    return step;
+  }
 
-        const isCorrectStep = (step >= 0) && (step <= steps);
+  isCorrectStepSize(scale: [number, number], stepSize: number): boolean {
+    const isStepSizeLessThan1 = stepSize < 1;
 
-        if (!isCorrectStep) {
-            return null;
-        }
-
-        const [rangeMin] = scale as [number, number];
-        return (step * stepSize) + rangeMin;
+    if (isStepSizeLessThan1) {
+      return false;
     }
+
+    const [
+      rangeMin,
+      rangeMax,
+    ] = scale;
+
+    const range = rangeMax - rangeMin;
+    const isStepSizeTooBig = stepSize > range;
+
+    if (isStepSizeTooBig) {
+      return false;
+    }
+
+    return true;
+  }
+
+  stepToValue(step: number, dataManager: ISliderModelDataManager): number | null {
+    const {
+      scale,
+      steps,
+      stepSize,
+    } = dataManager;
+
+    const isCorrectStep = (step >= 0) && (step <= steps);
+
+    if (!isCorrectStep) {
+      return null;
+    }
+
+    const [rangeMin] = scale as [number, number];
+    return (step * stepSize) + rangeMin;
+  }
 }
 
 export default DriverScaleNumberRange;

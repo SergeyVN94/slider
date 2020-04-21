@@ -2,53 +2,54 @@ import { ISliderModelStateManager } from './domain-model/Model';
 import { ISliderViewConfigManager } from './view/View';
 
 class Slider {
-    private readonly model: ISliderModelStateManager;
-    private readonly view: ISliderViewConfigManager;
+  private readonly model: ISliderModelStateManager;
 
-    constructor(view: ISliderViewConfigManager, model: ISliderModelStateManager) {
-        this.view = view;
-        this.model = model;
-    }
+  private readonly view: ISliderViewConfigManager;
 
-    public get value(): string[] | number[] {
-        return this.model.value;
-    }
+  constructor(view: ISliderViewConfigManager, model: ISliderModelStateManager) {
+    this.view = view;
+    this.model = model;
+  }
 
-    public set value(value: string[] | number[]) {
-        this.model.value = value;
-    }
+  public get value(): string[] | number[] {
+    return this.model.value;
+  }
 
-    public get step(): number {
-        return this.model.step;
-    }
+  public set value(value: string[] | number[]) {
+    this.model.value = value;
+  }
 
-    public set step(value: number) {
-        this.model.step = value;
-    }
+  public get step(): number {
+    return this.model.step;
+  }
 
-    public get showTooltips(): boolean {
-        return this.view.showTooltips;
-    }
+  public set step(value: number) {
+    this.model.step = value;
+  }
 
-    public set showTooltips(state: boolean) {
-        this.view.showTooltips = state;
-    }
+  public get showTooltips(): boolean {
+    return this.view.showTooltips;
+  }
 
-    public get showBgLine(): boolean {
-        return this.view.showBgLine;
-    }
+  public set showTooltips(state: boolean) {
+    this.view.showTooltips = state;
+  }
 
-    public set showBgLine(state: boolean) {
-        this.view.showBgLine = state;
-    }
+  public get showBgLine(): boolean {
+    return this.view.showBgLine;
+  }
 
-    public get viewName(): 'horizontal' | 'vertical' {
-        return this.view.viewName;
-    }
+  public set showBgLine(state: boolean) {
+    this.view.showBgLine = state;
+  }
 
-    public set viewName(viewName: 'horizontal' | 'vertical') {
-        this.view.viewName = viewName;
-    }
+  public get viewName(): 'horizontal' | 'vertical' {
+    return this.view.viewName;
+  }
+
+  public set viewName(viewName: 'horizontal' | 'vertical') {
+    this.view.viewName = viewName;
+  }
 }
 
 export default Slider;
