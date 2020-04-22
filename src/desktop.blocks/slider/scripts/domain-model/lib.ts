@@ -1,14 +1,9 @@
-import {
-  ISliderModelDataManager,
-  ISliderScaleDriver,
-} from './Model';
-
 const SCALE_TYPES = {
   STRING: 'string',
 };
 
 const getPointPositions = function getPointPositions(
-  dataManager: ISliderModelDataManager,
+  dataManager: IDataGateway,
 ): number[] {
   const {
     pointSteps,
@@ -19,7 +14,7 @@ const getPointPositions = function getPointPositions(
 };
 
 const getModelValues = function getModelValues(
-  dataManager: ISliderModelDataManager,
+  dataManager: IDataGateway,
   scaleDriver: ISliderScaleDriver,
 ): number[] | string[] {
   const {
@@ -40,7 +35,7 @@ const getModelValues = function getModelValues(
 
 const isCorrectSteps = function isCorrectSteps(
   steps: number[],
-  dataManager: ISliderModelDataManager,
+  dataManager: IDataGateway,
 ): boolean {
   const { steps: maxSteps } = dataManager;
   let isCorrect = true;
@@ -70,33 +65,8 @@ const isCorrectSteps = function isCorrectSteps(
   return isCorrect;
 };
 
-const setModelValues = function setModelValues(
-  values: number[] | string[],
-  dataManager: ISliderModelDataManager,
-  scaleDriver: ISliderScaleDriver,
-): boolean {
-  if (values.length < 1) {
-    console.error(new Error('At least one value must be passed.'));
-  }
-
-  const steps: number[] = [];
-  values.forEach(
-    (value: string | number) => steps.push(scaleDriver.valueToStep(value, dataManager)),
-  );
-
-  if (isCorrectSteps(steps, dataManager)) {
-    dataManager.pointSteps = steps;
-    return true;
-  }
-
-  console.error(new Error(`[${values.join(',')}] values are not valid.`));
-
-  return false;
-};
-
 export {
   getModelValues,
-  setModelValues,
   getPointPositions,
   isCorrectSteps,
 };

@@ -69,4 +69,4 @@ const createSlider = function createSlider(config: {
   };
 };
 
-export { createSlider };
+export default createSlider;

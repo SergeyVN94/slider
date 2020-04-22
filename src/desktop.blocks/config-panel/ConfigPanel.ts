@@ -33,12 +33,12 @@ class ConfigPanel {
   private readonly domElements: IConfigPanelDomElements;
 
   constructor($panel: JQuery, $slider: JQuery) {
-    this.domElements = this._getDomElements($panel, $slider);
+    this.domElements = ConfigPanel._getDomElements($panel, $slider);
     this._initDomElements();
     this._initEventListeners();
   }
 
-  private _getDomElements($panel: JQuery, $slider: JQuery): IConfigPanelDomElements {
+  private static _getDomElements($panel: JQuery, $slider: JQuery): IConfigPanelDomElements {
     const $inputStep = $panel.find(`.${CLASSES.INPUT_STEP}`);
     const $radioViewName = $panel.find(`.${CLASSES.RADIO_VIEW_NAME}`);
     const $checkboxBgLine = $panel.find(`.${CLASSES.CHECKBOX_BG_LINE}`);

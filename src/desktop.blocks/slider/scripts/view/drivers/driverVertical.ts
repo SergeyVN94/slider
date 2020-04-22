@@ -1,12 +1,5 @@
-import CLASSES from '../classes';
-import { ISliderViewDriver } from '../View';
-
-class DriverVertical implements ISliderViewDriver {
-  constructor($slider: JQuery) {
-    $slider.addClass(CLASSES.VIEW_NAME_VERTICAL);
-  }
-
-  public getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
+const driverVertical: ISliderViewDriver = {
+  getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
     const containerHeight = $pointContainer.outerHeight();
     const globalMousePosition = ev.pageY;
     const mousePosition = globalMousePosition - $pointContainer.offset().top;
@@ -21,16 +14,16 @@ class DriverVertical implements ISliderViewDriver {
     }
 
     return targetPosition;
-  }
+  },
 
-  public setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void {
+  setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void {
     const containerHeight = $pointContainer.outerHeight();
     const pointOffset = $point.outerHeight() / 2;
     const marginBottom = (position * containerHeight) - pointOffset;
     $point.css('bottom', `${marginBottom}px`);
-  }
+  },
 
-  public updateTooltip(
+  updateTooltip(
     $tooltip: JQuery,
     $tooltipContainer: JQuery,
     position: number,
@@ -42,9 +35,9 @@ class DriverVertical implements ISliderViewDriver {
 
     const offset = (position * containerHeight) - ($tooltip.outerHeight() / 2);
     $tooltip.css('bottom', `${offset}px`);
-  }
+  },
 
-  public updateBgLine(
+  updateBgLine(
     $bgLine: JQuery,
     $pointContainer: JQuery,
     pointPositions: number[],
@@ -58,7 +51,7 @@ class DriverVertical implements ISliderViewDriver {
       const bottomMargin = pointPositions[0] * containerHeight;
       $bgLine.css('bottom', `${bottomMargin}px`);
     }
-  }
-}
+  },
+};
 
-export default DriverVertical;
+export default driverVertical;

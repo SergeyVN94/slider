@@ -1,6 +1,3 @@
-import { SliderScale } from '../scripts/domain-model/Model';
-import { PrettifyFunc } from '../scripts/view/View';
-
 import initSlider from '../scripts/initSlider';
 import Slider from '../scripts/Slider';
 
@@ -26,6 +23,7 @@ const COMMANDS = {
   BG_LINE: 'show-bg-line',
 };
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
   command: 'init' | 'step' | 'value' | 'show-tooltips' | 'view-name' | 'show-bg-line',

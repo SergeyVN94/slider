@@ -1,9 +1,6 @@
 import { expect } from 'chai';
-
 import DataManager from '../../desktop.blocks/slider/scripts/domain-model/DataManager';
 import Core from '../../desktop.blocks/slider/scripts/domain-model/Core';
-
-const core = new Core();
 
 describe('[Core]', () => {
   describe('[updatePointSteps]', () => {
@@ -168,13 +165,14 @@ describe('[Core]', () => {
             ...dataManagerConfig,
           });
           const pointSelected = -1;
-          core.updatePointSteps(
+          const newPointSteps = Core.getNewPointSteps(
             targetPosition,
             pointSelected,
             dataManager,
           );
 
-          expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          expect(arraysSame(targetSteps, newPointSteps)).to.be.true;
         });
       });
     });
@@ -287,13 +285,14 @@ describe('[Core]', () => {
             pointSteps,
             ...dataManagerConfig,
           });
-          core.updatePointSteps(
+          const newPointSteps = Core.getNewPointSteps(
             targetPosition,
             pointSelected,
             dataManager,
           );
 
-          expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          expect(arraysSame(targetSteps, newPointSteps)).to.be.true;
         });
       });
     });

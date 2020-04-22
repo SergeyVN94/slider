@@ -1,14 +1,11 @@
 /* eslint-disable no-loop-func */
 import { expect } from 'chai';
-
-import { createSlider } from './lib';
-import DriverHorizontal from '../../desktop.blocks/slider/scripts/view/drivers/DriverHorizontal';
+import driverHorizontal from '../../desktop.blocks/slider/scripts/view/drivers/driverHorizontal';
+import createSlider from './createSlider';
 
 import '../../desktop.blocks/slider/slider.scss';
 
 document.body.style.padding = '50px';
-
-const driver = new DriverHorizontal();
 
 describe('[DriverHorizontal]', () => {
   describe('[setPointPosition]', () => {
@@ -30,7 +27,7 @@ describe('[DriverHorizontal]', () => {
           });
 
           $(document.body).append(packet.$slider);
-          driver.setPointPosition(
+          driverHorizontal.setPointPosition(
             packet.points[0],
             packet.$pointContainer,
             pointPosition,
@@ -39,6 +36,7 @@ describe('[DriverHorizontal]', () => {
           const targetPos = (sliderSize * pointPosition) - (pointSize / 2);
           const currentPos = parseInt(packet.points[0].css('left'), 10);
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(Math.abs(targetPos - currentPos) < 1).to.be.true;
         });
       }
@@ -67,11 +65,12 @@ describe('[DriverHorizontal]', () => {
 
           $(document.body).append(packet.$slider);
           packet.tooltips[0].css('width', `${tooltipSize}px`);
-          driver.updateTooltip(packet.tooltips[0], packet.$tooltipContainer, pointPosition, '');
+          driverHorizontal.updateTooltip(packet.tooltips[0], packet.$tooltipContainer, pointPosition, '');
 
           const targetPos = sliderSize * pointPosition - tooltipSize / 2;
           const currentPos = parseInt(packet.tooltips[0].css('left'), 10);
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(Math.abs(targetPos - currentPos) < 1).to.be.true;
         });
       }
@@ -95,8 +94,9 @@ describe('[DriverHorizontal]', () => {
 
           $(document.body).append(packet.$slider);
 
-          driver.updateBgLine(packet.$bgLine, packet.$pointContainer, [pointPosition]);
+          driverHorizontal.updateBgLine(packet.$bgLine, packet.$pointContainer, [pointPosition]);
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(
             Math.abs(packet.$bgLine.width() - (sliderSize * pointPosition)) < 1,
           ).to.be.true;
@@ -124,7 +124,7 @@ describe('[DriverHorizontal]', () => {
 
           $(document.body).append(packet.$slider);
 
-          driver.updateBgLine(
+          driverHorizontal.updateBgLine(
             packet.$bgLine,
             packet.$pointContainer,
             points,
@@ -132,6 +132,8 @@ describe('[DriverHorizontal]', () => {
 
           const bgLineWidth = packet.$bgLine.width();
           const targetWidth = (sliderSize * (points[points.length - 1] - points[0]));
+
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(
             Math.abs(bgLineWidth - targetWidth) < 1,
           ).to.be.true;

@@ -1,9 +1,7 @@
 import { expect } from 'chai';
-
-import DriverScaleNumberRange from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleNumberRange';
+import driverScaleNumberRange from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/driverScaleNumberRange';
 import DataManager from '../../desktop.blocks/slider/scripts/domain-model/DataManager';
 
-const scaleDriver = new DriverScaleNumberRange();
 const scale: [number, number] = [-1000, 2000];
 
 describe('[DriverScaleNumberRange]', () => {
@@ -45,7 +43,7 @@ describe('[DriverScaleNumberRange]', () => {
     }) => {
       it(
         `[range: (${scale.join(',')}); stepSize: ${stepSize}]`,
-        () => expect(scaleDriver.getAllSteps(scale, stepSize)).to.equal(allSteps),
+        () => expect(driverScaleNumberRange.getAllSteps(scale, stepSize)).to.equal(allSteps),
       );
     });
   });
@@ -55,7 +53,7 @@ describe('[DriverScaleNumberRange]', () => {
       scale,
       pointSteps: [0],
       stepSize: 10,
-      steps: scaleDriver.getAllSteps(scale, 10),
+      steps: driverScaleNumberRange.getAllSteps(scale, 10),
     });
 
     const template = [
@@ -101,7 +99,7 @@ describe('[DriverScaleNumberRange]', () => {
     ) => {
       it(
         `[range: (${scale.join(',')}); value: ${value}]`,
-        () => expect(scaleDriver.valueToStep(value, dataManager)).to.equal(step),
+        () => expect(driverScaleNumberRange.valueToStep(value, dataManager)).to.equal(step),
       );
     });
   });
@@ -146,7 +144,7 @@ describe('[DriverScaleNumberRange]', () => {
     ) => {
       it(
         `[range: (${scale.join(',')}); stepSize: ${stepSize}]`,
-        () => expect(scaleDriver.isCorrectStepSize(scale, stepSize)).to.equal(isCorrect),
+        () => expect(driverScaleNumberRange.isCorrectStepSize(scale, stepSize)).to.equal(isCorrect),
       );
     });
   });
@@ -156,7 +154,7 @@ describe('[DriverScaleNumberRange]', () => {
       scale,
       pointSteps: [0],
       stepSize: 100,
-      steps: scaleDriver.getAllSteps(scale, 100),
+      steps: driverScaleNumberRange.getAllSteps(scale, 100),
     });
 
     const template = [
@@ -194,7 +192,7 @@ describe('[DriverScaleNumberRange]', () => {
     ) => {
       it(
         `[range: (${scale.join(',')}); step: ${step}]`,
-        () => expect(scaleDriver.stepToValue(step, dataManager)).to.equal(value),
+        () => expect(driverScaleNumberRange.stepToValue(step, dataManager)).to.equal(value),
       );
     });
   });

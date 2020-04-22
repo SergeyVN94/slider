@@ -1,9 +1,4 @@
-import {
-  ISliderModelDataManager,
-  ISliderScaleDriver,
-} from '../Model';
-
-class DriverScaleNumberRange implements ISliderScaleDriver {
+const driverScaleNumberRange: ISliderScaleDriver = {
   getAllSteps(scale: [number, number], stepSize: number): number {
     const [
       rangeMin,
@@ -20,9 +15,9 @@ class DriverScaleNumberRange implements ISliderScaleDriver {
     }
 
     return Math.floor(range / stepSize);
-  }
+  },
 
-  valueToStep(value: number, dataManager: ISliderModelDataManager): number {
+  valueToStep(value: number, dataManager: IDataGateway): number {
     const {
       scale,
       stepSize,
@@ -47,7 +42,7 @@ class DriverScaleNumberRange implements ISliderScaleDriver {
     }
 
     return step;
-  }
+  },
 
   isCorrectStepSize(scale: [number, number], stepSize: number): boolean {
     const isStepSizeLessThan1 = stepSize < 1;
@@ -69,9 +64,9 @@ class DriverScaleNumberRange implements ISliderScaleDriver {
     }
 
     return true;
-  }
+  },
 
-  stepToValue(step: number, dataManager: ISliderModelDataManager): number | null {
+  stepToValue(step: number, dataManager: IDataGateway): number | null {
     const {
       scale,
       steps,
@@ -86,7 +81,7 @@ class DriverScaleNumberRange implements ISliderScaleDriver {
 
     const [rangeMin] = scale as [number, number];
     return (step * stepSize) + rangeMin;
-  }
-}
+  },
+};
 
-export default DriverScaleNumberRange;
+export default driverScaleNumberRange;

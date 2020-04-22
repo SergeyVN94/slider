@@ -1,6 +1,3 @@
-import { ISliderModel } from './domain-model/Model';
-import { ISliderView } from './view/View';
-
 class Presenter {
   readonly view: ISliderView;
 

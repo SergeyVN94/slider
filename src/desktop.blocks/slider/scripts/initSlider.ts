@@ -1,9 +1,5 @@
-import View, {
-  PrettifyFunc,
-  SliderViewName,
-} from './view/View';
-import Model, { SliderScale } from './domain-model/Model';
-
+import Model from './domain-model/Model';
+import View from './view/View';
 import Slider from './Slider';
 import Presenter from './Presenter';
 

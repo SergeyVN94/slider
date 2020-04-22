@@ -1,7 +1,5 @@
-import { ISliderViewDriver } from '../View';
-
-class DriverHorizontal implements ISliderViewDriver {
-  public getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
+const driverHorizontal: ISliderViewDriver = {
+  getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
     const containerWidth = $pointContainer.width();
     const globalMousePosition = ev.pageX;
     const mousePosition = globalMousePosition - $pointContainer.offset().left;
@@ -16,16 +14,16 @@ class DriverHorizontal implements ISliderViewDriver {
     }
 
     return targetPosition;
-  }
+  },
 
-  public setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void {
+  setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void {
     const containerWidth = $pointContainer.outerWidth();
     const offset = $point.outerWidth() / 2;
     const marginLeft = position * containerWidth - offset;
     $point.css('left', `${marginLeft}px`);
-  }
+  },
 
-  public updateTooltip(
+  updateTooltip(
     $tooltip: JQuery,
     $tooltipContainer: JQuery,
     position: number,
@@ -37,9 +35,9 @@ class DriverHorizontal implements ISliderViewDriver {
 
     const offset = position * containerWidth - $tooltip.outerWidth() / 2;
     $tooltip.css('left', `${offset}px`);
-  }
+  },
 
-  public updateBgLine(
+  updateBgLine(
     $bgLine: JQuery,
     $pointContainer: JQuery,
     pointPositions: number[],
@@ -53,7 +51,7 @@ class DriverHorizontal implements ISliderViewDriver {
       const marginLeft = (pointPositions[0] * containerWidth);
       $bgLine.css('left', `${marginLeft}px`);
     }
-  }
-}
+  },
+};
 
-export default DriverHorizontal;
+export default driverHorizontal;

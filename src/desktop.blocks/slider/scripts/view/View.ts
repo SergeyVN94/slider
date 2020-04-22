@@ -1,43 +1,6 @@
-import DriverHorizontal from './drivers/DriverHorizontal';
-import DriverVertical from './drivers/DriverVertical';
+import driverHorizontal from './drivers/driverHorizontal';
+import driverVertical from './drivers/driverVertical';
 import CLASSES from './classes';
-
-type SliderViewName = 'horizontal' | 'vertical';
-type PrettifyFunc = (value: number | string) => string;
-type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
-
-interface IDomElements {
-  $slider: JQuery;
-  points: JQuery[];
-  tooltips: JQuery[];
-  $pointContainer: JQuery;
-  $tooltipContainer: JQuery;
-  $bgLine: JQuery;
-  $document: JQuery<Document>;
-}
-
-interface ISliderViewConfigManager {
-  showTooltips: boolean;
-  viewName: 'horizontal' | 'vertical';
-  showBgLine: boolean;
-}
-
-interface ISliderView {
-  onSelect(callback: HandlerSliderViewSelect): void;
-  update(pointPositions: number[], pointValues: number[] | string[]): void;
-}
-
-interface ISliderViewDriver {
-  getTargetPosition($event: JQuery.Event, $pointContainer: JQuery): number;
-  setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void;
-  updateTooltip(
-    $tooltip: JQuery,
-    $tooltipContainer: JQuery,
-    position: number,
-    value: string
-  ): void;
-  updateBgLine($bgLine: JQuery, $pointContainer: JQuery, pointPositions: number[]): void;
-}
 
 const createPoint = function createPoint(index: number): JQuery {
   return $('<div/>', {
@@ -58,9 +21,10 @@ const createDriver = function viewDriverFactory(
 ): ISliderViewDriver {
   switch (viewName) {
     case 'vertical':
-      return new DriverVertical($slider);
+      $slider.addClass(CLASSES.VIEW_NAME_VERTICAL);
+      return driverVertical;
     default:
-      return new DriverHorizontal();
+      return driverHorizontal;
   }
 };
 
@@ -113,7 +77,7 @@ class View implements ISliderView, ISliderViewConfigManager {
       showBgLine,
     };
     this.prettify = prettify;
-    this.domElements = this._createIDomElements($slider, points);
+    this.domElements = View._createIDomElements($slider, points);
     this.updateEventCallback = null;
     this.pointSelected = -1;
     this.driver = createDriver(viewName, this.domElements.$slider);
@@ -248,7 +212,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.domElements.$tooltipContainer.append(this.domElements.tooltips);
   }
 
-  private _createIDomElements($slider: JQuery, points: number): IDomElements {
+  private static _createIDomElements($slider: JQuery, points: number): IDomElements {
     const domElements: IDomElements = {
       $slider,
       points: [],
@@ -316,9 +280,4 @@ export default View;
 export {
   createPoint,
   createTooltip,
-  PrettifyFunc,
-  SliderViewName,
-  ISliderViewConfigManager,
-  ISliderView,
-  ISliderViewDriver,
 };

@@ -1,12 +1,9 @@
 /* eslint-disable no-loop-func */
 import { expect } from 'chai';
-
-import { createSlider } from './lib';
-import DriverVertical from '../../desktop.blocks/slider/scripts/view/drivers/DriverVertical';
+import driverVertical from '../../desktop.blocks/slider/scripts/view/drivers/driverVertical';
+import createSlider from './createSlider';
 
 document.body.style.padding = '50px';
-
-const driver = new DriverVertical($('')); // $('') - затычка. Драйвер добавляет к слайдеру класс slider_theme_vertical. В тестах это делает функция createSlider.
 
 describe('[DriverVertical]', () => {
   describe('[setPointPosition]', () => {
@@ -29,7 +26,7 @@ describe('[DriverVertical]', () => {
           });
 
           $(document.body).append(packet.$slider);
-          driver.setPointPosition(
+          driverVertical.setPointPosition(
             packet.points[0],
             packet.$pointContainer,
             pointPosition,
@@ -38,6 +35,7 @@ describe('[DriverVertical]', () => {
           const targetPos = (sliderSize * pointPosition) - (pointSize / 2);
           const currentPos = parseInt(packet.points[0].css('bottom'), 10);
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(Math.abs(targetPos - currentPos) < 1).to.be.true;
         });
       }
@@ -67,7 +65,7 @@ describe('[DriverVertical]', () => {
 
           $(document.body).append(packet.$slider);
           packet.tooltips[0].css('height', `${tooltipSize}px`);
-          driver.updateTooltip(
+          driverVertical.updateTooltip(
             packet.tooltips[0],
             packet.$tooltipContainer,
             pointPosition,
@@ -77,6 +75,7 @@ describe('[DriverVertical]', () => {
           const targetPos = (sliderSize * pointPosition) - (tooltipSize / 2);
           const currentPos = parseInt(packet.tooltips[0].css('bottom'), 10);
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(Math.abs(targetPos - currentPos) < 1).to.be.true;
         });
       }
@@ -103,8 +102,9 @@ describe('[DriverVertical]', () => {
 
           $(document.body).append(packet.$slider);
 
-          driver.updateBgLine(packet.$bgLine, packet.$pointContainer, [pointPosition]);
+          driverVertical.updateBgLine(packet.$bgLine, packet.$pointContainer, [pointPosition]);
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(
             Math.abs(packet.$bgLine.height() - (sliderSize * pointPosition)) < 1,
           ).to.be.true;
@@ -133,7 +133,7 @@ describe('[DriverVertical]', () => {
 
           $(document.body).append(packet.$slider);
 
-          driver.updateBgLine(
+          driverVertical.updateBgLine(
             packet.$bgLine,
             packet.$pointContainer,
             points,
@@ -141,6 +141,8 @@ describe('[DriverVertical]', () => {
 
           const bgLineHeight = packet.$bgLine.height();
           const targetHeight = (sliderSize * (points[points.length - 1] - points[0]));
+
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(
             Math.abs(bgLineHeight - targetHeight) < 1,
           ).to.be.true;

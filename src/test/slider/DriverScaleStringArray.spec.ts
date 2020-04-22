@@ -1,9 +1,7 @@
 import { expect } from 'chai';
-
-import DriverScaleStringArray from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/DriverScaleStringArray';
+import driverScaleStringArray from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/driverScaleStringArray';
 import DataManager from '../../desktop.blocks/slider/scripts/domain-model/DataManager';
 
-const scaleDriver = new DriverScaleStringArray();
 const scale: string[] = [
   'a',
   'b',
@@ -37,7 +35,7 @@ describe('[DriverScaleStringArray]', () => {
     }) => {
       it(
         `scale: (${_scale.join(',')})`,
-        () => expect(scaleDriver.getAllSteps(_scale)).to.equal(allSteps),
+        () => expect(driverScaleStringArray.getAllSteps(_scale, allSteps)).to.equal(allSteps),
       );
     });
   });
@@ -47,7 +45,7 @@ describe('[DriverScaleStringArray]', () => {
       scale,
       stepSize: 1,
       pointSteps: [0],
-      steps: scaleDriver.getAllSteps(scale),
+      steps: driverScaleStringArray.getAllSteps(scale),
     });
 
     const template = [
@@ -79,7 +77,7 @@ describe('[DriverScaleStringArray]', () => {
     }) => {
       it(
         `value: ${value}`,
-        () => expect(scaleDriver.valueToStep(value, dataManager)).to.equal(step),
+        () => expect(driverScaleStringArray.valueToStep(value, dataManager)).to.equal(step),
       );
     });
   });
@@ -89,7 +87,7 @@ describe('[DriverScaleStringArray]', () => {
       scale,
       stepSize: 1,
       pointSteps: [0],
-      steps: scaleDriver.getAllSteps(scale),
+      steps: driverScaleStringArray.getAllSteps(scale),
     });
 
     const template = [
@@ -121,7 +119,7 @@ describe('[DriverScaleStringArray]', () => {
     }) => {
       it(
         `step: ${step}`,
-        () => expect(scaleDriver.stepToValue(step, dataManager)).to.equal(value),
+        () => expect(driverScaleStringArray.stepToValue(step, dataManager)).to.equal(value),
       );
     });
   });

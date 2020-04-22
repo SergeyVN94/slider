@@ -1,23 +1,21 @@
-import { ISliderModelDataManager } from './Model';
-
 class Core {
-  public updatePointSteps(
+  public static getNewPointSteps(
     targetPosition: number,
     pointIndex: number,
-    dataManager: ISliderModelDataManager,
-  ): void {
+    dataManager: IDataGateway,
+  ): number[] {
     if (pointIndex === -1) {
-      this._updatePointStepsForNull(targetPosition, dataManager);
-    } else {
-      this._updatePointStepsForPoint(targetPosition, pointIndex, dataManager);
+      return Core._updatePointStepsForNull(targetPosition, dataManager);
     }
+
+    return Core._updatePointStepsForPoint(targetPosition, pointIndex, dataManager);
   }
 
-  private _updatePointStepsForPoint(
+  private static _updatePointStepsForPoint(
     targetPosition: number,
     pointIndex: number,
-    dataManager: ISliderModelDataManager,
-  ): boolean {
+    dataManager: IDataGateway,
+  ): number[] {
     const {
       pointSteps,
       steps,
@@ -27,51 +25,51 @@ class Core {
     const currentPointStep = pointSteps[pointIndex];
 
     if (targetStep === currentPointStep) {
-      return true;
+      return pointSteps;
     }
 
     if (pointSteps.length === 1) {
-      dataManager.pointSteps[0] = targetStep;
-      return true;
+      pointSteps[0] = targetStep;
+      return pointSteps;
     }
 
     if (targetStep > currentPointStep) {
       if (pointIndex === pointSteps.length - 1) {
-        dataManager.pointSteps[pointIndex] = targetStep;
-        return true;
+        pointSteps[pointIndex] = targetStep;
+        return pointSteps;
       }
 
       const stepPointRight = pointSteps[pointIndex + 1];
 
       if (targetStep > stepPointRight) {
-        dataManager.pointSteps[pointIndex] = stepPointRight;
-        return true;
+        pointSteps[pointIndex] = stepPointRight;
+        return pointSteps;
       }
 
-      dataManager.pointSteps[pointIndex] = targetStep;
-      return true;
+      pointSteps[pointIndex] = targetStep;
+      return pointSteps;
     }
 
     if (pointIndex === 0) {
-      dataManager.pointSteps[pointIndex] = targetStep;
-      return true;
+      pointSteps[pointIndex] = targetStep;
+      return pointSteps;
     }
 
     const stepPointLeft = pointSteps[pointIndex - 1];
 
     if (targetStep < stepPointLeft) {
-      dataManager.pointSteps[pointIndex] = stepPointLeft;
-      return true;
+      pointSteps[pointIndex] = stepPointLeft;
+      return pointSteps;
     }
 
-    dataManager.pointSteps[pointIndex] = targetStep;
-    return true;
+    pointSteps[pointIndex] = targetStep;
+    return pointSteps;
   }
 
-  private _updatePointStepsForNull(
+  private static _updatePointStepsForNull(
     targetPosition: number,
-    dataManager: ISliderModelDataManager,
-  ): boolean {
+    dataManager: IDataGateway,
+  ): number[] {
     const {
       steps,
       pointSteps,
@@ -80,8 +78,7 @@ class Core {
     const targetStep = Math.round(targetPosition * steps);
 
     if (pointSteps.length === 1) {
-      dataManager.pointSteps = [targetStep];
-      return true;
+      return [targetStep];
     }
 
     let minDistance = Infinity;
@@ -106,8 +103,7 @@ class Core {
     if (nearestPoints.length === 1) {
       const index = pointSteps.indexOf(nearestPoints[0]);
       pointSteps[index] = targetStep;
-      dataManager.pointSteps = pointSteps;
-      return true;
+      return pointSteps;
     }
 
     let isAllPointsInOnePosition = true;
@@ -130,18 +126,16 @@ class Core {
         pointSteps[index] = targetStep;
       }
 
-      dataManager.pointSteps = pointSteps;
-      return true;
+      return pointSteps;
     }
 
     if (!isAllPointsInOnePosition) {
       const index = pointSteps.lastIndexOf(tmpStep);
       pointSteps[index] = targetStep;
-      dataManager.pointSteps = pointSteps;
-      return true;
+      return pointSteps;
     }
 
-    return true;
+    return pointSteps;
   }
 }
 

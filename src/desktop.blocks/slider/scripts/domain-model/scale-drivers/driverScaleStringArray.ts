@@ -1,18 +1,13 @@
-import {
-  ISliderModelDataManager,
-  ISliderScaleDriver,
-} from '../Model';
-
-class DriverScaleStringArray implements ISliderScaleDriver {
+const driverScaleStringArray: ISliderScaleDriver = {
   getAllSteps(scale: string[]): number {
     return scale.length - 1;
-  }
+  },
 
-  valueToStep(value: string, dataManager: ISliderModelDataManager): number {
+  valueToStep(value: string, dataManager: IDataGateway): number {
     const { scale } = dataManager;
 
     return (scale as string[]).indexOf(value);
-  }
+  },
 
   isCorrectStepSize(scale: string[], stepSize: number): boolean {
     if (stepSize === 1) {
@@ -20,9 +15,9 @@ class DriverScaleStringArray implements ISliderScaleDriver {
     }
 
     return false;
-  }
+  },
 
-  stepToValue(step: number, dataManager: ISliderModelDataManager): string | null {
+  stepToValue(step: number, dataManager: IDataGateway): string | null {
     const {
       scale,
       steps,
@@ -35,7 +30,7 @@ class DriverScaleStringArray implements ISliderScaleDriver {
     }
 
     return (scale as string[])[step];
-  }
-}
+  },
+};
 
-export default DriverScaleStringArray;
+export default driverScaleStringArray;

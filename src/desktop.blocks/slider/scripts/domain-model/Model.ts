@@ -1,59 +1,27 @@
+import driverScaleNumberRange from './scale-drivers/driverScaleNumberRange';
+import driverScaleStringArray from './scale-drivers/driverScaleStringArray';
 import DataManager from './DataManager';
+import Core from './Core';
 import {
   getModelValues,
-  setModelValues,
+  isCorrectSteps,
   getPointPositions,
 } from './lib';
-import DriverScaleNumberRange from './scale-drivers/DriverScaleNumberRange';
-import DriverScaleStringArray from './scale-drivers/DriverScaleStringArray';
-import Core from './Core';
-
-type SliderScale = [number, number] | string[];
-type HandlerSliderModelUpdate = (pointPositions: number[]) => void;
-
-interface ISliderModel {
-  readonly value: string[] | number[];
-  getPointPositions(): number[];
-  update(targetPosition: number, pointIndex: number): void;
-  onUpdate(callback: (pointPositions: number[]) => void): void;
-}
-
-interface ISliderModelDataManager {
-  scale: SliderScale;
-  scaleType: 'string' | 'number';
-  pointSteps: number[];
-  stepSize: number;
-  steps: number;
-}
-
-interface ISliderModelStateManager {
-  step: number;
-  value: string[] | number[];
-}
-
-interface ISliderScaleDriver {
-  getAllSteps(scale: SliderScale, stepSize: number): number;
-  valueToStep(value: number | string, dataManager: ISliderModelDataManager): number;
-  isCorrectStepSize(scale: SliderScale, stepSize: number): boolean;
-  stepToValue(step: number, dataManager: ISliderModelDataManager): string | number | null;
-}
 
 const createSliderScale = function sliderScaleFactory(scale: SliderScale): ISliderScaleDriver {
   if (typeof scale[0] === 'number') {
-    return new DriverScaleNumberRange();
+    return driverScaleNumberRange;
   }
 
-  return new DriverScaleStringArray();
+  return driverScaleStringArray;
 };
 
 class Model implements ISliderModel, ISliderModelStateManager {
-  private readonly dataManager: ISliderModelDataManager;
+  private readonly dataManager: IDataGateway;
 
   private readonly updateEventCallbackList: HandlerSliderModelUpdate[];
 
   private readonly scaleDriver: ISliderScaleDriver;
-
-  private readonly core: Core;
 
   constructor(config: {
     scale: [number, number] | string[];
@@ -75,8 +43,6 @@ class Model implements ISliderModel, ISliderModelStateManager {
       steps: this.scaleDriver.getAllSteps(scale, stepSize),
     });
 
-    this.core = new Core();
-
     const pointSteps: number[] = [];
     start.forEach((startValue: string | number) => pointSteps.push(
       this.scaleDriver.valueToStep(startValue, this.dataManager),
@@ -88,7 +54,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
   }
 
   public update(targetPosition: number, pointSelected: number): void {
-    this.core.updatePointSteps(
+    this.dataManager.pointSteps = Core.getNewPointSteps(
       targetPosition,
       pointSelected,
       this.dataManager,
@@ -112,6 +78,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
       this.dataManager.stepSize = newStepSize;
       this.dataManager.steps = this.scaleDriver.getAllSteps(scale, newStepSize);
       this.value = values;
+      this._toggleUpdateEvent();
     }
   }
 
@@ -120,8 +87,21 @@ class Model implements ISliderModel, ISliderModelStateManager {
   }
 
   public set value(values: string[] | number[]) {
-    setModelValues(values, this.dataManager, this.scaleDriver);
-    this._toggleUpdateEvent();
+    if (values.length < 1) {
+      console.error(new Error('At least one value must be passed.'));
+    }
+
+    const steps: number[] = [];
+    values.forEach(
+      (value: string | number) => steps.push(this.scaleDriver.valueToStep(value, this.dataManager)),
+    );
+
+    if (isCorrectSteps(steps, this.dataManager)) {
+      this.dataManager.pointSteps = steps;
+      this._toggleUpdateEvent();
+    } else {
+      console.error(new Error(`[${values.join(',')}] values are not valid.`));
+    }
   }
 
   public getPointPositions(): number[] {
@@ -136,10 +116,3 @@ class Model implements ISliderModel, ISliderModelStateManager {
 }
 
 export default Model;
-export {
-  SliderScale,
-  ISliderModel,
-  ISliderModelDataManager,
-  ISliderModelStateManager,
-  ISliderScaleDriver,
-};
