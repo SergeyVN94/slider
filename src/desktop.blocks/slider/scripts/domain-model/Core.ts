@@ -1,21 +1,21 @@
 class Core {
-  public static getNewPointSteps(
+  public static updatePointSteps(
     targetPosition: number,
     pointIndex: number,
     dataManager: IDataGateway,
-  ): number[] {
+  ): void {
     if (pointIndex === -1) {
-      return Core._updatePointStepsForNull(targetPosition, dataManager);
+      Core._updatePointStepsForNull(targetPosition, dataManager);
+    } else {
+      Core._updatePointStepsForPoint(targetPosition, pointIndex, dataManager);
     }
-
-    return Core._updatePointStepsForPoint(targetPosition, pointIndex, dataManager);
   }
 
   private static _updatePointStepsForPoint(
     targetPosition: number,
     pointIndex: number,
     dataManager: IDataGateway,
-  ): number[] {
+  ): boolean {
     const {
       pointSteps,
       steps,
@@ -25,51 +25,51 @@ class Core {
     const currentPointStep = pointSteps[pointIndex];
 
     if (targetStep === currentPointStep) {
-      return pointSteps;
+      return true;
     }
 
     if (pointSteps.length === 1) {
       pointSteps[0] = targetStep;
-      return pointSteps;
+      return true;
     }
 
     if (targetStep > currentPointStep) {
       if (pointIndex === pointSteps.length - 1) {
         pointSteps[pointIndex] = targetStep;
-        return pointSteps;
+        return true;
       }
 
       const stepPointRight = pointSteps[pointIndex + 1];
 
       if (targetStep > stepPointRight) {
         pointSteps[pointIndex] = stepPointRight;
-        return pointSteps;
+        return true;
       }
 
       pointSteps[pointIndex] = targetStep;
-      return pointSteps;
+      return true;
     }
 
     if (pointIndex === 0) {
       pointSteps[pointIndex] = targetStep;
-      return pointSteps;
+      return true;
     }
 
     const stepPointLeft = pointSteps[pointIndex - 1];
 
     if (targetStep < stepPointLeft) {
       pointSteps[pointIndex] = stepPointLeft;
-      return pointSteps;
+      return true;
     }
 
     pointSteps[pointIndex] = targetStep;
-    return pointSteps;
+    return true;
   }
 
   private static _updatePointStepsForNull(
     targetPosition: number,
     dataManager: IDataGateway,
-  ): number[] {
+  ): boolean {
     const {
       steps,
       pointSteps,
@@ -78,7 +78,8 @@ class Core {
     const targetStep = Math.round(targetPosition * steps);
 
     if (pointSteps.length === 1) {
-      return [targetStep];
+      pointSteps[0] = targetStep;
+      return true;
     }
 
     let minDistance = Infinity;
@@ -103,7 +104,7 @@ class Core {
     if (nearestPoints.length === 1) {
       const index = pointSteps.indexOf(nearestPoints[0]);
       pointSteps[index] = targetStep;
-      return pointSteps;
+      return true;
     }
 
     let isAllPointsInOnePosition = true;
@@ -126,16 +127,16 @@ class Core {
         pointSteps[index] = targetStep;
       }
 
-      return pointSteps;
+      return true;
     }
 
     if (!isAllPointsInOnePosition) {
       const index = pointSteps.lastIndexOf(tmpStep);
       pointSteps[index] = targetStep;
-      return pointSteps;
+      return true;
     }
 
-    return pointSteps;
+    return true;
   }
 }
 

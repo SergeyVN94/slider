@@ -165,14 +165,14 @@ describe('[Core]', () => {
             ...dataManagerConfig,
           });
           const pointSelected = -1;
-          const newPointSteps = Core.getNewPointSteps(
+          Core.updatePointSteps(
             targetPosition,
             pointSelected,
             dataManager,
           );
 
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          expect(arraysSame(targetSteps, newPointSteps)).to.be.true;
+          expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
         });
       });
     });
@@ -285,14 +285,14 @@ describe('[Core]', () => {
             pointSteps,
             ...dataManagerConfig,
           });
-          const newPointSteps = Core.getNewPointSteps(
+          Core.updatePointSteps(
             targetPosition,
             pointSelected,
             dataManager,
           );
 
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          expect(arraysSame(targetSteps, newPointSteps)).to.be.true;
+          expect(arraysSame(targetSteps, dataManager.pointSteps)).to.be.true;
         });
       });
     });

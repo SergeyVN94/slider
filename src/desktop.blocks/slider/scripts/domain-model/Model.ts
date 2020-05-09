@@ -54,7 +54,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
   }
 
   public update(targetPosition: number, pointSelected: number): void {
-    this.dataManager.pointSteps = Core.getNewPointSteps(
+    Core.updatePointSteps(
       targetPosition,
       pointSelected,
       this.dataManager,
