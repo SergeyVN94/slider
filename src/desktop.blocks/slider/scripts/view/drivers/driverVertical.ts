@@ -1,4 +1,4 @@
-const driverVertical: ISliderViewDriver = {
+const driverVertical = {
   getTargetPosition(ev: JQuery.Event, $pointContainer: JQuery): number {
     const containerHeight = $pointContainer.outerHeight();
     const globalMousePosition = ev.pageY;
