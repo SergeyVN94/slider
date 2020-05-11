@@ -40,4 +40,6 @@ interface IPoint extends ISliderElement {
 
 interface IPointContainer extends ISliderElement {
   getSize(): number;
+  onClick(callback: (position: number) => void): void;
+  getTargetPosition(ev: JQuery.MouseEventBase): number;
 }

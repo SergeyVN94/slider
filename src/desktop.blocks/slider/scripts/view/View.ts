@@ -62,6 +62,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     };
 
     this._initComponents();
+    this._initEventListeners();
   }
 
   private _createComponents($slider: JQuery, allPoints = 1): ISliderComponents {
@@ -87,6 +88,16 @@ class View implements ISliderView, ISliderViewConfigManager {
     } = this.components;
 
     $slider.append(pointContainer.getElement());
+  }
+
+  private _initEventListeners(): void {
+    const { pointContainer } = this.components;
+
+    pointContainer.onClick(this._handlePointContainerClick.bind(this));
+  }
+
+  private _handlePointContainerClick(position: number): void {
+    this.updateEventCallback(position, View.POINT_NOT_SELECTED);
   }
 
   public get showBgLine(): boolean {
@@ -140,6 +151,10 @@ class View implements ISliderView, ISliderViewConfigManager {
       pointPositions,
       pointValues,
     };
+
+    const { points } = this.components;
+
+    points.forEach((point, index) => point.setPosition(pointPositions[index]));
   }
 }
 
