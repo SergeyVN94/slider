@@ -2,14 +2,16 @@ type SliderViewName = 'horizontal' | 'vertical';
 type PrettifyFunc = (value: number | string) => string;
 type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
 
-interface IDomElements {
+interface ISliderComponents {
   $slider: JQuery;
-  points: JQuery[];
-  tooltips: JQuery[];
-  $pointContainer: JQuery;
-  $tooltipContainer: JQuery;
-  $bgLine: JQuery;
   $document: JQuery<Document>;
+  points: IPoint[];
+  pointContainer: IPointContainer;
+}
+
+interface IViewCache {
+  pointPositions: number[];
+  pointValues: string[] | number[];
 }
 
 interface ISliderViewConfigManager {
@@ -23,14 +25,19 @@ interface ISliderView {
   update(pointPositions: number[], pointValues: number[] | string[]): void;
 }
 
-interface ISliderViewDriver {
-  getTargetPosition($event: JQuery.Event, $pointContainer: JQuery): number;
-  setPointPosition($point: JQuery, $pointContainer: JQuery, position: number): void;
-  updateTooltip(
-    $tooltip: JQuery,
-    $tooltipContainer: JQuery,
-    position: number,
-    value: string
-  ): void;
-  updateBgLine($bgLine: JQuery, $pointContainer: JQuery, pointPositions: number[]): void;
+interface IComponentsFactory {
+  createPointContainer(): IPointContainer;
+  createPoint(index: number, pointContainer: IPointContainer): IPoint;
+}
+
+interface ISliderElement {
+  getElement(): JQuery;
+}
+
+interface IPoint extends ISliderElement {
+  setPosition(position: number): void;
+}
+
+interface IPointContainer extends ISliderElement {
+  getSize(): number;
 }
