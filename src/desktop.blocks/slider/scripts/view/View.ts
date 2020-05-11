@@ -152,9 +152,14 @@ class View implements ISliderView, ISliderViewConfigManager {
       pointValues,
     };
 
-    const { points } = this.components;
+    const {
+      points,
+      $slider,
+    } = this.components;
 
     points.forEach((point, index) => point.setPosition(pointPositions[index]));
+
+    $slider.trigger('select', pointValues);
   }
 }
 
