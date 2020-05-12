@@ -29,6 +29,10 @@ class ComponentsFactory implements IComponentsFactory {
   public createTooltip($tooltipContainer: JQuery): ITooltip {
     return this.concreteFactory.createTooltip($tooltipContainer);
   }
+
+  public createBgLine(pointContainer: IPointContainer): IBgLine {
+    return this.concreteFactory.createBgLine(pointContainer);
+  }
 }
 
 export default ComponentsFactory;

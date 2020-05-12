@@ -1,6 +1,7 @@
 import VerticalSliderPoint from '../components/slider-point/VerticalSliderPoint';
 import VerticalPointContainer from '../components/point-container/VerticalPointContainer';
 import VerticalSliderTooltip from '../components/tooltip/VerticalSliderTooltip';
+import VerticalBgLine from '../components/bg-line/VerticalBgLine';
 
 const VerticalComponentsFactory: IComponentsFactory = {
   createPointContainer(): IPointContainer {
@@ -13,6 +14,10 @@ const VerticalComponentsFactory: IComponentsFactory = {
 
   createTooltip($tooltipContainer: JQuery): ITooltip {
     return new VerticalSliderTooltip($tooltipContainer);
+  },
+
+  createBgLine(pointContainer: IPointContainer): IBgLine {
+    return new VerticalBgLine(pointContainer);
   },
 };
 

@@ -84,6 +84,8 @@ class View implements ISliderView, ISliderViewConfigManager {
       tooltips.push(this.componentsFactory.createTooltip($tooltipContainer));
     }
 
+    const bgLine = this.componentsFactory.createBgLine(pointContainer);
+
     return {
       $slider,
       $document: $(document),
@@ -91,6 +93,7 @@ class View implements ISliderView, ISliderViewConfigManager {
       points,
       $tooltipContainer,
       tooltips,
+      bgLine,
     };
   }
 
@@ -208,6 +211,7 @@ class View implements ISliderView, ISliderViewConfigManager {
       points,
       tooltips,
       $slider,
+      bgLine,
     } = this.components;
 
     points.forEach((point, index) => point.setPosition(pointPositions[index]));
@@ -215,6 +219,10 @@ class View implements ISliderView, ISliderViewConfigManager {
       pointPositions[index],
       this.prettify(pointValues[index]),
     ));
+
+    const bgLineMax = pointPositions[pointPositions.length - 1];
+    const bgLineMin = pointPositions.length > 1 ? pointPositions[0] : 0;
+    bgLine.update(bgLineMax, bgLineMin);
 
     $slider.trigger('select', pointValues);
   }

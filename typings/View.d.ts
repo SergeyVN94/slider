@@ -9,6 +9,7 @@ interface ISliderComponents {
   points: IPoint[];
   tooltips: ITooltip[];
   pointContainer: IPointContainer;
+  bgLine: IBgLine;
 }
 
 interface IViewCache {
@@ -31,6 +32,7 @@ interface IComponentsFactory {
   createPointContainer(): IPointContainer;
   createPoint(index: number, pointContainer: IPointContainer): IPoint;
   createTooltip($tooltipContainer: JQuery): ITooltip;
+  createBgLine(pointContainer: IPointContainer): IBgLine;
 }
 
 interface ISliderComponent {
@@ -44,6 +46,10 @@ interface IPoint extends ISliderComponent {
 
 interface ITooltip extends ISliderComponent {
   setState(position: number, value: string): void;
+}
+
+interface IBgLine extends ISliderComponent {
+  update(max: number, min?: number): void;
 }
 
 interface IPointContainer extends ISliderComponent {
