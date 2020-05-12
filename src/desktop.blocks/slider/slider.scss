@@ -29,6 +29,7 @@ $tooltip-container-offset: (
   min-width: $point-diameter * 4;
 
   &_view-name_vertical {
+    position: absolute;
     width: $slider-height;
     height: 100%;
     min-width: 0;
