@@ -12,7 +12,7 @@ html {
 .page {
   width: 100%;
   margin: 0;
-  padding: 50px 0px 0px 20px;
+  padding: 50px 20px;
   display: -webkit-box;
   display: flex;
   -webkit-box-orient: vertical;
@@ -20,8 +20,16 @@ html {
   flex-direction: column;
   box-sizing: border-box;
 
+  @media (max-width: 540px) {
+    padding: 50px 10px;
+  }
+
   &__demo-panel {
-    margin: 10px 20px;
+    margin: 10px 5px;
     box-sizing: border-box;
+
+    @media (max-width: 540px) {
+      margin: 0;
+    }
   }
 }
