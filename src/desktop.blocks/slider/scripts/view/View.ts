@@ -28,6 +28,8 @@ class View implements ISliderView, ISliderViewConfigManager {
 
   private static POINT_NOT_SELECTED = -1;
 
+  private handleDocumentMousemove: (ev: JQuery.MouseMoveEvent) => void;
+
   constructor(config: {
     $slider: JQuery;
     points?: number;
@@ -122,13 +124,38 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   private _initEventListeners(): void {
-    const { pointContainer } = this.components;
+    const {
+      pointContainer,
+      points,
+      $document,
+    } = this.components;
+
+    this.handleDocumentMousemove = this._handleDocumentMousemove.bind(this);
 
     pointContainer.onClick(this._handlePointContainerClick.bind(this));
+    points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
+    $document.on('mouseup', this._handleDocumentMouseup.bind(this));
   }
 
   private _handlePointContainerClick(position: number): void {
-    this.updateEventCallback(position, View.POINT_NOT_SELECTED);
+    if (this.pointSelected === View.POINT_NOT_SELECTED) {
+      this.updateEventCallback(position, View.POINT_NOT_SELECTED);
+    }
+  }
+
+  private _handlePointMousedown(index: number): void {
+    this.pointSelected = index;
+    this.components.$document.on('mousemove', this.handleDocumentMousemove);
+  }
+
+  private _handleDocumentMouseup(): void {
+    this.components.$document.off('mousemove', this.handleDocumentMousemove);
+    this.pointSelected = View.POINT_NOT_SELECTED;
+  }
+
+  private _handleDocumentMousemove(ev: JQuery.MouseMoveEvent): void {
+    const targetPosition = this.components.pointContainer.getTargetPosition(ev);
+    this.updateEventCallback(targetPosition, this.pointSelected);
   }
 
   public get showBgLine(): boolean {

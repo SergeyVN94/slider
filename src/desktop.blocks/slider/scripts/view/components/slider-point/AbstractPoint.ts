@@ -7,6 +7,8 @@ abstract class AbstractPoint implements IPoint {
 
   protected readonly index: number;
 
+  private mousedownCallback: (index: number) => void;
+
   constructor(index: number, pointContainer: IPointContainer) {
     this.index = index;
     this.pointContainer = pointContainer;
@@ -27,7 +29,16 @@ abstract class AbstractPoint implements IPoint {
     return this.$point;
   }
 
+  public onMousedown(callback: (index: number) => void): void {
+    this.mousedownCallback = callback;
+    this.$point.on('mousedown', this._handlePointMousedown.bind(this));
+  }
+
   public abstract setPosition(position: number): void;
+
+  private _handlePointMousedown(): void {
+    this.mousedownCallback(this.index);
+  }
 }
 
 export default AbstractPoint;

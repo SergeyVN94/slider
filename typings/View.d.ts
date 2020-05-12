@@ -39,6 +39,7 @@ interface ISliderElement {
 
 interface IPoint extends ISliderElement {
   setPosition(position: number): void;
+  onMousedown(callback: (index: number) => void): void;
 }
 
 interface ITooltip extends ISliderElement {

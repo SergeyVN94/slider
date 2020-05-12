@@ -7,7 +7,8 @@ abstract class AbstractPointContainer implements IPointContainer {
 
   constructor() {
     this.$pointContainer = AbstractPointContainer._createPointContainer();
-    this.$pointContainer.on('click', this._handleContainerClick.bind(this));
+    // mousedown используется вместо click, что бы не конфликтовать с другими событиями
+    this.$pointContainer.on('mousedown', this._handleContainerMousedown.bind(this));
   }
 
   private static _createPointContainer(): JQuery {
@@ -24,7 +25,7 @@ abstract class AbstractPointContainer implements IPointContainer {
     this.clickEventCallback = callback;
   }
 
-  private _handleContainerClick(ev: JQuery.MouseMoveEvent): void {
+  private _handleContainerMousedown(ev: JQuery.MouseMoveEvent): void {
     this.clickEventCallback(this.getTargetPosition(ev));
   }
 
