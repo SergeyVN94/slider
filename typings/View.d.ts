@@ -33,20 +33,20 @@ interface IComponentsFactory {
   createTooltip($tooltipContainer: JQuery): ITooltip;
 }
 
-interface ISliderElement {
+interface ISliderComponent {
   getElement(): JQuery;
 }
 
-interface IPoint extends ISliderElement {
+interface IPoint extends ISliderComponent {
   setPosition(position: number): void;
   onMousedown(callback: (index: number) => void): void;
 }
 
-interface ITooltip extends ISliderElement {
+interface ITooltip extends ISliderComponent {
   setState(position: number, value: string): void;
 }
 
-interface IPointContainer extends ISliderElement {
+interface IPointContainer extends ISliderComponent {
   getSize(): number;
   onClick(callback: (position: number) => void): void;
   getTargetPosition(ev: JQuery.MouseEventBase): number;
