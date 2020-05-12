@@ -10,6 +10,7 @@ class View implements ISliderView, ISliderViewConfigManager {
   private flags: {
     showTooltips: boolean;
     showBgLine: boolean;
+    awaitingRedrawing: boolean;
   };
 
   private components: ISliderComponents;
@@ -27,6 +28,8 @@ class View implements ISliderView, ISliderViewConfigManager {
   private currentViewName: 'horizontal' | 'vertical';
 
   private static POINT_NOT_SELECTED = -1;
+
+  private static redrawingTimeout = 1000 / 60;
 
   private handleDocumentMousemove: (ev: JQuery.MouseMoveEvent) => void;
 
@@ -57,6 +60,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.flags = {
       showTooltips,
       showBgLine,
+      awaitingRedrawing: false,
     };
     this.cache = {
       pointPositions: [],
@@ -171,6 +175,43 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.update(pointPositions, pointValues);
   }
 
+  private _redrawAll(): void {
+    const {
+      pointPositions,
+      pointValues,
+    } = this.cache;
+
+    const {
+      points,
+      tooltips,
+      $slider,
+      bgLine,
+    } = this.components;
+
+    points.forEach((point, index) => point.setPosition(pointPositions[index]));
+    tooltips.forEach((tooltip, index) => tooltip.setState(
+      pointPositions[index],
+      this.prettify(pointValues[index]),
+    ));
+
+    const bgLineMax = pointPositions[pointPositions.length - 1];
+    const bgLineMin = pointPositions.length > 1 ? pointPositions[0] : 0;
+    bgLine.update(bgLineMax, bgLineMin);
+
+    $slider.trigger('select', pointValues);
+  }
+
+  private _requestRedrawing(): void {
+    if (!this.flags.awaitingRedrawing) {
+      this.flags.awaitingRedrawing = true;
+
+      setTimeout(() => {
+        this._redrawAll();
+        this.flags.awaitingRedrawing = false;
+      }, View.redrawingTimeout);
+    }
+  }
+
   public get showBgLine(): boolean {
     return this.flags.showBgLine;
   }
@@ -194,10 +235,7 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   public set viewName(viewName: SliderViewName) {
-    const {
-      pointPositions,
-      pointValues,
-    } = this.cache;
+    const { pointPositions } = this.cache;
 
     this.currentViewName = viewName;
     this.resetSlider();
@@ -206,7 +244,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     this._initComponents(viewName);
     this._initEventListeners();
 
-    this.update(pointPositions, pointValues);
+    this._requestRedrawing();
   }
 
   public onSelect(callback: (targetPosition: number, pointSelected: number) => void): void {
@@ -226,24 +264,7 @@ class View implements ISliderView, ISliderViewConfigManager {
       pointValues,
     };
 
-    const {
-      points,
-      tooltips,
-      $slider,
-      bgLine,
-    } = this.components;
-
-    points.forEach((point, index) => point.setPosition(pointPositions[index]));
-    tooltips.forEach((tooltip, index) => tooltip.setState(
-      pointPositions[index],
-      this.prettify(pointValues[index]),
-    ));
-
-    const bgLineMax = pointPositions[pointPositions.length - 1];
-    const bgLineMin = pointPositions.length > 1 ? pointPositions[0] : 0;
-    bgLine.update(bgLineMax, bgLineMin);
-
-    $slider.trigger('select', pointValues);
+    this._requestRedrawing();
   }
 }
 
