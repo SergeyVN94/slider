@@ -167,6 +167,7 @@ class View implements ISliderView, ISliderViewConfigManager {
 
   public set showBgLine(state: boolean) {
     this.flags.showBgLine = state;
+    this.components.$slider.toggleClass(CLASSES.HIDE_BG_LINE, !state);
   }
 
   public get showTooltips(): boolean {
@@ -175,6 +176,7 @@ class View implements ISliderView, ISliderViewConfigManager {
 
   public set showTooltips(state: boolean) {
     this.flags.showTooltips = state;
+    this.components.$slider.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
   }
 
   public get viewName(): SliderViewName {
@@ -202,6 +204,13 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
+    if (this.cache.pointPositions.length !== pointPositions.length) {
+      this.resetSlider();
+      this.components = this._createComponents(this.components.$slider, pointPositions.length);
+      this._initComponents(this.currentViewName);
+      this._initEventListeners();
+    }
+
     this.cache = {
       pointPositions,
       pointValues,
