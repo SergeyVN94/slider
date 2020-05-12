@@ -138,6 +138,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     pointContainer.onClick(this._handlePointContainerClick.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
     $document.on('mouseup', this._handleDocumentMouseup.bind(this));
+    window.addEventListener('resize', this._handleDocumentResize.bind(this));
   }
 
   private _handlePointContainerClick(position: number): void {
@@ -159,6 +160,15 @@ class View implements ISliderView, ISliderViewConfigManager {
   private _handleDocumentMousemove(ev: JQuery.MouseMoveEvent): void {
     const targetPosition = this.components.pointContainer.getTargetPosition(ev);
     this.updateEventCallback(targetPosition, this.pointSelected);
+  }
+
+  private _handleDocumentResize(): void {
+    const {
+      pointPositions,
+      pointValues,
+    } = this.cache;
+
+    this.update(pointPositions, pointValues);
   }
 
   public get showBgLine(): boolean {
