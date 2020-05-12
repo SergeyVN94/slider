@@ -25,6 +25,10 @@ class ComponentsFactory implements IComponentsFactory {
   public createPoint(index: number, pointContainer: IPointContainer): IPoint {
     return this.concreteFactory.createPoint(index, pointContainer);
   }
+
+  public createTooltip($tooltipContainer: JQuery): ITooltip {
+    return this.concreteFactory.createTooltip($tooltipContainer);
+  }
 }
 
 export default ComponentsFactory;

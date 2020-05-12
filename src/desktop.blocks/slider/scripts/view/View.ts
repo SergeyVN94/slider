@@ -61,7 +61,7 @@ class View implements ISliderView, ISliderViewConfigManager {
       pointValues: [],
     };
 
-    this._initComponents();
+    this._initComponents(viewName);
     this._initEventListeners();
   }
 
@@ -73,21 +73,52 @@ class View implements ISliderView, ISliderViewConfigManager {
       points.push(this.componentsFactory.createPoint(i, pointContainer));
     }
 
+    const $tooltipContainer = $('<div/>', {
+      class: `${CLASSES.TOOLTIP_CONTAINER} js-${CLASSES.TOOLTIP_CONTAINER}`,
+    });
+
+    const tooltips: ITooltip[] = [];
+    for (let i = 0; i < allPoints; i += 1) {
+      tooltips.push(this.componentsFactory.createTooltip($tooltipContainer));
+    }
+
     return {
       $slider,
       $document: $(document),
       pointContainer,
       points,
+      $tooltipContainer,
+      tooltips,
     };
   }
 
-  private _initComponents(): void {
+  private _initComponents(viewName: 'horizontal' | 'vertical'): void {
     const {
       $slider,
       pointContainer,
+      $tooltipContainer,
     } = this.components;
 
-    $slider.append(pointContainer.getElement());
+    if (viewName !== VIEW_NAMES.HORIZONTAL) {
+      $slider.addClass(`slider_view-name_${viewName}`);
+    }
+
+    $slider
+      .append(pointContainer.getElement())
+      .append($tooltipContainer);
+  }
+
+  private resetSlider(): void {
+    const { $slider } = this.components;
+
+    $slider
+      .removeClass(
+        (index, classes) => classes
+          .split(' ')
+          .filter((className) => className.includes('slider_view-name_'))
+          .join(' '),
+      )
+      .html('');
   }
 
   private _initEventListeners(): void {
@@ -121,23 +152,17 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   public set viewName(viewName: SliderViewName) {
-    const { $slider } = this.components;
-    $slider.removeClass(
-      (index, classes) => classes
-        .split(' ')
-        .filter((className) => className.includes('slider_view-name_'))
-        .join(' '),
-    );
-    $slider.find('*').removeAttr('style');
-
-    this.currentViewName = viewName;
-    this.componentsFactory = new ComponentsFactory(viewName);
-    this.components = this._createComponents($slider);
-    this._initComponents();
     const {
       pointPositions,
       pointValues,
     } = this.cache;
+
+    this.currentViewName = viewName;
+    this.resetSlider();
+    this.componentsFactory = new ComponentsFactory(viewName);
+    this.components = this._createComponents(this.components.$slider, pointPositions.length);
+    this._initComponents(viewName);
+    this._initEventListeners();
 
     this.update(pointPositions, pointValues);
   }
@@ -154,10 +179,15 @@ class View implements ISliderView, ISliderViewConfigManager {
 
     const {
       points,
+      tooltips,
       $slider,
     } = this.components;
 
     points.forEach((point, index) => point.setPosition(pointPositions[index]));
+    tooltips.forEach((tooltip, index) => tooltip.setState(
+      pointPositions[index],
+      this.prettify(pointValues[index]),
+    ));
 
     $slider.trigger('select', pointValues);
   }

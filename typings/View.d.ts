@@ -4,8 +4,10 @@ type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) =
 
 interface ISliderComponents {
   $slider: JQuery;
+  $tooltipContainer: JQuery;
   $document: JQuery<Document>;
   points: IPoint[];
+  tooltips: ITooltip[];
   pointContainer: IPointContainer;
 }
 
@@ -28,6 +30,7 @@ interface ISliderView {
 interface IComponentsFactory {
   createPointContainer(): IPointContainer;
   createPoint(index: number, pointContainer: IPointContainer): IPoint;
+  createTooltip($tooltipContainer: JQuery): ITooltip;
 }
 
 interface ISliderElement {
@@ -36,6 +39,10 @@ interface ISliderElement {
 
 interface IPoint extends ISliderElement {
   setPosition(position: number): void;
+}
+
+interface ITooltip extends ISliderElement {
+  setState(position: number, value: string): void;
 }
 
 interface IPointContainer extends ISliderElement {

@@ -1,5 +1,7 @@
 const enum CLASSES {
-  TOOLTIP_CONTAINER = 'js-slider__tooltip-container',
+  SLIDER = 'slider',
+  TOOLTIP_CONTAINER = 'slider__tooltip-container',
+  TOOLTIP = 'slider__tooltip',
   POINT_CONTAINER = 'slider__point-container',
   VIEW_NAME_VERTICAL = 'slider_view-name_vertical',
   HIDE_TOOLTIPS = 'slider_tooltips-hide',
