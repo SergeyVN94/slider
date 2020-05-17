@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import ComponentsFactory from '../../desktop.blocks/slider/scripts/view/components-factory/ComponentsFactory';
+import getComponentsFactory from '../../desktop.blocks/slider/scripts/view/components-factory/getComponentsFactory';
 
 require('../../desktop.blocks/slider/slider.sass');
 
@@ -7,7 +7,7 @@ const $body = $(document.body);
 $body.css('padding', '50px');
 
 const $slider = $('<div class="slider"></div>');
-const factory = new ComponentsFactory('vertical');
+const factory = getComponentsFactory('vertical');
 const pointContainer = factory.createPointContainer();
 const bgLine = factory.createBgLine(pointContainer);
 const $bgLine = bgLine.getElement();

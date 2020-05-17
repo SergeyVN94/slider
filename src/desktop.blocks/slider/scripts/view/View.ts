@@ -1,5 +1,5 @@
 import CLASSES from './classes';
-import ComponentsFactory from './components-factory/ComponentsFactory';
+import getComponentsFactory from './components-factory/getComponentsFactory';
 
 const enum VIEW_NAMES {
   HORIZONTAL = 'horizontal',
@@ -50,7 +50,7 @@ class View implements ISliderView, ISliderViewConfigManager {
       viewName = VIEW_NAMES.HORIZONTAL,
     } = config;
 
-    this.componentsFactory = new ComponentsFactory(viewName);
+    this.componentsFactory = getComponentsFactory(viewName);
     this.components = this._createComponents($slider, points);
     this.currentViewName = viewName;
     this.pointSelected = View.POINT_NOT_SELECTED;
@@ -239,7 +239,7 @@ class View implements ISliderView, ISliderViewConfigManager {
 
     this.currentViewName = viewName;
     this.resetSlider();
-    this.componentsFactory = new ComponentsFactory(viewName);
+    this.componentsFactory = getComponentsFactory(viewName);
     this.components = this._createComponents(this.components.$slider, pointPositions.length);
     this._initComponents(viewName);
     this._initEventListeners();

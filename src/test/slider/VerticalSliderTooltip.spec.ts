@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import ComponentsFactory from '../../desktop.blocks/slider/scripts/view/components-factory/ComponentsFactory';
+import getComponentsFactory from '../../desktop.blocks/slider/scripts/view/components-factory/getComponentsFactory';
 import CLASSES from '../../desktop.blocks/slider/scripts/view/classes';
 
 require('../../desktop.blocks/slider/slider.sass');
@@ -8,7 +8,7 @@ const $body = $(document.body);
 $body.css('padding', '50px');
 
 const $slider = $('<div class="slider slider_view-name_vertical"><div class="slider__tooltip-container js-slider__tooltip-container"></div></div>');
-const factory = new ComponentsFactory('vertical');
+const factory = getComponentsFactory('vertical');
 const $tooltipContainer = $slider.find(`.js-${CLASSES.TOOLTIP_CONTAINER}`);
 const tooltip = factory.createTooltip($tooltipContainer);
 
