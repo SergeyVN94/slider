@@ -13,7 +13,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     awaitingRedrawing: boolean;
   };
 
-  private components: ISliderComponents;
+  private components: IViewComponents;
 
   private componentsFactory: IComponentsFactory;
 
@@ -71,7 +71,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     this._initEventListeners();
   }
 
-  private _createComponents($slider: JQuery, allPoints = 1): ISliderComponents {
+  private _createComponents($slider: JQuery, allPoints = 1): IViewComponents {
     const pointContainer = this.componentsFactory.createPointContainer();
 
     const points: IPoint[] = [];

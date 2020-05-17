@@ -2,7 +2,7 @@ type SliderViewName = 'horizontal' | 'vertical';
 type PrettifyFunc = (value: number | string) => string;
 type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
 
-interface ISliderComponents {
+interface IViewComponents {
   $slider: JQuery;
   $tooltipContainer: JQuery;
   $document: JQuery<Document>;
