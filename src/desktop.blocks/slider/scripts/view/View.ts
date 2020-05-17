@@ -1,5 +1,6 @@
 import CLASSES from './classes';
 import getComponentsFactory from './components-factory/getComponentsFactory';
+import Controller from './Controller';
 
 const enum VIEW_NAMES {
   HORIZONTAL = 'horizontal',
@@ -19,19 +20,15 @@ class View implements ISliderView, ISliderViewConfigManager {
 
   private cache: IViewCache;
 
-  private updateEventCallback: HandlerSliderViewSelect;
-
-  private pointSelected: number;
+  private selectEventCallback: HandlerSliderViewSelect;
 
   private readonly prettify: PrettifyFunc;
 
   private currentViewName: 'horizontal' | 'vertical';
 
-  private static POINT_NOT_SELECTED = -1;
-
   private static redrawingTimeout = 1000 / 60;
 
-  private handleDocumentMousemove: (ev: JQuery.MouseMoveEvent) => void;
+  private controller: Controller;
 
   constructor(config: {
     $slider: JQuery;
@@ -53,8 +50,6 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.componentsFactory = getComponentsFactory(viewName);
     this.components = this._createComponents($slider, points);
     this.currentViewName = viewName;
-    this.pointSelected = View.POINT_NOT_SELECTED;
-    this.updateEventCallback = null;
     this.prettify = prettify;
 
     this.flags = {
@@ -67,8 +62,8 @@ class View implements ISliderView, ISliderViewConfigManager {
       pointValues: [],
     };
 
+    this._initController();
     this._initComponents(viewName);
-    this._initEventListeners();
   }
 
   private _createComponents($slider: JQuery, allPoints = 1): IViewComponents {
@@ -130,43 +125,7 @@ class View implements ISliderView, ISliderViewConfigManager {
       .html('');
   }
 
-  private _initEventListeners(): void {
-    const {
-      pointContainer,
-      points,
-      $document,
-    } = this.components;
-
-    this.handleDocumentMousemove = this._handleDocumentMousemove.bind(this);
-
-    pointContainer.onClick(this._handlePointContainerClick.bind(this));
-    points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
-    $document.on('mouseup', this._handleDocumentMouseup.bind(this));
-    window.addEventListener('resize', this._handleDocumentResize.bind(this));
-  }
-
-  private _handlePointContainerClick(position: number): void {
-    if (this.pointSelected === View.POINT_NOT_SELECTED) {
-      this.updateEventCallback(position, View.POINT_NOT_SELECTED);
-    }
-  }
-
-  private _handlePointMousedown(index: number): void {
-    this.pointSelected = index;
-    this.components.$document.on('mousemove', this.handleDocumentMousemove);
-  }
-
-  private _handleDocumentMouseup(): void {
-    this.components.$document.off('mousemove', this.handleDocumentMousemove);
-    this.pointSelected = View.POINT_NOT_SELECTED;
-  }
-
-  private _handleDocumentMousemove(ev: JQuery.MouseMoveEvent): void {
-    const targetPosition = this.components.pointContainer.getTargetPosition(ev);
-    this.updateEventCallback(targetPosition, this.pointSelected);
-  }
-
-  private _handleDocumentResize(): void {
+  private _handleSliderResize(): void {
     const {
       pointPositions,
       pointValues,
@@ -212,6 +171,12 @@ class View implements ISliderView, ISliderViewConfigManager {
     }
   }
 
+  private _initController(): void {
+    this.controller = new Controller(this.components);
+    this.controller.onSelect(this.selectEventCallback);
+    this.controller.onResize(this._handleSliderResize.bind(this));
+  }
+
   public get showBgLine(): boolean {
     return this.flags.showBgLine;
   }
@@ -242,21 +207,21 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.componentsFactory = getComponentsFactory(viewName);
     this.components = this._createComponents(this.components.$slider, pointPositions.length);
     this._initComponents(viewName);
-    this._initEventListeners();
 
     this._requestRedrawing();
   }
 
   public onSelect(callback: (targetPosition: number, pointSelected: number) => void): void {
-    this.updateEventCallback = callback;
+    this.selectEventCallback = callback;
+    this._initController();
   }
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
     if (this.cache.pointPositions.length !== pointPositions.length) {
       this.resetSlider();
       this.components = this._createComponents(this.components.$slider, pointPositions.length);
+      this._initController();
       this._initComponents(this.currentViewName);
-      this._initEventListeners();
     }
 
     this.cache = {
