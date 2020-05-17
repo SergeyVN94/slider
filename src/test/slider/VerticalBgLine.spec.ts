@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import ComponentsFactory from '../../desktop.blocks/slider/scripts/view/components-factory/ComponentsFactory';
 
-require('../../desktop.blocks/slider/slider.scss');
+require('../../desktop.blocks/slider/slider.sass');
 
 const $body = $(document.body);
 $body.css('padding', '50px');
