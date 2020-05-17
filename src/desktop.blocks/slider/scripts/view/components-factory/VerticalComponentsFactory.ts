@@ -8,16 +8,16 @@ const VerticalComponentsFactory: IComponentsFactory = {
     return new VerticalPointContainer();
   },
 
-  createPoint(index: number, pointContainer: IPointContainer): IPoint {
-    return new VerticalSliderPoint(index, pointContainer);
+  createPoint(index: number): IPoint {
+    return new VerticalSliderPoint(index);
   },
 
-  createTooltip($tooltipContainer: JQuery): ITooltip {
-    return new VerticalSliderTooltip($tooltipContainer);
+  createTooltip(): ITooltip {
+    return new VerticalSliderTooltip();
   },
 
-  createBgLine(pointContainer: IPointContainer): IBgLine {
-    return new VerticalBgLine(pointContainer);
+  createBgLine(): IBgLine {
+    return new VerticalBgLine();
   },
 };
 

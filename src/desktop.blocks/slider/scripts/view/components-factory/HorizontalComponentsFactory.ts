@@ -8,16 +8,16 @@ const HorizontalComponentsFactory: IComponentsFactory = {
     return new HorizontalPointContainer();
   },
 
-  createPoint(index: number, pointContainer: IPointContainer): IPoint {
-    return new HorizontalSliderPoint(index, pointContainer);
+  createPoint(index: number): IPoint {
+    return new HorizontalSliderPoint(index);
   },
 
-  createTooltip($tooltipContainer: JQuery): ITooltip {
-    return new HorizontalSliderTooltip($tooltipContainer);
+  createTooltip(): ITooltip {
+    return new HorizontalSliderTooltip();
   },
 
-  createBgLine(pointContainer: IPointContainer): IBgLine {
-    return new HorizontalBgLine(pointContainer);
+  createBgLine(): IBgLine {
+    return new HorizontalBgLine();
   },
 };
 

@@ -1,6 +1,8 @@
 class Controller {
   private readonly components: IViewComponents;
 
+  private static readonly $document = $(document);
+
   private selectEventCallback: (position: number, pointSelected: number) => void;
 
   private resizeEventCallback: () => void;
@@ -23,14 +25,13 @@ class Controller {
     const {
       pointContainer,
       points,
-      $document,
     } = this.components;
 
     this.handleDocumentMousemove = this._handleDocumentMousemove.bind(this);
 
     pointContainer.onClick(this._handlePointContainerClick.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
-    $document.on('mouseup', this._handleDocumentMouseup.bind(this));
+    Controller.$document.on('mouseup', this._handleDocumentMouseup.bind(this));
     window.addEventListener('resize', this._handleDocumentResize.bind(this));
   }
 
@@ -42,9 +43,10 @@ class Controller {
     }
   }
 
-  private _handlePointMousedown(index: number): void {
+  private _handlePointMousedown(index: number, ev: JQuery.MouseDownEvent): void {
     this.pointSelected = index;
-    this.components.$document.on('mousemove', this.handleDocumentMousemove);
+    Controller.$document.on('mousemove', this.handleDocumentMousemove);
+    this.selectEventCallback(this.components.pointContainer.getTargetPosition(ev), index);
   }
 
   private _handleDocumentMousemove(ev: JQuery.MouseMoveEvent): void {
@@ -55,7 +57,7 @@ class Controller {
   }
 
   private _handleDocumentMouseup(): void {
-    this.components.$document.off('mousemove', this.handleDocumentMousemove);
+    Controller.$document.off('mousemove', this.handleDocumentMousemove);
     this.pointSelected = Controller.POINT_NOT_SELECTED;
   }
 

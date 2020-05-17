@@ -7,19 +7,18 @@ const $body = $(document.body);
 $body.css('padding', '50px');
 
 const $slider = $('<div class="slider"></div>');
-
 const factory = getComponentsFactory('horizontal');
 const pointContainer = factory.createPointContainer();
-const point = factory.createPoint(0, pointContainer);
 const $pointContainer = pointContainer.getElement();
+const point = factory.createPoint(0);
+const $point = point.getElement();
 
+$pointContainer.append($point);
 $slider.append($pointContainer);
 $body.append($slider);
 
 describe('[HorizontalSliderPoint]', () => {
   describe('[setPosition]', () => {
-    const $point = point.getElement();
-
     describe('[Random point position]', () => {
       for (let i = 0; i < 15; i += 1) {
         // minimum slider size 100px
@@ -27,7 +26,7 @@ describe('[HorizontalSliderPoint]', () => {
         const pointSize = Math.round(Math.random() * 10 + 5);
         const pointPosition = Math.random();
 
-        it(`Set random point position: ${pointPosition}`, () => {
+        it(`[Set random point position: ${pointPosition}]`, () => {
           $slider.css('width', `${sliderSize}px`);
           $point.css('width', `${pointSize}px`);
 

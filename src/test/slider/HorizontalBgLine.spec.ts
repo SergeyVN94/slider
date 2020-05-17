@@ -9,9 +9,11 @@ $body.css('padding', '50px');
 const $slider = $('<div class="slider"></div>');
 const factory = getComponentsFactory('horizontal');
 const pointContainer = factory.createPointContainer();
-const bgLine = factory.createBgLine(pointContainer);
+const $pointContainer = pointContainer.getElement();
+const bgLine = factory.createBgLine();
 const $bgLine = bgLine.getElement();
 
+$pointContainer.append($bgLine);
 $slider.append(pointContainer.getElement());
 $body.append($slider);
 
@@ -80,7 +82,7 @@ describe('[HorizontalBgLine]', () => {
       max,
       result,
     }) => {
-      it(`Slider size: ${sliderSize}, min: ${min}, max: ${max}.`, () => {
+      it(`[Slider size: ${sliderSize}, min: ${min}, max: ${max}]`, () => {
         $slider.css('width', `${sliderSize}px`);
         bgLine.update(max, min);
 

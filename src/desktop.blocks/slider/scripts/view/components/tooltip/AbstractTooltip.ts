@@ -1,17 +1,12 @@
 import CLASSES from '../../classes';
 
 abstract class AbstractTooltip implements ITooltip {
-  protected $tooltipContainer: JQuery;
-
   protected $tooltip: JQuery;
 
-  constructor($tooltipContainer: JQuery) {
-    this.$tooltipContainer = $tooltipContainer;
+  constructor() {
     this.$tooltip = $('<div>', {
       class: CLASSES.TOOLTIP,
     });
-
-    $tooltipContainer.append(this.$tooltip);
   }
 
   public getElement(): JQuery {

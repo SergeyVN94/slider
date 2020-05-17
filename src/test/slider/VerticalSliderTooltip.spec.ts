@@ -10,16 +10,16 @@ $body.css('padding', '50px');
 const $slider = $('<div class="slider slider_view-name_vertical"><div class="slider__tooltip-container js-slider__tooltip-container"></div></div>');
 const factory = getComponentsFactory('vertical');
 const $tooltipContainer = $slider.find(`.js-${CLASSES.TOOLTIP_CONTAINER}`);
-const tooltip = factory.createTooltip($tooltipContainer);
+const tooltip = factory.createTooltip();
+const $tooltip = tooltip.getElement();
 
+$tooltipContainer.append($tooltip);
 $slider.append($tooltipContainer);
 $body.append($slider);
 
 describe('[VerticalSliderTooltip]', () => {
   describe('[setState]', () => {
     describe('[Random point position]', () => {
-      const $tooltip = tooltip.getElement();
-
       for (let i = 0; i < 20; i += 1) {
         // minimum slider size 100px
         const sliderSize = Math.round(Math.random() * 1000 + 100);
@@ -28,7 +28,7 @@ describe('[VerticalSliderTooltip]', () => {
         const position = Math.random();
 
         // eslint-disable-next-line no-loop-func
-        it(`Position ${position}`, () => {
+        it(`[Position ${position}]`, () => {
           $slider.css('height', `${sliderSize}px`);
 
           tooltip.setState(position, 'Hello, World!');

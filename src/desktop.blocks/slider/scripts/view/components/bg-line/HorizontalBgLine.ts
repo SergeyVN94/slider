@@ -2,11 +2,13 @@ import AbstractBgLine from './AbstractBgLine';
 
 class HorizontalBgLine extends AbstractBgLine {
   public update(max: number, min = 0): void {
-    const containerWidth = this.pointContainer.getSize();
+    const { $bgLine } = this;
+
+    const containerWidth = $bgLine.parent().outerWidth();
     const marginLeft = min * containerWidth;
     const marginRight = containerWidth - (max * containerWidth);
 
-    this.$bgLine
+    $bgLine
       .css('right', `${marginRight}px`)
       .css('left', `${marginLeft}px`);
   }

@@ -71,7 +71,7 @@ class View implements ISliderView, ISliderViewConfigManager {
 
     const points: IPoint[] = [];
     for (let i = 0; i < allPoints; i += 1) {
-      points.push(this.componentsFactory.createPoint(i, pointContainer));
+      points.push(this.componentsFactory.createPoint(i));
     }
 
     const $tooltipContainer = $('<div/>', {
@@ -80,14 +80,13 @@ class View implements ISliderView, ISliderViewConfigManager {
 
     const tooltips: ITooltip[] = [];
     for (let i = 0; i < allPoints; i += 1) {
-      tooltips.push(this.componentsFactory.createTooltip($tooltipContainer));
+      tooltips.push(this.componentsFactory.createTooltip());
     }
 
-    const bgLine = this.componentsFactory.createBgLine(pointContainer);
+    const bgLine = this.componentsFactory.createBgLine();
 
     return {
       $slider,
-      $document: $(document),
       pointContainer,
       points,
       $tooltipContainer,
@@ -101,14 +100,23 @@ class View implements ISliderView, ISliderViewConfigManager {
       $slider,
       pointContainer,
       $tooltipContainer,
+      bgLine,
+      points,
+      tooltips,
     } = this.components;
 
     if (viewName !== VIEW_NAMES.HORIZONTAL) {
       $slider.addClass(`slider_view-name_${viewName}`);
     }
 
+    const $pointContainer = pointContainer.getElement();
+    points.forEach((point) => $pointContainer.append(point.getElement()));
+    $pointContainer.append(bgLine.getElement());
+
+    tooltips.forEach((tooltip) => $tooltipContainer.append(tooltip.getElement()));
+
     $slider
-      .append(pointContainer.getElement())
+      .append($pointContainer)
       .append($tooltipContainer);
   }
 

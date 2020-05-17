@@ -3,17 +3,13 @@ import CLASSES from '../../classes';
 abstract class AbstractPoint implements IPoint {
   protected readonly $point: JQuery;
 
-  protected readonly pointContainer: IPointContainer;
-
   protected readonly index: number;
 
-  private mousedownCallback: (index: number) => void;
+  private mousedownCallback: (index: number, ev: JQuery.MouseDownEvent) => void;
 
-  constructor(index: number, pointContainer: IPointContainer) {
+  constructor(index: number) {
     this.index = index;
-    this.pointContainer = pointContainer;
     this.$point = this._createPoint();
-    pointContainer.getElement().append(this.$point);
   }
 
   private _createPoint(): JQuery {
@@ -29,15 +25,15 @@ abstract class AbstractPoint implements IPoint {
     return this.$point;
   }
 
-  public onMousedown(callback: (index: number) => void): void {
+  public onMousedown(callback: (index: number, ev: JQuery.MouseDownEvent) => void): void {
     this.mousedownCallback = callback;
     this.$point.on('mousedown', this._handlePointMousedown.bind(this));
   }
 
   public abstract setPosition(position: number): void;
 
-  private _handlePointMousedown(): void {
-    this.mousedownCallback(this.index);
+  private _handlePointMousedown(ev: JQuery.MouseDownEvent): void {
+    this.mousedownCallback(this.index, ev);
   }
 }
 

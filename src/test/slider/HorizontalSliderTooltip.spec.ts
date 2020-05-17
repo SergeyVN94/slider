@@ -10,16 +10,16 @@ $body.css('padding', '50px');
 const $slider = $('<div class="slider"><div class="slider__tooltip-container js-slider__tooltip-container"></div></div>');
 const factory = getComponentsFactory('horizontal');
 const $tooltipContainer = $slider.find(`.js-${CLASSES.TOOLTIP_CONTAINER}`);
-const tooltip = factory.createTooltip($tooltipContainer);
+const tooltip = factory.createTooltip();
+const $tooltip = tooltip.getElement();
 
+$tooltipContainer.append($tooltip);
 $slider.append($tooltipContainer);
 $body.append($slider);
 
 describe('[HorizontalSliderTooltip]', () => {
   describe('[setState]', () => {
     describe('[Random point position]', () => {
-      const $tooltip = tooltip.getElement();
-
       for (let i = 0; i < 20; i += 1) {
         // minimum slider size 100px
         const sliderSize = Math.round(Math.random() * 1000 + 100);
@@ -28,7 +28,7 @@ describe('[HorizontalSliderTooltip]', () => {
         const position = Math.random();
 
         // eslint-disable-next-line no-loop-func
-        it(`Tooltip size: ${tooltipSize}, position ${position}`, () => {
+        it(`[Tooltip size: ${tooltipSize}, position ${position}]`, () => {
           $slider.css('width', `${sliderSize}px`);
           $tooltip.css('width', `${tooltipSize}px`);
 
