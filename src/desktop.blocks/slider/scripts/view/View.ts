@@ -48,6 +48,8 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.currentViewName = viewName;
     this.prettify = prettify;
     this.awaitingRedrawing = false;
+    this.showTooltips = showTooltips;
+    this.showBgLine = showBgLine;
 
     this.cache = {
       pointPositions: [],
