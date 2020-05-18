@@ -8,11 +8,7 @@ const enum VIEW_NAMES {
 }
 
 class View implements ISliderView, ISliderViewConfigManager {
-  private flags: {
-    showTooltips: boolean;
-    showBgLine: boolean;
-    awaitingRedrawing: boolean;
-  };
+  private awaitingRedrawing: boolean;
 
   private components: IViewComponents;
 
@@ -51,12 +47,8 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.components = this._createComponents($slider, points);
     this.currentViewName = viewName;
     this.prettify = prettify;
+    this.awaitingRedrawing = false;
 
-    this.flags = {
-      showTooltips,
-      showBgLine,
-      awaitingRedrawing: false,
-    };
     this.cache = {
       pointPositions: [],
       pointValues: [],
@@ -169,12 +161,12 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   private _requestRedrawing(): void {
-    if (!this.flags.awaitingRedrawing) {
-      this.flags.awaitingRedrawing = true;
+    if (!this.awaitingRedrawing) {
+      this.awaitingRedrawing = true;
 
       setTimeout(() => {
         this._redrawAll();
-        this.flags.awaitingRedrawing = false;
+        this.awaitingRedrawing = false;
       }, View.redrawingTimeout);
     }
   }
@@ -186,20 +178,18 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   public get showBgLine(): boolean {
-    return this.flags.showBgLine;
+    return !this.components.$slider.hasClass(CLASSES.HIDE_BG_LINE);
   }
 
   public set showBgLine(state: boolean) {
-    this.flags.showBgLine = state;
     this.components.$slider.toggleClass(CLASSES.HIDE_BG_LINE, !state);
   }
 
   public get showTooltips(): boolean {
-    return this.flags.showTooltips;
+    return !this.components.$slider.hasClass(CLASSES.HIDE_TOOLTIPS);
   }
 
   public set showTooltips(state: boolean) {
-    this.flags.showTooltips = state;
     this.components.$slider.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
   }
 
@@ -214,6 +204,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.resetSlider();
     this.componentsFactory = getComponentsFactory(viewName);
     this.components = this._createComponents(this.components.$slider, pointPositions.length);
+    this._initController();
     this._initComponents(viewName);
 
     this._requestRedrawing();
