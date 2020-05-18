@@ -1,0 +1,60 @@
+import getComponentsFactory from './components-factory/getComponentsFactory';
+import CLASSES from './classes';
+
+const createDefaultSlider = function createDefaultSlider(
+  $slider: JQuery,
+  componentsFactory: IComponentsFactory,
+  allPoints: number,
+): IViewComponents {
+  const pointContainer = componentsFactory.createPointContainer();
+  const $pointContainer = pointContainer.getElement();
+  const $tooltipContainer = $('<div>', { class: CLASSES.TOOLTIP_CONTAINER });
+  const points: IPoint[] = [];
+  const tooltips: ITooltip[] = [];
+
+  for (let i = 0; i < allPoints; i += 1) {
+    const point = componentsFactory.createPoint(i);
+    const tooltip = componentsFactory.createTooltip();
+    points.push(point);
+    tooltips.push(tooltip);
+    $pointContainer.append(point.getElement());
+    $tooltipContainer.append(tooltip.getElement());
+  }
+
+  const bgLine = componentsFactory.createBgLine();
+  $pointContainer.append(bgLine.getElement());
+
+  $slider
+    .append($pointContainer)
+    .append($tooltipContainer);
+
+  return {
+    $slider,
+    pointContainer,
+    points,
+    tooltips,
+    bgLine,
+  };
+};
+
+const createSlider = function createSlider(
+  $slider: JQuery,
+  viewName: 'horizontal' | 'vertical' = 'horizontal',
+  points: number,
+): IViewComponents {
+  const componentsFactory = getComponentsFactory(viewName);
+
+  // Эта функция должна возвращать полностью готовый к использованию сладер
+  // По этому производится сброс сладера
+  $slider
+    .html('')
+    .removeClass()
+    .addClass(`slider js-slider slider_view-name_${viewName}`);
+
+  switch (viewName) {
+    default:
+      return createDefaultSlider($slider, componentsFactory, points);
+  }
+};
+
+export default createSlider;

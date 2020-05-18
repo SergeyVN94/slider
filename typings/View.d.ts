@@ -4,7 +4,6 @@ type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) =
 
 interface IViewComponents {
   $slider: JQuery;
-  $tooltipContainer: JQuery;
   points: IPoint[];
   tooltips: ITooltip[];
   pointContainer: IPointContainer;

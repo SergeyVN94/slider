@@ -1,6 +1,6 @@
 import CLASSES from './classes';
-import getComponentsFactory from './components-factory/getComponentsFactory';
 import Controller from './Controller';
+import createSlider from './createSlider';
 
 const enum VIEW_NAMES {
   HORIZONTAL = 'horizontal',
@@ -11,8 +11,6 @@ class View implements ISliderView, ISliderViewConfigManager {
   private awaitingRedrawing: boolean;
 
   private components: IViewComponents;
-
-  private componentsFactory: IComponentsFactory;
 
   private cache: IViewCache;
 
@@ -43,8 +41,7 @@ class View implements ISliderView, ISliderViewConfigManager {
       viewName = VIEW_NAMES.HORIZONTAL,
     } = config;
 
-    this.componentsFactory = getComponentsFactory(viewName);
-    this.components = this._createComponents($slider, points);
+    this.components = createSlider($slider, viewName, points);
     this.currentViewName = viewName;
     this.prettify = prettify;
     this.awaitingRedrawing = false;
@@ -57,74 +54,6 @@ class View implements ISliderView, ISliderViewConfigManager {
     };
 
     this._initController();
-    this._initComponents(viewName);
-  }
-
-  private _createComponents($slider: JQuery, allPoints = 1): IViewComponents {
-    const pointContainer = this.componentsFactory.createPointContainer();
-
-    const points: IPoint[] = [];
-    for (let i = 0; i < allPoints; i += 1) {
-      points.push(this.componentsFactory.createPoint(i));
-    }
-
-    const $tooltipContainer = $('<div/>', {
-      class: `${CLASSES.TOOLTIP_CONTAINER} js-${CLASSES.TOOLTIP_CONTAINER}`,
-    });
-
-    const tooltips: ITooltip[] = [];
-    for (let i = 0; i < allPoints; i += 1) {
-      tooltips.push(this.componentsFactory.createTooltip());
-    }
-
-    const bgLine = this.componentsFactory.createBgLine();
-
-    return {
-      $slider,
-      pointContainer,
-      points,
-      $tooltipContainer,
-      tooltips,
-      bgLine,
-    };
-  }
-
-  private _initComponents(viewName: 'horizontal' | 'vertical'): void {
-    const {
-      $slider,
-      pointContainer,
-      $tooltipContainer,
-      bgLine,
-      points,
-      tooltips,
-    } = this.components;
-
-    if (viewName !== VIEW_NAMES.HORIZONTAL) {
-      $slider.addClass(`slider_view-name_${viewName}`);
-    }
-
-    const $pointContainer = pointContainer.getElement();
-    points.forEach((point) => $pointContainer.append(point.getElement()));
-    $pointContainer.append(bgLine.getElement());
-
-    tooltips.forEach((tooltip) => $tooltipContainer.append(tooltip.getElement()));
-
-    $slider
-      .append($pointContainer)
-      .append($tooltipContainer);
-  }
-
-  private resetSlider(): void {
-    const { $slider } = this.components;
-
-    $slider
-      .removeClass(
-        (index, classes) => classes
-          .split(' ')
-          .filter((className) => className.includes('slider_view-name_'))
-          .join(' '),
-      )
-      .html('');
   }
 
   private _handleSliderResize(): void {
@@ -201,14 +130,15 @@ class View implements ISliderView, ISliderViewConfigManager {
 
   public set viewName(viewName: SliderViewName) {
     const { pointPositions } = this.cache;
+    const { $slider } = this.components;
 
     this.currentViewName = viewName;
-    this.resetSlider();
-    this.componentsFactory = getComponentsFactory(viewName);
-    this.components = this._createComponents(this.components.$slider, pointPositions.length);
+    this.components = createSlider(
+      $slider,
+      viewName,
+      pointPositions.length,
+    );
     this._initController();
-    this._initComponents(viewName);
-
     this._requestRedrawing();
   }
 
@@ -219,10 +149,12 @@ class View implements ISliderView, ISliderViewConfigManager {
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
     if (this.cache.pointPositions.length !== pointPositions.length) {
-      this.resetSlider();
-      this.components = this._createComponents(this.components.$slider, pointPositions.length);
+      this.components = createSlider(
+        this.components.$slider,
+        this.currentViewName,
+        pointPositions.length,
+      );
       this._initController();
-      this._initComponents(this.currentViewName);
     }
 
     this.cache = {
