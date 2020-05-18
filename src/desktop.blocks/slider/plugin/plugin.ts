@@ -68,7 +68,7 @@ $.fn.slider = function pluginMainFunction(
         throw new TypeError('Boolean expected.');
       }
 
-      slider.showTooltips = args;
+      slider.showTooltips = Boolean(args);
       return this;
 
     case COMMANDS.STEP:
@@ -76,8 +76,7 @@ $.fn.slider = function pluginMainFunction(
         return slider.step;
       }
 
-      slider.step = parseInt(args as string, 10);
-
+      slider.step = parseInt(String(args), 10);
       return this;
 
     case COMMANDS.VALUE:
@@ -101,7 +100,7 @@ $.fn.slider = function pluginMainFunction(
         return slider.showBgLine;
       }
 
-      slider.showBgLine = args as boolean;
+      slider.showBgLine = Boolean(args);
       return this;
 
     default:
