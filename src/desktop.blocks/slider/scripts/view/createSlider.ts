@@ -44,12 +44,17 @@ const createSlider = function createSlider(
 ): IViewComponents {
   const componentsFactory = getComponentsFactory(viewName);
 
+  const isTooltipsHidden = $slider.hasClass(CLASSES.HIDE_TOOLTIPS);
+  const isBgLineHidden = $slider.hasClass(CLASSES.HIDE_BG_LINE);
+
   // Эта функция должна возвращать полностью готовый к использованию сладер
   // По этому производится сброс сладера
   $slider
     .html('')
     .removeClass()
-    .addClass(`slider js-slider slider_view-name_${viewName}`);
+    .addClass(`slider js-slider slider_view-name_${viewName}`)
+    .toggleClass(CLASSES.HIDE_TOOLTIPS, isTooltipsHidden)
+    .toggleClass(CLASSES.HIDE_BG_LINE, isBgLineHidden);
 
   switch (viewName) {
     default:
