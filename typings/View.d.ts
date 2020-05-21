@@ -3,10 +3,9 @@ type PrettifyFunc = (value: number | string) => string;
 type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
 
 interface IViewComponents {
-  $slider: JQuery;
+  slider: ISlider;
   points: IPoint[];
   tooltips: ITooltip[];
-  pointContainer: IPointContainer;
   bgLine: IBgLine;
 }
 
@@ -27,7 +26,7 @@ interface ISliderView {
 }
 
 interface IComponentsFactory {
-  createPointContainer(): IPointContainer;
+  createSlider($slider: JQuery): ISlider;
   createPoint(index: number): IPoint;
   createTooltip(): ITooltip;
   createBgLine(): IBgLine;
@@ -35,6 +34,12 @@ interface IComponentsFactory {
 
 interface ISliderComponent {
   getElement(): JQuery;
+}
+
+interface ISlider extends ISliderComponent {
+  getTargetPosition(ev: JQuery.MouseEventBase): number;
+  showTooltips: boolean;
+  showBgLine: boolean;
 }
 
 interface IPoint extends ISliderComponent {
@@ -48,9 +53,4 @@ interface ITooltip extends ISliderComponent {
 
 interface IBgLine extends ISliderComponent {
   update(max: number, min?: number): void;
-}
-
-interface IPointContainer extends ISliderComponent {
-  onClick(callback: (position: number) => void): void;
-  getTargetPosition(ev: JQuery.MouseEventBase): number;
 }
