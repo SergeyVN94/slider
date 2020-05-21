@@ -8,13 +8,10 @@ $body.css('padding', '50px');
 
 const $slider = $('<div class="slider"></div>');
 const factory = getComponentsFactory('horizontal');
-const pointContainer = factory.createPointContainer();
-const $pointContainer = pointContainer.getElement();
 const point = factory.createPoint(0);
 const $point = point.getElement();
 
-$pointContainer.append($point);
-$slider.append($pointContainer);
+$slider.append($point);
 $body.append($slider);
 
 describe('[HorizontalSliderPoint]', () => {

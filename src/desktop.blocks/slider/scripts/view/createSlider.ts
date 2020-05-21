@@ -6,9 +6,7 @@ const createDefaultSlider = function createDefaultSlider(
   componentsFactory: IComponentsFactory,
   allPoints: number,
 ): IViewComponents {
-  const pointContainer = componentsFactory.createPointContainer();
-  const $pointContainer = pointContainer.getElement();
-  const $tooltipContainer = $('<div>', { class: CLASSES.TOOLTIP_CONTAINER });
+  const slider = componentsFactory.createSlider($slider);
   const points: IPoint[] = [];
   const tooltips: ITooltip[] = [];
 
@@ -17,20 +15,14 @@ const createDefaultSlider = function createDefaultSlider(
     const tooltip = componentsFactory.createTooltip();
     points.push(point);
     tooltips.push(tooltip);
-    $pointContainer.append(point.getElement());
-    $tooltipContainer.append(tooltip.getElement());
+    $slider.append(point.getElement(), tooltip.getElement());
   }
 
   const bgLine = componentsFactory.createBgLine();
-  $pointContainer.append(bgLine.getElement());
-
-  $slider
-    .append($pointContainer)
-    .append($tooltipContainer);
+  $slider.append(bgLine.getElement());
 
   return {
-    $slider,
-    pointContainer,
+    slider,
     points,
     tooltips,
     bgLine,

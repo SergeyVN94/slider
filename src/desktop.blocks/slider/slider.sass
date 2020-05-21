@@ -1,5 +1,5 @@
 $dark-green: #16a085
-$color-slider-bg: #d4d4e1
+$color-slider-bg: #e1d4de
 $color-point: #b44650
 
 // config
@@ -17,14 +17,17 @@ $scale-margin: 5px
 $tooltip-font-size: 12px
 $tooltip-line-height: 18px
 $tooltip-height: $tooltip-line-height + 6px
-$tooltip-container-offset: ($tooltip-margin + $point-offset + $slider-height + $tooltip-height + $triangle)
+$tooltip-offset: ($tooltip-margin + $point-offset + $tooltip-height + $triangle)
 
 .slider
+  position: relative
   display: block
   box-sizing: border-box
   width: 100%
   height: $slider-height
   min-width: $point-diameter * 4
+  border-radius: $slider-height - 2px
+  background-color: $slider-bg
 
   &_view-name_vertical
     position: absolute
@@ -42,24 +45,19 @@ $tooltip-container-offset: ($tooltip-margin + $point-offset + $slider-height + $
       bottom: -($point-diameter / 2)
       left: -$point-offset
 
-    .slider__tooltip-container
-      height: 100%
-      width: $tooltip-height
-      top: -100%
-      left: -$tooltip-container-offset + 10px
-
     .slider__tooltip
       left: auto
-      right: 0
+      top: auto
+      left: $tooltip-offset - $tooltip-height + $slider-height
       padding: 3px 8px
 
       &::after
-        left: auto
-        right: -$triangle * 2 + 1
+        right: auto
+        left: -$triangle * 2 + 1
         margin: 0
         top: ($tooltip-height - ($triangle * 2)) / 2
         border-top: $triangle solid transparent
-        border-left: $triangle solid $tooltip-bg
+        border-right: $triangle solid $tooltip-bg
 
   &_bg-line-hide
     .slider__bg-line
@@ -67,14 +65,7 @@ $tooltip-container-offset: ($tooltip-margin + $point-offset + $slider-height + $
 
   &_tooltips-hide
     .slider__tooltip
-      display: none
-
-  &__point-container
-    width: 100%
-    height: 100%
-    position: relative
-    border-radius: $slider-height - 2px
-    background-color: $slider-bg
+      display: none    
 
   &__point
     display: block
@@ -99,12 +90,6 @@ $tooltip-container-offset: ($tooltip-margin + $point-offset + $slider-height + $
     left: 0px
     z-index: 1
 
-  &__tooltip-container
-    position: relative
-    width: 100%
-    height: $tooltip-height
-    top: -($tooltip-margin + $point-offset + $slider-height + $tooltip-height + $triangle)
-
   &__tooltip
     display: block
     width: auto
@@ -120,6 +105,7 @@ $tooltip-container-offset: ($tooltip-margin + $point-offset + $slider-height + $
     box-sizing: border-box
     border-radius: 6px
     white-space: nowrap
+    top: -$tooltip-offset
 
     left: 0
     user-select: none

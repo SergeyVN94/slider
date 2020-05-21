@@ -74,7 +74,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     const {
       points,
       tooltips,
-      $slider,
+      slider,
       bgLine,
     } = this.components;
 
@@ -88,7 +88,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     const bgLineMin = pointPositions.length > 1 ? pointPositions[0] : 0;
     bgLine.update(bgLineMax, bgLineMin);
 
-    $slider.trigger('select', pointValues);
+    slider.getElement().trigger('select', pointValues);
   }
 
   private _requestRedrawing(): void {
@@ -109,19 +109,19 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   public get showBgLine(): boolean {
-    return !this.components.$slider.hasClass(CLASSES.HIDE_BG_LINE);
+    return !this.components.slider.getElement().hasClass(CLASSES.HIDE_BG_LINE);
   }
 
   public set showBgLine(state: boolean) {
-    this.components.$slider.toggleClass(CLASSES.HIDE_BG_LINE, !state);
+    this.components.slider.getElement().toggleClass(CLASSES.HIDE_BG_LINE, !state);
   }
 
   public get showTooltips(): boolean {
-    return !this.components.$slider.hasClass(CLASSES.HIDE_TOOLTIPS);
+    return !this.components.slider.getElement().hasClass(CLASSES.HIDE_TOOLTIPS);
   }
 
   public set showTooltips(state: boolean) {
-    this.components.$slider.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
+    this.components.slider.getElement().toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
   }
 
   public get viewName(): SliderViewName {
@@ -130,7 +130,7 @@ class View implements ISliderView, ISliderViewConfigManager {
 
   public set viewName(viewName: SliderViewName) {
     const { pointPositions } = this.cache;
-    const { $slider } = this.components;
+    const $slider = this.components.slider.getElement();
 
     this.currentViewName = viewName;
     this.components = createSlider(
@@ -150,7 +150,7 @@ class View implements ISliderView, ISliderViewConfigManager {
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
     if (this.cache.pointPositions.length !== pointPositions.length) {
       this.components = createSlider(
-        this.components.$slider,
+        this.components.slider.getElement(),
         this.currentViewName,
         pointPositions.length,
       );

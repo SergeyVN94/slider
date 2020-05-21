@@ -8,13 +8,10 @@ $body.css('padding', '50px');
 
 const $slider = $('<div class="slider"></div>');
 const factory = getComponentsFactory('horizontal');
-const pointContainer = factory.createPointContainer();
-const $pointContainer = pointContainer.getElement();
 const bgLine = factory.createBgLine();
 const $bgLine = bgLine.getElement();
 
-$pointContainer.append($bgLine);
-$slider.append(pointContainer.getElement());
+$slider.append($bgLine);
 $body.append($slider);
 
 describe('[HorizontalBgLine]', () => {

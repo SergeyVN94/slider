@@ -23,37 +23,33 @@ class Controller {
 
   private _initEventListeners(): void {
     const {
-      pointContainer,
+      slider,
       points,
     } = this.components;
 
     this.handleDocumentMousemove = this._handleDocumentMousemove.bind(this);
 
-    pointContainer.onClick(this._handlePointContainerClick.bind(this));
+    slider.getElement().on('mousedown', this._handleSliderMousedown.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
     Controller.$document.on('mouseup', this._handleDocumentMouseup.bind(this));
     window.addEventListener('resize', this._handleDocumentResize.bind(this));
   }
 
-  private _handlePointContainerClick(position: number): void {
-    if (this.pointSelected === Controller.POINT_NOT_SELECTED) {
-      if (this.selectEventCallback !== null) {
-        this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
-      }
-    }
+  private _handleSliderMousedown(ev: JQuery.MouseEventBase): void {
+    const position = this.components.slider.getTargetPosition(ev);
+    this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
   }
 
   private _handlePointMousedown(index: number, ev: JQuery.MouseDownEvent): void {
     this.pointSelected = index;
     Controller.$document.on('mousemove', this.handleDocumentMousemove);
-    this.selectEventCallback(this.components.pointContainer.getTargetPosition(ev), index);
+    const position = this.components.slider.getTargetPosition(ev);
+    this.selectEventCallback(position, index);
   }
 
   private _handleDocumentMousemove(ev: JQuery.MouseMoveEvent): void {
-    const targetPosition = this.components.pointContainer.getTargetPosition(ev);
-    if (this.selectEventCallback !== null) {
-      this.selectEventCallback(targetPosition, this.pointSelected);
-    }
+    const position = this.components.slider.getTargetPosition(ev);
+    this.selectEventCallback(position, this.pointSelected);
   }
 
   private _handleDocumentMouseup(): void {
@@ -62,9 +58,7 @@ class Controller {
   }
 
   private _handleDocumentResize(): void {
-    if (this.resizeEventCallback !== null) {
-      this.resizeEventCallback();
-    }
+    this.resizeEventCallback();
   }
 
   public onSelect(selectEventCallback: (position: number, pointSelected: number) => void): void {
