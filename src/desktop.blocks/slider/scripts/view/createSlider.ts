@@ -42,6 +42,7 @@ const createSlider = function createSlider(
   // Эта функция должна возвращать полностью готовый к использованию сладер
   // По этому производится сброс сладера
   $slider
+    .off()
     .html('')
     .removeClass()
     .addClass(`slider js-slider slider_view-name_${viewName}`)

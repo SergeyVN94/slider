@@ -144,7 +144,11 @@ class View implements ISliderView, ISliderViewConfigManager {
 
   public onSelect(callback: (targetPosition: number, pointSelected: number) => void): void {
     this.selectEventCallback = callback;
-    this._initController();
+    if (this.controller) {
+      this.controller.onSelect(callback);
+    } else {
+      this._initController();
+    }
   }
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
