@@ -33,7 +33,7 @@ class Controller {
 
   private _triggerSelectEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
     const position = this.components.slider.getTargetPosition(ev);
-    this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
+    this.selectEventCallback(position, pointIndex);
   }
 
   private _handleSliderMousedown(ev: JQuery.MouseEventBase): void {
