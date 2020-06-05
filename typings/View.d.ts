@@ -7,11 +7,13 @@ interface IViewComponents {
   points: IPoint[];
   tooltips: ITooltip[];
   bgLine: IBgLine;
+  scale: IScale;
 }
 
 interface IViewCache {
   pointPositions: number[];
   pointValues: string[] | number[];
+  allSteps: number;
 }
 
 interface ISliderViewConfigManager {
@@ -23,6 +25,7 @@ interface ISliderViewConfigManager {
 interface ISliderView {
   onSelect(callback: HandlerSliderViewSelect): void;
   update(pointPositions: number[], pointValues: number[] | string[]): void;
+  setAllSteps(allSteps: number): void;
 }
 
 interface IComponentsFactory {
@@ -30,6 +33,7 @@ interface IComponentsFactory {
   createPoint(index: number): IPoint;
   createTooltip(): ITooltip;
   createBgLine(): IBgLine;
+  createScale(): IScale;
 }
 
 interface ISliderComponent {
@@ -55,4 +59,9 @@ interface ITooltip extends ISliderComponent {
 
 interface IBgLine extends ISliderComponent {
   update(max: number, min?: number): void;
+}
+
+interface IScale extends ISliderComponent {
+  setAllSteps(allSteps: number): void;
+  redraw(): void;
 }

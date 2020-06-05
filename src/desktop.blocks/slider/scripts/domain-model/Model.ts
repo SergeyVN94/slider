@@ -23,6 +23,8 @@ class Model implements ISliderModel, ISliderModelStateManager {
 
   private readonly scaleDriver: ISliderScaleDriver;
 
+  private callbackChangeAllSteps: (allSteps: number) => void;
+
   constructor(config: {
     scale: [number, number] | string[];
     start: number[] | string[];
@@ -51,6 +53,13 @@ class Model implements ISliderModel, ISliderModelStateManager {
     this.dataManager.pointSteps = pointSteps;
 
     this.updateEventCallbackList = [];
+
+    this.callbackChangeAllSteps = null;
+  }
+
+  public onChangeAllSteps(callback: (allSteps: number) => void): void {
+    this.callbackChangeAllSteps = callback;
+    callback(this.dataManager.steps);
   }
 
   public update(targetPosition: number, pointSelected: number): void {
@@ -79,6 +88,10 @@ class Model implements ISliderModel, ISliderModelStateManager {
       this.dataManager.steps = this.scaleDriver.getAllSteps(scale, newStepSize);
       this.value = values;
       this._toggleUpdateEvent();
+
+      if (this.callbackChangeAllSteps) {
+        this.callbackChangeAllSteps(this.dataManager.steps);
+      }
     }
   }
 

@@ -1,11 +1,19 @@
 import getComponentsFactory from './components-factory/getComponentsFactory';
 import AbstractSlider from './components/slider/AbstractSlider';
 
-const createSlider = function createSlider(
-  $slider: JQuery,
-  viewName: 'horizontal' | 'vertical' = 'horizontal',
-  allPoints: number,
-): IViewComponents {
+const createSlider = function createSlider(options: {
+  $slider: JQuery;
+  viewName: 'horizontal' | 'vertical';
+  allPoints: number;
+  allSteps: number;
+}): IViewComponents {
+  const {
+    $slider,
+    viewName,
+    allPoints,
+    allSteps,
+  } = options;
+
   // Эта функция должна возвращать полностью готовый к использованию сладер
   // Поэтому производится сброс сладера
   AbstractSlider.resetSlider($slider);
@@ -27,11 +35,16 @@ const createSlider = function createSlider(
   const bgLine = componentsFactory.createBgLine();
   bgLine.draw($slider);
 
+  const scale = componentsFactory.createScale();
+  scale.draw($slider);
+  scale.setAllSteps(allSteps);
+
   return {
     slider,
     points,
     tooltips,
     bgLine,
+    scale,
   };
 };
 

@@ -41,7 +41,12 @@ class View implements ISliderView, ISliderViewConfigManager {
       viewName = VIEW_NAMES.HORIZONTAL,
     } = config;
 
-    this.components = createSlider($slider, viewName, points);
+    this.components = createSlider({
+      $slider,
+      viewName,
+      allPoints: points,
+      allSteps: 0,
+    });
     this.currentViewName = viewName;
     this.prettify = prettify;
     this.awaitingRedrawing = false;
@@ -51,6 +56,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.cache = {
       pointPositions: [],
       pointValues: [],
+      allSteps: 0,
     };
 
     this._initController();
@@ -63,6 +69,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     } = this.cache;
 
     this.update(pointPositions, pointValues);
+    this.components.scale.redraw();
   }
 
   private _redrawAll(): void {
@@ -108,6 +115,15 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.controller.onResize(this._handleSliderResize.bind(this));
   }
 
+  private _recreateSlider(): void {
+    this.components = createSlider({
+      $slider: this.components.slider.getElement(),
+      viewName: this.currentViewName,
+      allPoints: this.cache.pointPositions.length,
+      allSteps: this.cache.allSteps,
+    });
+  }
+
   public get showBgLine(): boolean {
     return !this.components.slider.getElement().hasClass(CLASSES.HIDE_BG_LINE);
   }
@@ -129,15 +145,8 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   public set viewName(viewName: SliderViewName) {
-    const { pointPositions } = this.cache;
-    const $slider = this.components.slider.getElement();
-
     this.currentViewName = viewName;
-    this.components = createSlider(
-      $slider,
-      viewName,
-      pointPositions.length,
-    );
+    this._recreateSlider();
     this._initController();
     this._requestRedrawing();
   }
@@ -152,21 +161,22 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
-    if (this.cache.pointPositions.length !== pointPositions.length) {
-      this.components = createSlider(
-        this.components.slider.getElement(),
-        this.currentViewName,
-        pointPositions.length,
-      );
+    const isNeedRecreateSlider = this.cache.pointPositions.length !== pointPositions.length;
+
+    this.cache.pointPositions = pointPositions;
+    this.cache.pointValues = pointValues;
+
+    if (isNeedRecreateSlider) {
+      this._recreateSlider();
       this._initController();
     }
 
-    this.cache = {
-      pointPositions,
-      pointValues,
-    };
-
     this._requestRedrawing();
+  }
+
+  public setAllSteps(allSteps: number): void {
+    this.cache.allSteps = allSteps;
+    this.components.scale.setAllSteps(allSteps);
   }
 }
 

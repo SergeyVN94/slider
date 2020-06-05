@@ -14,6 +14,7 @@ interface ISliderModel {
   getPointPositions(): number[];
   update(targetPosition: number, pointIndex: number): void;
   onUpdate(callback: (pointPositions: number[]) => void): void;
+  onChangeAllSteps(callback: (allSteps: number) => void): void;
 }
 
 interface ISliderModelStateManager {

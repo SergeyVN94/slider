@@ -19,6 +19,12 @@ class Presenter {
       this.model.getPointPositions(),
       model.value,
     );
+
+    this.model.onChangeAllSteps(this._handleModelChangeAllSteps.bind(this));
+  }
+
+  private _handleModelChangeAllSteps(allSteps: number): void {
+    this.view.setAllSteps(allSteps);
   }
 }
 

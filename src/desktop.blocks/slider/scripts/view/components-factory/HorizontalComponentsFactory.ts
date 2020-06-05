@@ -2,6 +2,7 @@ import HorizontalSliderPoint from '../components/slider-point/HorizontalSliderPo
 import HorizontalSliderTooltip from '../components/tooltip/HorizontalSliderTooltip';
 import HorizontalBgLine from '../components/bg-line/HorizontalBgLine';
 import HorizontalSlider from '../components/slider/HorizontalSlider';
+import HorizontalSliderScale from '../components/scale/HorizontalSliderScale';
 
 const HorizontalComponentsFactory: IComponentsFactory = {
   createSlider($slider: JQuery): ISlider {
@@ -18,6 +19,10 @@ const HorizontalComponentsFactory: IComponentsFactory = {
 
   createBgLine(): IBgLine {
     return new HorizontalBgLine();
+  },
+
+  createScale(): IScale {
+    return new HorizontalSliderScale();
   },
 };
 

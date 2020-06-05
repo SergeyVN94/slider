@@ -2,6 +2,7 @@ import VerticalSliderPoint from '../components/slider-point/VerticalSliderPoint'
 import VerticalSliderTooltip from '../components/tooltip/VerticalSliderTooltip';
 import VerticalBgLine from '../components/bg-line/VerticalBgLine';
 import VerticalSlider from '../components/slider/VerticalSlider';
+import VerticalSliderScale from '../components/scale/VerticalSliderScale';
 
 const VerticalComponentsFactory: IComponentsFactory = {
   createSlider($slider: JQuery): ISlider {
@@ -18,6 +19,10 @@ const VerticalComponentsFactory: IComponentsFactory = {
 
   createBgLine(): IBgLine {
     return new VerticalBgLine();
+  },
+
+  createScale(): IScale {
+    return new VerticalSliderScale();
   },
 };
 

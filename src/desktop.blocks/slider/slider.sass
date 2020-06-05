@@ -18,6 +18,7 @@ $tooltip-font-size: 12px
 $tooltip-line-height: 18px
 $tooltip-height: $tooltip-line-height + 6px
 $tooltip-offset: ($tooltip-margin + $point-offset + $tooltip-height + $triangle)
+$scale-item-size: $slider-height * 1.777
 
 .slider
   position: relative
@@ -58,6 +59,17 @@ $tooltip-offset: ($tooltip-margin + $point-offset + $tooltip-height + $triangle)
         top: ($tooltip-height - ($triangle * 2)) / 2
         border-top: $triangle solid transparent
         border-right: $triangle solid $tooltip-bg
+
+    .slider__scale
+      width: $scale-item-size
+      height: 100%
+      top: 0
+      right: ($scale-item-size + $tooltip-margin + $point-offset)
+
+      &-item
+        width: 100%
+        height: 2px
+        right: 0
 
   &_bg-line-hide
     .slider__bg-line
@@ -124,3 +136,15 @@ $tooltip-offset: ($tooltip-margin + $point-offset + $tooltip-height + $triangle)
       margin: 0 auto
       border: $triangle solid transparent
       border-top: $triangle solid $tooltip-bg
+
+  &__scale
+    position: relative
+    width: 100%
+    height: $scale-item-size
+    top: ($slider-height + $tooltip-margin + $point-offset)
+
+    &-item
+      position: absolute
+      height: 100%
+      width: 2px
+      background-color: black

@@ -8,6 +8,8 @@ const enum CLASSES {
   HIDE_TOOLTIPS = 'slider_tooltips-hide',
   HIDE_BG_LINE = 'slider_bg-line-hide',
   POINT = 'slider__point',
+  SCALE = 'slider__scale',
+  SCALE_ITEM = 'slider__scale-item',
 }
 
 export default CLASSES;
