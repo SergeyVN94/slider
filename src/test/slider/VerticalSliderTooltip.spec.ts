@@ -11,7 +11,7 @@ const factory = getComponentsFactory('vertical');
 const tooltip = factory.createTooltip();
 const $tooltip = tooltip.getElement();
 
-$slider.append($tooltip);
+tooltip.draw($slider);
 $body.append($slider);
 
 describe('[VerticalSliderTooltip]', () => {

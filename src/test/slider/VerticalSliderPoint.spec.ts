@@ -11,7 +11,7 @@ const factory = getComponentsFactory('vertical');
 const point = factory.createPoint(0);
 const $point = point.getElement();
 
-$slider.append($point);
+point.draw($slider);
 $body.append($slider);
 
 describe('[VerticalSliderPoint]', () => {

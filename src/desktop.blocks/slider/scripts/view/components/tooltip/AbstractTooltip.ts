@@ -9,6 +9,10 @@ abstract class AbstractTooltip implements ITooltip {
     });
   }
 
+  draw($slider: JQuery): void {
+    $slider.append(this.$tooltip);
+  }
+
   public getElement(): JQuery {
     return this.$tooltip;
   }

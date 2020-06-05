@@ -7,6 +7,19 @@ abstract class AbstractSlider implements ISlider {
     this.$slider = $slider;
   }
 
+  public static resetSlider($slider: JQuery): void {
+    const isTooltipsHidden = $slider.hasClass(CLASSES.HIDE_TOOLTIPS);
+    const isBgLineHidden = $slider.hasClass(CLASSES.HIDE_BG_LINE);
+
+    $slider
+      .off()
+      .html('')
+      .removeClass()
+      .addClass('slider js-slider')
+      .toggleClass(CLASSES.HIDE_TOOLTIPS, isTooltipsHidden)
+      .toggleClass(CLASSES.HIDE_BG_LINE, isBgLineHidden);
+  }
+
   public set showTooltips(state: boolean) {
     this.$slider.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
   }

@@ -21,6 +21,10 @@ abstract class AbstractPoint implements IPoint {
     });
   }
 
+  draw($slider: JQuery): void {
+    $slider.append(this.$point);
+  }
+
   public getElement(): JQuery {
     return this.$point;
   }

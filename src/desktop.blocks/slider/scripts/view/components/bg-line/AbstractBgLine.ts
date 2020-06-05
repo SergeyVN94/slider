@@ -9,6 +9,10 @@ abstract class AbstractBgLine implements IBgLine {
     });
   }
 
+  draw($slider: JQuery): void {
+    $slider.append(this.$bgLine);
+  }
+
   public getElement(): JQuery {
     return this.$bgLine;
   }

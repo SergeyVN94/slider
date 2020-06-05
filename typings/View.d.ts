@@ -34,9 +34,11 @@ interface IComponentsFactory {
 
 interface ISliderComponent {
   getElement(): JQuery;
+  draw($slider: JQuery): void;
 }
 
-interface ISlider extends ISliderComponent {
+interface ISlider {
+  getElement(): JQuery;
   getTargetPosition(ev: JQuery.MouseEventBase): number;
   showTooltips: boolean;
   showBgLine: boolean;

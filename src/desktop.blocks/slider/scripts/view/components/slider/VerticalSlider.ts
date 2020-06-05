@@ -1,6 +1,11 @@
 import AbstractSlider from './AbstractSlider';
 
 class VerticalSlider extends AbstractSlider {
+  constructor($slider: JQuery) {
+    super($slider);
+    $slider.addClass('slider_view-name_vertical');
+  }
+
   public getTargetPosition(ev: JQuery.MouseEventBase): number {
     const absolutePosition = ev.pageY;
     const offset = this.$slider.offset().top;

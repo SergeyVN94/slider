@@ -1,11 +1,16 @@
 import getComponentsFactory from './components-factory/getComponentsFactory';
-import CLASSES from './classes';
+import AbstractSlider from './components/slider/AbstractSlider';
 
-const createDefaultSlider = function createDefaultSlider(
+const createSlider = function createSlider(
   $slider: JQuery,
-  componentsFactory: IComponentsFactory,
+  viewName: 'horizontal' | 'vertical' = 'horizontal',
   allPoints: number,
 ): IViewComponents {
+  // Эта функция должна возвращать полностью готовый к использованию сладер
+  // Поэтому производится сброс сладера
+  AbstractSlider.resetSlider($slider);
+
+  const componentsFactory = getComponentsFactory(viewName);
   const slider = componentsFactory.createSlider($slider);
   const points: IPoint[] = [];
   const tooltips: ITooltip[] = [];
@@ -15,11 +20,12 @@ const createDefaultSlider = function createDefaultSlider(
     const tooltip = componentsFactory.createTooltip();
     points.push(point);
     tooltips.push(tooltip);
-    $slider.append(point.getElement(), tooltip.getElement());
+    point.draw($slider);
+    tooltip.draw($slider);
   }
 
   const bgLine = componentsFactory.createBgLine();
-  $slider.append(bgLine.getElement());
+  bgLine.draw($slider);
 
   return {
     slider,
@@ -27,32 +33,6 @@ const createDefaultSlider = function createDefaultSlider(
     tooltips,
     bgLine,
   };
-};
-
-const createSlider = function createSlider(
-  $slider: JQuery,
-  viewName: 'horizontal' | 'vertical' = 'horizontal',
-  points: number,
-): IViewComponents {
-  const componentsFactory = getComponentsFactory(viewName);
-
-  const isTooltipsHidden = $slider.hasClass(CLASSES.HIDE_TOOLTIPS);
-  const isBgLineHidden = $slider.hasClass(CLASSES.HIDE_BG_LINE);
-
-  // Эта функция должна возвращать полностью готовый к использованию сладер
-  // По этому производится сброс сладера
-  $slider
-    .off()
-    .html('')
-    .removeClass()
-    .addClass(`slider js-slider slider_view-name_${viewName}`)
-    .toggleClass(CLASSES.HIDE_TOOLTIPS, isTooltipsHidden)
-    .toggleClass(CLASSES.HIDE_BG_LINE, isBgLineHidden);
-
-  switch (viewName) {
-    default:
-      return createDefaultSlider($slider, componentsFactory, points);
-  }
 };
 
 export default createSlider;

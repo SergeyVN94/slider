@@ -11,7 +11,7 @@ const factory = getComponentsFactory('horizontal');
 const bgLine = factory.createBgLine();
 const $bgLine = bgLine.getElement();
 
-$slider.append($bgLine);
+bgLine.draw($slider);
 $body.append($slider);
 
 describe('[HorizontalBgLine]', () => {
