@@ -13,16 +13,13 @@ class StringArrayScaleDriver implements ISliderScaleDriver {
   }
 
   valueToStep(value: string): number {
-    return this.scale.indexOf(value);
+    const step = this.scale.indexOf(value);
+    if (step === -1) return null;
+    return step;
   }
 
   stepToValue(step: number): string | null {
-    const isCorrectStep = (step >= 0) && (step <= this.maxStep);
-
-    if (!isCorrectStep) {
-      return null;
-    }
-
+    if (step < 0 || step > this.maxStep) return null;
     return this.scale[step];
   }
 }

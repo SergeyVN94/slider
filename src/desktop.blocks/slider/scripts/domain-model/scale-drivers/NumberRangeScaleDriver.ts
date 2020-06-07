@@ -15,16 +15,13 @@ class NumberRangeScaleDriver implements ISliderScaleDriver {
 
   valueToStep(value: number): number {
     const [rangeMin] = this.scale;
-    return value - rangeMin;
+    const step = value - rangeMin;
+    if (step < 0 || step > this.maxStep) return null;
+    return step;
   }
 
   stepToValue(step: number): number | null {
-    const isCorrectStep = (step >= 0) && (step <= this.maxStep);
-
-    if (!isCorrectStep) {
-      return null;
-    }
-
+    if (step < 0 || step > this.maxStep) return null;
     const [rangeMin] = this.scale;
     return step + rangeMin;
   }
