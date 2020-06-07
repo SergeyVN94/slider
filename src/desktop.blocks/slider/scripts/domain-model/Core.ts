@@ -1,99 +1,142 @@
 class Core {
-  public static updatePointSteps(
+  private pointSteps: number[];
+
+  private readonly maxStep: number;
+
+  private stepSize: number;
+
+  private readonly scaleDriver: ISliderScaleDriver;
+
+  private lastStepIsUneven: boolean;
+
+  private lastStep: number;
+
+  constructor(options: {
+    stepSize: number;
+    scaleDriver: ISliderScaleDriver;
+  }) {
+    const { stepSize, scaleDriver } = options;
+
+    this.pointSteps = [];
+    this.maxStep = scaleDriver.getMaxStep();
+    this.stepSize = stepSize;
+    this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
+    this.lastStepIsUneven = ((this.maxStep - this.lastStep) > 0);
+    this.scaleDriver = scaleDriver;
+  }
+
+  public updatePointSteps(
     targetPosition: number,
     pointIndex: number,
-    dataManager: IDataGateway,
   ): void {
     if (pointIndex === -1) {
-      Core._updatePointStepsForNull(targetPosition, dataManager);
+      this._updatePointStepsForNull(targetPosition);
     } else {
-      Core._updatePointStepsForPoint(targetPosition, pointIndex, dataManager);
+      this._updatePointStepsForPoint(targetPosition, pointIndex);
     }
   }
 
-  private static _updatePointStepsForPoint(
-    targetPosition: number,
-    pointIndex: number,
-    dataManager: IDataGateway,
-  ): boolean {
-    const {
-      pointSteps,
-      steps,
-    } = dataManager;
+  public getPointPositions(): number[] {
+    return this.pointSteps.map((pointStep) => pointStep / this.maxStep);
+  }
 
-    const targetStep = Math.round(targetPosition * steps);
-    const currentPointStep = pointSteps[pointIndex];
+  public get step(): number {
+    return this.stepSize;
+  }
+
+  public set step(stepSize: number) {
+    this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
+    this.lastStepIsUneven = ((this.maxStep - this.lastStep) > 0);
+
+    const values = [...this.values] as string[] | number[];
+    this.stepSize = stepSize;
+    this.values = values;
+  }
+
+  public get values(): string[] | number[] {
+    return this.pointSteps.map((step) => this.scaleDriver.stepToValue(step)) as string[] | number[];
+  }
+
+  public set values(values: string[] | number[]) {
+    if (values.length === 0) {
+      console.error(new Error('At least one value must be passed.'));
+    }
+
+    const steps: number[] = [];
+    values.forEach(
+      (value: string | number) => steps.push(
+        this._adjustStep(this.scaleDriver.valueToStep(value)),
+      ),
+    );
+    this.pointSteps = steps;
+  }
+
+  private _updatePointStepsForPoint(targetPosition: number, pointIndex: number): boolean {
+    const targetStep = Math.round(targetPosition * this.maxStep);
+    const currentPointStep = this.pointSteps[pointIndex];
 
     if (targetStep === currentPointStep) {
       return true;
     }
 
-    if (pointSteps.length === 1) {
-      pointSteps[0] = targetStep;
+    if (this.pointSteps.length === 1) {
+      this.pointSteps[0] = this._adjustStep(targetStep);
       return true;
     }
 
     if (targetStep > currentPointStep) {
-      if (pointIndex === pointSteps.length - 1) {
-        pointSteps[pointIndex] = targetStep;
+      if (pointIndex === this.pointSteps.length - 1) {
+        this.pointSteps[pointIndex] = this._adjustStep(targetStep);
         return true;
       }
 
-      const stepPointRight = pointSteps[pointIndex + 1];
+      const stepPointRight = this.pointSteps[pointIndex + 1];
 
       if (targetStep > stepPointRight) {
-        pointSteps[pointIndex] = stepPointRight;
+        this.pointSteps[pointIndex] = stepPointRight;
         return true;
       }
 
-      pointSteps[pointIndex] = targetStep;
+      this.pointSteps[pointIndex] = this._adjustStep(targetStep);
       return true;
     }
 
     if (pointIndex === 0) {
-      pointSteps[pointIndex] = targetStep;
+      this.pointSteps[pointIndex] = this._adjustStep(targetStep);
       return true;
     }
 
-    const stepPointLeft = pointSteps[pointIndex - 1];
+    const stepPointLeft = this.pointSteps[pointIndex - 1];
 
     if (targetStep < stepPointLeft) {
-      pointSteps[pointIndex] = stepPointLeft;
+      this.pointSteps[pointIndex] = stepPointLeft;
       return true;
     }
 
-    pointSteps[pointIndex] = targetStep;
+    this.pointSteps[pointIndex] = this._adjustStep(targetStep);
     return true;
   }
 
-  private static _updatePointStepsForNull(
-    targetPosition: number,
-    dataManager: IDataGateway,
-  ): boolean {
-    const {
-      steps,
-      pointSteps,
-    } = dataManager;
+  private _updatePointStepsForNull(targetPosition: number): boolean {
+    const targetStep = Math.round(targetPosition * this.maxStep);
 
-    const targetStep = Math.round(targetPosition * steps);
-
-    if (pointSteps.length === 1) {
-      pointSteps[0] = targetStep;
+    if (this.pointSteps.length === 1) {
+      this.pointSteps[0] = this._adjustStep(targetStep);
       return true;
     }
 
     let minDistance = Infinity;
 
-    pointSteps.forEach((step) => {
-      const distance = Math.abs((step / steps) - targetPosition);
+    this.pointSteps.forEach((step) => {
+      const distance = Math.abs((step / this.maxStep) - targetPosition);
 
       if (distance < minDistance) {
         minDistance = distance;
       }
     });
 
-    const nearestPoints = pointSteps.filter((step) => {
-      const distance = Math.abs((step / steps) - targetPosition);
+    const nearestPoints = this.pointSteps.filter((step) => {
+      const distance = Math.abs((step / this.maxStep) - targetPosition);
       if (distance === minDistance) {
         return true;
       }
@@ -102,8 +145,8 @@ class Core {
     });
 
     if (nearestPoints.length === 1) {
-      const index = pointSteps.indexOf(nearestPoints[0]);
-      pointSteps[index] = targetStep;
+      const index = this.pointSteps.indexOf(nearestPoints[0]);
+      this.pointSteps[index] = this._adjustStep(targetStep);
       return true;
     }
 
@@ -118,25 +161,45 @@ class Core {
 
     if (isAllPointsInOnePosition) {
       if (targetStep > tmpStep) {
-        const index = pointSteps.lastIndexOf(nearestPoints[0]);
-        pointSteps[index] = targetStep;
+        const index = this.pointSteps.lastIndexOf(nearestPoints[0]);
+        this.pointSteps[index] = this._adjustStep(targetStep);
       }
 
       if (targetStep < tmpStep) {
-        const index = pointSteps.indexOf(nearestPoints[0]);
-        pointSteps[index] = targetStep;
+        const index = this.pointSteps.indexOf(nearestPoints[0]);
+        this.pointSteps[index] = this._adjustStep(targetStep);
       }
 
       return true;
     }
 
     if (!isAllPointsInOnePosition) {
-      const index = pointSteps.lastIndexOf(tmpStep);
-      pointSteps[index] = targetStep;
+      const index = this.pointSteps.lastIndexOf(tmpStep);
+      this.pointSteps[index] = this._adjustStep(targetStep);
       return true;
     }
 
     return true;
+  }
+
+  private _adjustStep(step: number): number {
+    if (step < this.lastStep) {
+      const targetStep = Math.round((step / this.stepSize)) * this.stepSize;
+
+      if (targetStep > this.maxStep) {
+        return this.maxStep;
+      }
+
+      return targetStep;
+    }
+
+    const targetStep = Math.round((step - this.lastStep) / (this.maxStep - this.lastStep));
+
+    if (targetStep) {
+      return this.maxStep;
+    }
+
+    return this.lastStep;
   }
 }
 
