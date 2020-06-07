@@ -7,8 +7,6 @@ class Core {
 
   private readonly scaleDriver: ISliderScaleDriver;
 
-  private lastStepIsUneven: boolean;
-
   private lastStep: number;
 
   constructor(options: {
@@ -22,7 +20,6 @@ class Core {
     this.stepSize = stepSize;
     this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
     if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
-    this.lastStepIsUneven = ((this.maxStep - this.lastStep) > 0);
     this.scaleDriver = scaleDriver;
   }
 
@@ -48,7 +45,6 @@ class Core {
   public set step(stepSize: number) {
     this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
     if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
-    this.lastStepIsUneven = ((this.maxStep - this.lastStep) > 0);
 
     const values = [...this.values] as string[] | number[];
     this.stepSize = stepSize;
