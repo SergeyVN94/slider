@@ -21,6 +21,7 @@ class Core {
     this.maxStep = scaleDriver.getMaxStep();
     this.stepSize = stepSize;
     this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
+    if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
     this.lastStepIsUneven = ((this.maxStep - this.lastStep) > 0);
     this.scaleDriver = scaleDriver;
   }
@@ -46,6 +47,7 @@ class Core {
 
   public set step(stepSize: number) {
     this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
+    if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
     this.lastStepIsUneven = ((this.maxStep - this.lastStep) > 0);
 
     const values = [...this.values] as string[] | number[];
@@ -62,13 +64,20 @@ class Core {
       console.error(new Error('At least one value must be passed.'));
     }
 
+    let isCorrectValues = true;
     const steps: number[] = [];
-    values.forEach(
-      (value: string | number) => steps.push(
-        this._adjustStep(this.scaleDriver.valueToStep(value)),
-      ),
-    );
-    this.pointSteps = steps;
+
+    values.forEach((value: string | number) => {
+      const step = this.scaleDriver.valueToStep(value);
+      if (step === null) {
+        isCorrectValues = false;
+        console.error(new Error(`The value '${value}' cannot be set for this scale.`));
+      }
+
+      steps.push(this._adjustStep(step));
+    });
+
+    if (isCorrectValues) this.pointSteps = steps;
   }
 
   private _updatePointStepsForPoint(targetPosition: number, pointIndex: number): boolean {
