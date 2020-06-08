@@ -7,24 +7,31 @@ class Presenter {
     this.view = view;
     this.model = model;
 
-    this.view.onSelect((targetPosition, pointSelected): void => {
-      this.model.update(targetPosition, pointSelected);
-    });
+    this._initEventListeners();
+    this.view.update(this.model.getPointPositions(), model.value);
+  }
 
-    this.model.onUpdate((pointPositions: number[]) => {
-      this.view.update(pointPositions, model.value);
-    });
+  private _initEventListeners(): void {
+    this.view.onSelect(this._handleViewSelect.bind(this));
+    this.view.onStepToValue(this._handleViewStepToValue.bind(this));
+    this.model.onUpdate(this._handleModelUpdate.bind(this));
+    this.model.onUpdateScale(this._handleModelUpdateScale.bind(this));
+  }
 
-    this.view.update(
-      this.model.getPointPositions(),
-      model.value,
-    );
+  private _handleViewSelect(targetPosition: number, pointSelected: number): void {
+    this.model.update(targetPosition, pointSelected);
+  }
 
-    this.view.onStepToValue((step: number): string => this.model.stepToValue(step));
+  private _handleViewStepToValue(step: number): string {
+    return this.model.stepToValue(step);
+  }
 
-    this.model.onUpdateScale((maxStep, stepSize) => {
-      this.view.updateScale(maxStep, stepSize);
-    });
+  private _handleModelUpdate(pointPositions: number[]): void {
+    this.view.update(pointPositions, this.model.value);
+  }
+
+  private _handleModelUpdateScale(maxStep: number, stepSize: number): void {
+    this.view.updateScale(maxStep, stepSize);
   }
 }
 
