@@ -19,6 +19,8 @@ $tooltip-line-height: 18px
 $tooltip-height: $tooltip-line-height + 6px
 $tooltip-offset: ($tooltip-margin + $point-offset + $tooltip-height + $triangle)
 $scale-item-size: $slider-height * 1.777
+$scale-item-line: ($scale-item-size / 2)
+$scale-item-line-offset: 3px
 
 .slider
   position: relative
@@ -60,16 +62,22 @@ $scale-item-size: $slider-height * 1.777
         border-top: $triangle solid transparent
         border-right: $triangle solid $tooltip-bg
 
-    .slider__scale
-      width: $scale-item-size
-      height: 100%
-      top: 0
-      right: ($scale-item-size + $tooltip-margin + $point-offset)
+    .slider__scale-item
+      right: ($slider-height + $point-offset + $tooltip-margin + $scale-item-line + $scale-item-line-offset)
+      left: auto
+      top: auto
+      width: auto
+      text-align: right
 
-      &-item
-        width: 100%
+      &::after
+        position: absolute
+        top: 50%
+        bottom: auto
+        left: auto    
+        right: -($scale-item-size / 2) - $scale-item-line-offset
+        margin: 0
+        width: $scale-item-size / 2
         height: 2px
-        right: 0
 
   &_bg-line-hide
     .slider__bg-line
@@ -137,14 +145,22 @@ $scale-item-size: $slider-height * 1.777
       border: $triangle solid transparent
       border-top: $triangle solid $tooltip-bg
 
-  &__scale
-    position: relative
-    width: 100%
-    height: $scale-item-size
-    top: ($slider-height + $tooltip-margin + $point-offset)
+  &__scale-item
+    position: absolute
+    top: ($slider-height + $point-offset + $tooltip-margin + $scale-item-line + $scale-item-line-offset)
+    // width: 40px
+    text-align: center
+    user-select: none
+    cursor: pointer
 
-    &-item
+    &::after
       position: absolute
-      height: 100%
+      top: -($scale-item-size / 2) - $scale-item-line-offset
+      left: 0
+      right: 0
+      margin: 0 auto
       width: 2px
-      background-color: black
+      height: $scale-item-line
+      content: ''
+      display: block
+      background-color: $dark-green

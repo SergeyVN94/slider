@@ -21,8 +21,8 @@ const HorizontalComponentsFactory: IComponentsFactory = {
     return new HorizontalBgLine();
   },
 
-  createScale(): IScale {
-    return new HorizontalSliderScale();
+  createScale($slider: JQuery): IScale {
+    return new HorizontalSliderScale($slider);
   },
 };
 

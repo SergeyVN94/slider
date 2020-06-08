@@ -1,7 +1,9 @@
 import CLASSES from '../../classes';
 
 abstract class AbstractScale implements IScale {
-  protected readonly $scale: JQuery;
+  protected readonly $slider: JQuery;
+
+  protected readonly scaleItems: JQuery[];
 
   protected maxStep: number;
 
@@ -9,29 +11,23 @@ abstract class AbstractScale implements IScale {
 
   protected itemPaddings: number;
 
+  protected stepToValue: HandlerStepToValueEvent;
+
   private static redrawingTimeout = 1000 / 25;
 
   private awaitingRedrawing: boolean;
 
-  protected stepToValue: HandlerStepToValueEvent;
+  private clickCallback: HandleScaleItemClickEvent;
 
-  constructor() {
-    this.$scale = $('<div/>', {
-      class: `${CLASSES.SCALE} js-${CLASSES.SCALE}`,
-    });
+  constructor($slider: JQuery) {
+    this.$slider = $slider;
+    this.scaleItems = [];
     this.maxStep = 0;
     this.stepSize = 1;
     this.awaitingRedrawing = false;
-    this.itemPaddings = 30;
+    this.itemPaddings = 6;
     this.stepToValue = null;
-  }
-
-  public getElement(): JQuery {
-    return this.$scale;
-  }
-
-  public draw($slider: JQuery): void {
-    $slider.append(this.$scale);
+    this.clickCallback = null;
   }
 
   public setMaxStep(maxStep: number): void {
@@ -58,8 +54,12 @@ abstract class AbstractScale implements IScale {
     this.stepToValue = callback;
   }
 
+  public onClick(callback: HandleScaleItemClickEvent): void {
+    this.clickCallback = callback;
+  }
+
   private _clear(): void {
-    this.$scale.html('');
+    while (this.scaleItems.length) this.scaleItems.pop().remove();
   }
 
   protected static _createScaleItem(): JQuery {
@@ -68,12 +68,12 @@ abstract class AbstractScale implements IScale {
     });
   }
 
-  protected _redraw(): boolean {
+  protected _redraw(): void {
     this._clear();
 
-    const containerSize = this._getScaleSize();
+    const containerSize = this._getSliderSize();
     const $testItem = AbstractScale._createScaleItem();
-    this.$scale.append($testItem);
+    this.$slider.append($testItem.text('Hello, World!'));
     const itemSize = this._getItemSize($testItem);
     $testItem.remove();
 
@@ -84,21 +84,39 @@ abstract class AbstractScale implements IScale {
     for (let i = 0; i <= allItems; i += multiple) {
       const $item = AbstractScale._createScaleItem();
       const step = Math.round(i * this.stepSize);
-      const position = step / this.maxStep;
-      this._setItemPosition($item, position, containerSize);
+      $item.data('step', step);
 
       if (this.stepToValue) {
         const value = this.stepToValue(step);
         $item.text(value);
       }
 
-      this.$scale.append($item);
-    }
+      this.scaleItems.push($item);
+      this.$slider.append($item);
 
-    return true;
+      $item.on('mousedown.slider.scale.select', this._handleItemMousedown.bind(this));
+
+      const position = step / this.maxStep;
+      $item.data('position', position);
+      this._setItemPosition($item, position, containerSize);
+    }
   }
 
-  protected abstract _getScaleSize(): number;
+  private _handleItemMousedown(ev: JQuery.MouseDownEvent): void {
+    ev.stopPropagation(); // Что бы не конфликтовало с кликом по самому сладеру.
+
+    if (this.clickCallback) {
+      const position = String($(ev.currentTarget).data('position'));
+
+      try {
+        this.clickCallback(parseFloat(position));
+      } catch (error) {
+        console.error(new TypeError('Incorrect position.'));
+      }
+    }
+  }
+
+  protected abstract _getSliderSize(): number;
 
   protected abstract _getItemSize(item: JQuery): number;
 

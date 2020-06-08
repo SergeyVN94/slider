@@ -23,12 +23,18 @@ class Controller {
     const {
       slider,
       points,
+      scale,
     } = this.components;
 
     slider.getElement().on('mousedown.slider.checkSingleClick', this._handleSliderMousedown.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
     Controller.$document.on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
     window.addEventListener('resize', this._handleDocumentResize.bind(this));
+    scale.onClick(this._handleScaleClick.bind(this));
+  }
+
+  private _handleScaleClick(position: number): void {
+    this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
   }
 
   private _triggerSelectEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {

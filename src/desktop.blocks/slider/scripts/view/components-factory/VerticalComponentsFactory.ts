@@ -21,8 +21,8 @@ const VerticalComponentsFactory: IComponentsFactory = {
     return new VerticalBgLine();
   },
 
-  createScale(): IScale {
-    return new VerticalSliderScale();
+  createScale($slider: JQuery): IScale {
+    return new VerticalSliderScale($slider);
   },
 };
 

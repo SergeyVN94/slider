@@ -39,8 +39,7 @@ const createSlider = function createSlider(options: {
   const bgLine = componentsFactory.createBgLine();
   bgLine.draw($slider);
 
-  const scale = componentsFactory.createScale();
-  scale.draw($slider);
+  const scale = componentsFactory.createScale($slider);
   scale.setMaxStep(maxStep);
   scale.setStepSize(stepSize);
   scale.onStepToValue(stepToValue);
