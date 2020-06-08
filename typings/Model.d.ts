@@ -6,6 +6,8 @@ interface ISliderModel {
   getPointPositions(): number[];
   update(targetPosition: number, pointIndex: number): void;
   onUpdate(callback: (pointPositions: number[]) => void): void;
+  onUpdateScale(callback: (maxStep: number, stepSize: number) => void): void;
+  stepToValue(step: number): string;
 }
 
 interface ISliderModelStateManager {

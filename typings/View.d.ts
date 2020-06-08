@@ -1,6 +1,7 @@
 type SliderViewName = 'horizontal' | 'vertical';
 type PrettifyFunc = (value: number | string) => string;
 type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
+type HandlerStepToValueEvent = (step: number) => string;
 
 interface IViewComponents {
   slider: ISlider;
@@ -13,7 +14,9 @@ interface IViewComponents {
 interface IViewCache {
   pointPositions: number[];
   pointValues: string[] | number[];
-  allSteps: number;
+  stepSize: number;
+  maxStep: number;
+  stepToValue: HandlerStepToValueEvent;
 }
 
 interface ISliderViewConfigManager {
@@ -25,7 +28,8 @@ interface ISliderViewConfigManager {
 interface ISliderView {
   onSelect(callback: HandlerSliderViewSelect): void;
   update(pointPositions: number[], pointValues: number[] | string[]): void;
-  setAllSteps(allSteps: number): void;
+  updateScale(maxStep: number, stepSize: number): void;
+  onStepToValue(callback: HandlerStepToValueEvent): void;
 }
 
 interface IComponentsFactory {
@@ -62,6 +66,8 @@ interface IBgLine extends ISliderComponent {
 }
 
 interface IScale extends ISliderComponent {
-  setAllSteps(allSteps: number): void;
+  setMaxStep(maxStep: number): void;
+  setStepSize(stepSize: number): void;
   redraw(): void;
+  onStepToValue(callback: HandlerStepToValueEvent): void;
 }

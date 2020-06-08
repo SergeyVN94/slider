@@ -6,6 +6,8 @@ class Model implements ISliderModel, ISliderModelStateManager {
 
   private readonly core: Core;
 
+  private readonly scaleUpdateCallbackList: ((maxStep: number, stepSize: number) => void)[];
+
   constructor(config: {
     scale: [number, number] | string[];
     start: number[] | string[];
@@ -15,6 +17,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
     this.core = new Core({ scaleDriver: createScaleDriver(scale), stepSize: step });
     this.core.values = start;
     this.updateEventCallbackList = [];
+    this.scaleUpdateCallbackList = [];
   }
 
   public update(targetPosition: number, pointSelected: number): void {
@@ -34,6 +37,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
   public set step(newStepSize: number) {
     this.core.step = newStepSize;
     this._toggleUpdateEvent();
+    this._toggleScaleUpdateEvent();
   }
 
   public get value(): string[] | number[] {
@@ -49,9 +53,24 @@ class Model implements ISliderModel, ISliderModelStateManager {
     return this.core.getPointPositions();
   }
 
+  public stepToValue(step: number): string {
+    return this.core.stepToValue(step);
+  }
+
+  public onUpdateScale(callback: (maxStep: number, stepSize: number) => void): void {
+    this.scaleUpdateCallbackList.push(callback);
+    this._toggleScaleUpdateEvent();
+  }
+
   private _toggleUpdateEvent(): void {
     this.updateEventCallbackList.forEach(
       (callback) => callback(this.core.getPointPositions()),
+    );
+  }
+
+  private _toggleScaleUpdateEvent(): void {
+    this.scaleUpdateCallbackList.forEach(
+      (callback) => callback(this.core.getMaxStep(), this.core.step),
     );
   }
 }

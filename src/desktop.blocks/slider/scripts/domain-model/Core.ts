@@ -76,6 +76,14 @@ class Core {
     if (isCorrectValues) this.pointSteps = steps;
   }
 
+  public getMaxStep(): number {
+    return this.maxStep;
+  }
+
+  public stepToValue(step: number): string {
+    return String(this.scaleDriver.stepToValue(step));
+  }
+
   private _updatePointStepsForPoint(targetPosition: number, pointIndex: number): boolean {
     const targetStep = Math.round(targetPosition * this.maxStep);
     const currentPointStep = this.pointSteps[pointIndex];

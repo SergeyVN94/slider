@@ -19,6 +19,12 @@ class Presenter {
       this.model.getPointPositions(),
       model.value,
     );
+
+    this.view.onStepToValue((step: number): string => this.model.stepToValue(step));
+
+    this.model.onUpdateScale((maxStep, stepSize) => {
+      this.view.updateScale(maxStep, stepSize);
+    });
   }
 }
 

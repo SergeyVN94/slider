@@ -5,13 +5,17 @@ const createSlider = function createSlider(options: {
   $slider: JQuery;
   viewName: 'horizontal' | 'vertical';
   allPoints: number;
-  allSteps: number;
+  maxStep: number;
+  stepSize: number;
+  stepToValue: HandlerStepToValueEvent;
 }): IViewComponents {
   const {
     $slider,
     viewName,
     allPoints,
-    allSteps,
+    maxStep,
+    stepSize,
+    stepToValue,
   } = options;
 
   // Эта функция должна возвращать полностью готовый к использованию сладер
@@ -37,7 +41,9 @@ const createSlider = function createSlider(options: {
 
   const scale = componentsFactory.createScale();
   scale.draw($slider);
-  scale.setAllSteps(allSteps);
+  scale.setMaxStep(maxStep);
+  scale.setStepSize(stepSize);
+  scale.onStepToValue(stepToValue);
 
   return {
     slider,

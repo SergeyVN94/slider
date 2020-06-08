@@ -45,7 +45,9 @@ class View implements ISliderView, ISliderViewConfigManager {
       $slider,
       viewName,
       allPoints: points,
-      allSteps: 0,
+      maxStep: 0,
+      stepSize: 1,
+      stepToValue: null,
     });
     this.currentViewName = viewName;
     this.prettify = prettify;
@@ -56,7 +58,9 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.cache = {
       pointPositions: [],
       pointValues: [],
-      allSteps: 0,
+      maxStep: 0,
+      stepSize: 1,
+      stepToValue: null,
     };
 
     this._initController();
@@ -120,7 +124,9 @@ class View implements ISliderView, ISliderViewConfigManager {
       $slider: this.components.slider.getElement(),
       viewName: this.currentViewName,
       allPoints: this.cache.pointPositions.length,
-      allSteps: this.cache.allSteps,
+      maxStep: this.cache.maxStep,
+      stepSize: this.cache.stepSize,
+      stepToValue: this.cache.stepToValue,
     });
   }
 
@@ -174,9 +180,21 @@ class View implements ISliderView, ISliderViewConfigManager {
     this._requestRedrawing();
   }
 
-  public setAllSteps(allSteps: number): void {
-    this.cache.allSteps = allSteps;
-    this.components.scale.setAllSteps(allSteps);
+  public updateScale(maxStep: number, stepSize: number): void {
+    if (maxStep !== this.cache.maxStep) {
+      this.cache.maxStep = maxStep;
+      this.components.scale.setMaxStep(maxStep);
+    }
+
+    if (stepSize !== this.cache.stepSize) {
+      this.cache.stepSize = stepSize;
+      this.components.scale.setStepSize(stepSize);
+    }
+  }
+
+  public onStepToValue(callback: HandlerStepToValueEvent): void {
+    this.cache.stepToValue = callback;
+    this.components.scale.onStepToValue(callback);
   }
 }
 
