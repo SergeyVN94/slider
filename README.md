@@ -1,7 +1,7 @@
 # slider - виджет для сайта, оформленный в JQuery плагин.
 
 ## Демо
-https://sergeyvn94.github.io/site2/
+https://sergeyvn94.github.io/slider/
 
 ### Установка
 git clone https://github.com/SergeyVN94/slider.git && cd slider && npm i && npm run-script build
