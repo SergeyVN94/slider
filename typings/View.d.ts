@@ -2,6 +2,7 @@ type SliderViewName = 'horizontal' | 'vertical';
 type PrettifyFunc = (value: number | string) => string;
 type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
 type HandlerStepToValueEvent = (step: number) => string;
+type HandleScaleItemClickEvent = (position: number) => void;
 
 interface IViewComponents {
   slider: ISlider;
@@ -37,7 +38,7 @@ interface IComponentsFactory {
   createPoint(index: number): IPoint;
   createTooltip(): ITooltip;
   createBgLine(): IBgLine;
-  createScale(): IScale;
+  createScale($slider: JQuery): IScale;
 }
 
 interface ISliderComponent {
@@ -65,9 +66,10 @@ interface IBgLine extends ISliderComponent {
   update(max: number, min?: number): void;
 }
 
-interface IScale extends ISliderComponent {
+interface IScale {
   setMaxStep(maxStep: number): void;
   setStepSize(stepSize: number): void;
   redraw(): void;
   onStepToValue(callback: HandlerStepToValueEvent): void;
+  onClick(callback: HandleScaleItemClickEvent): void;
 }
