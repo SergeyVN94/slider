@@ -43,11 +43,11 @@ class Core {
   }
 
   public set step(stepSize: number) {
+    const values = [...this.values] as string[] | number[];
+    this.stepSize = stepSize;
     this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
     if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
 
-    const values = [...this.values] as string[] | number[];
-    this.stepSize = stepSize;
     this.values = values;
   }
 
