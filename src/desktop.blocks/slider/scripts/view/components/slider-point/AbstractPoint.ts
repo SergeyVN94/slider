@@ -5,7 +5,7 @@ abstract class AbstractPoint implements IPoint {
 
   protected readonly index: number;
 
-  private mousedownCallback: (index: number, ev: JQuery.MouseDownEvent) => void;
+  private mousedownCallback: HandlePointMousedown;
 
   constructor(index: number) {
     this.index = index;
@@ -29,7 +29,7 @@ abstract class AbstractPoint implements IPoint {
     return this.$point;
   }
 
-  public onMousedown(callback: (index: number, ev: JQuery.MouseDownEvent) => void): void {
+  public onMousedown(callback: HandlePointMousedown): void {
     this.mousedownCallback = callback;
     this.$point.on('mousedown', this._handlePointMousedown.bind(this));
   }

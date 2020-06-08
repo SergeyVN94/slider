@@ -2,11 +2,11 @@ import createScaleDriver from './scale-drivers/createScaleDriver';
 import Core from './Core';
 
 class Model implements ISliderModel, ISliderModelStateManager {
-  private readonly updateEventCallbackList: HandlerSliderModelUpdate[];
+  private readonly updateEventCallbackList: HandlerModelUpdate[];
 
   private readonly core: Core;
 
-  private readonly scaleUpdateCallbackList: ((maxStep: number, stepSize: number) => void)[];
+  private readonly scaleUpdateCallbackList: HandlerModelUpdateScale[];
 
   constructor(config: {
     scale: [number, number] | string[];
@@ -25,7 +25,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
     this._toggleUpdateEvent();
   }
 
-  public onUpdate(callback: HandlerSliderModelUpdate): void {
+  public onUpdate(callback: HandlerModelUpdate): void {
     this.updateEventCallbackList.push(callback);
     this._toggleUpdateEvent();
   }
@@ -57,7 +57,7 @@ class Model implements ISliderModel, ISliderModelStateManager {
     return this.core.stepToValue(step);
   }
 
-  public onUpdateScale(callback: (maxStep: number, stepSize: number) => void): void {
+  public onUpdateScale(callback: HandlerModelUpdateScale): void {
     this.scaleUpdateCallbackList.push(callback);
     this._toggleScaleUpdateEvent();
   }

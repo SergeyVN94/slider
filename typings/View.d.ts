@@ -3,6 +3,7 @@ type PrettifyFunc = (value: number | string) => string;
 type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
 type HandlerStepToValueEvent = (step: number) => string;
 type HandleScaleItemClickEvent = (position: number) => void;
+type HandlePointMousedown = (index: number, ev: JQuery.MouseDownEvent) => void;
 
 interface IViewComponents {
   slider: ISlider;
