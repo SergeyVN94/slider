@@ -23,6 +23,11 @@ const COMMANDS = {
   BG_LINE: 'show-bg-line',
 };
 
+const defaultConfig = {
+  scale: [0, 100],
+  start: [0],
+};
+
 // eslint-disable-next-line @typescript-eslint/unbound-method
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
@@ -49,13 +54,9 @@ $.fn.slider = function pluginMainFunction(
 
   switch (command) {
     case COMMANDS.INIT:
-      if (args === null) {
-        throw new TypeError('Configuration object expected.');
-      }
-
       this.data('slider', initSlider({
         $slider: this,
-        ...args as ISliderConfig,
+        ...(args || defaultConfig) as ISliderConfig,
       }));
       return this;
 

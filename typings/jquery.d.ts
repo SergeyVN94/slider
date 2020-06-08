@@ -3,7 +3,7 @@ interface JQuery {
   slider(
     this: JQuery,
     command: 'init',
-    config: {
+    config?: {
       readonly start?: string[] | number[];
       readonly scale?: [number, number] | string[];
       readonly viewName?: 'horizontal' | 'vertical';
