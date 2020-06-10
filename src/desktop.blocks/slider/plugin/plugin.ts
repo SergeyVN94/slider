@@ -1,10 +1,7 @@
 import initSlider from '../scripts/initSlider';
 import Slider from '../scripts/Slider';
 
-type SliderViewName = 'horizontal' | 'vertical';
-
 interface ISliderConfig {
-  readonly $slider: JQuery;
   readonly start?: string[] | number[];
   readonly scale?: SliderScale;
   readonly viewName?: SliderViewName;
@@ -32,21 +29,12 @@ const defaultConfig = {
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
   command: 'init' | 'step' | 'value' | 'show-tooltips' | 'view-name' | 'show-bg-line',
-  args: {
-    readonly start?: string[] | number[];
-    readonly scale?: SliderScale;
-    readonly viewName?: SliderViewName;
-    readonly showTooltips?: boolean;
-    readonly step?: number;
-    readonly prettify?: PrettifyFunc;
-    readonly showBgLine?: boolean;
-  }
+  args: ISliderConfig
   | number
   | string[]
   | number[]
   | boolean
-  | 'horizontal'
-  | 'vertical'
+  | SliderViewName
   = null,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
@@ -93,7 +81,7 @@ $.fn.slider = function pluginMainFunction(
         return slider.viewName;
       }
 
-      slider.viewName = args as 'horizontal' | 'vertical';
+      slider.viewName = args as SliderViewName;
       return this;
 
     case COMMANDS.BG_LINE:

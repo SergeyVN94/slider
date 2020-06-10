@@ -1,17 +1,29 @@
+import Slider from './components/Slider';
+import Point from './components/Point';
+import Scale from './components/Scale';
+
+type HandleWindowResize = () => void;
+
+interface IComponents {
+  slider: Slider;
+  points: Point[];
+  scale: Scale;
+}
+
 class Controller {
-  private readonly components: IViewComponents;
+  private readonly components: IComponents;
 
   private static readonly $document = $(document);
 
-  private selectEventCallback: (position: number, pointSelected: number) => void;
+  private selectEventCallback: HandlerSliderViewSelect;
 
-  private resizeEventCallback: () => void;
+  private resizeEventCallback: HandleWindowResize;
 
   private pointSelected: number;
 
   private static readonly POINT_NOT_SELECTED = -1;
 
-  constructor(components: IViewComponents) {
+  constructor(components: IComponents) {
     this.components = components;
     this.selectEventCallback = null;
     this.resizeEventCallback = null;
@@ -65,12 +77,12 @@ class Controller {
     this.resizeEventCallback();
   }
 
-  public onSelect(selectEventCallback: (position: number, pointSelected: number) => void): void {
-    this.selectEventCallback = selectEventCallback;
+  public onSelect(callback: HandlerSliderViewSelect): void {
+    this.selectEventCallback = callback;
   }
 
-  public onResize(resizeEventCallback: () => void): void {
-    this.resizeEventCallback = resizeEventCallback;
+  public onResize(callback: HandleWindowResize): void {
+    this.resizeEventCallback = callback;
   }
 }
 

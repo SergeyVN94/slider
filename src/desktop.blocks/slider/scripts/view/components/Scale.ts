@@ -1,17 +1,15 @@
-import CLASSES from '../../classes';
+import CLASSES from '../classes';
 
-abstract class AbstractScale implements IScale {
-  protected readonly $slider: JQuery;
+class Scale {
+  private readonly $slider: JQuery;
 
-  protected readonly scaleItems: JQuery[];
+  private readonly scaleItems: JQuery[];
 
-  protected maxStep: number;
+  private maxStep: number;
 
-  protected stepSize: number;
+  private stepSize: number;
 
-  protected itemPaddings: number;
-
-  protected stepToValue: HandlerStepToValueEvent;
+  private stepToValue: HandlerStepToValueEvent;
 
   private static redrawingTimeout = 1000 / 25;
 
@@ -19,15 +17,17 @@ abstract class AbstractScale implements IScale {
 
   private clickCallback: HandleScaleItemClickEvent;
 
-  constructor($slider: JQuery) {
+  private viewName: SliderViewName;
+
+  constructor($slider: JQuery, viewName: SliderViewName) {
     this.$slider = $slider;
     this.scaleItems = [];
     this.maxStep = 0;
     this.stepSize = 1;
     this.awaitingRedrawing = false;
-    this.itemPaddings = 6;
     this.stepToValue = null;
     this.clickCallback = null;
+    this.viewName = viewName;
   }
 
   public setMaxStep(maxStep: number): void {
@@ -46,7 +46,7 @@ abstract class AbstractScale implements IScale {
       setTimeout(() => {
         if (this.maxStep > 1 && this.stepSize > 0) this._redraw();
         this.awaitingRedrawing = false;
-      }, AbstractScale.redrawingTimeout);
+      }, Scale.redrawingTimeout);
     }
   }
 
@@ -58,22 +58,27 @@ abstract class AbstractScale implements IScale {
     this.clickCallback = callback;
   }
 
+  public setViewName(name: SliderViewName): void {
+    this.viewName = name;
+    this.redraw();
+  }
+
   private _clear(): void {
     while (this.scaleItems.length) this.scaleItems.pop().remove();
   }
 
-  protected static _createScaleItem(): JQuery {
+  private static _createScaleItem(): JQuery {
     return $('<div/>', {
       class: `${CLASSES.SCALE_ITEM} js-${CLASSES.SCALE_ITEM}`,
     });
   }
 
-  protected _redraw(): void {
+  private _redraw(): void {
     this._clear();
 
     const containerSize = this._getSliderSize();
-    const $testItem = AbstractScale._createScaleItem();
-    this.$slider.append($testItem.text('Hello, World!'));
+    const $testItem = Scale._createScaleItem();
+    this.$slider.append($testItem.text('WWWWWWWW'));
     const itemSize = this._getItemSize($testItem);
     $testItem.remove();
 
@@ -82,7 +87,7 @@ abstract class AbstractScale implements IScale {
     const multiple = Math.ceil(allItems / maxItems);
 
     for (let i = 0; i <= allItems; i += multiple) {
-      const $item = AbstractScale._createScaleItem();
+      const $item = Scale._createScaleItem();
       const step = Math.round(i * this.stepSize);
       $item.data('step', step);
 
@@ -116,13 +121,33 @@ abstract class AbstractScale implements IScale {
     }
   }
 
-  protected abstract _getSliderSize(): number;
+  private _getSliderSize(): number {
+    if (this.viewName === 'vertical') {
+      return this.$slider.outerHeight();
+    }
 
-  protected abstract _getItemSize(item: JQuery): number;
+    return this.$slider.outerWidth();
+  }
 
-  protected abstract _setItemPosition(
-    $item: JQuery, position: number, containerSize?: number
-  ): void;
+  private _getItemSize($item: JQuery): number {
+    if (this.viewName === 'vertical') {
+      return $item.outerHeight();
+    }
+
+    return $item.outerWidth();
+  }
+
+  private _setItemPosition($item: JQuery, position: number, containerSize = 0): void {
+    if (this.viewName === 'vertical') {
+      const offset = $item.outerHeight() / 2;
+      const px = (position * (containerSize || this._getSliderSize())) - offset;
+      $item.css('bottom', `${px}px`);
+    } else {
+      const offset = $item.outerWidth() / 2;
+      const px = (position * (containerSize || this._getSliderSize())) - offset;
+      $item.css('left', `${px}px`);
+    }
+  }
 }
 
-export default AbstractScale;
+export default Scale;
