@@ -38,7 +38,7 @@ class Controller {
       scale,
     } = this.components;
 
-    slider.getElement().on('mousedown.slider.checkSingleClick', this._handleSliderMousedown.bind(this));
+    slider.onSelect(this._handleSliderSelect.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
     Controller.$document.on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
     window.addEventListener('resize', this._handleDocumentResize.bind(this));
@@ -46,16 +46,16 @@ class Controller {
   }
 
   private _handleScaleClick(position: number): void {
-    this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
+    if (this.selectEventCallback) this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
   }
 
   private _triggerSelectEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
     const position = this.components.slider.getTargetPosition(ev);
-    this.selectEventCallback(position, pointIndex);
+    if (this.selectEventCallback) this.selectEventCallback(position, pointIndex);
   }
 
-  private _handleSliderMousedown(ev: JQuery.MouseEventBase): void {
-    this._triggerSelectEvent(ev, Controller.POINT_NOT_SELECTED);
+  private _handleSliderSelect(position: number): void {
+    if (this.selectEventCallback) this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
   }
 
   private _handlePointMousedown(index: number, ev: JQuery.MouseDownEvent): void {
@@ -74,7 +74,7 @@ class Controller {
   }
 
   private _handleDocumentResize(): void {
-    this.resizeEventCallback();
+    if (this.resizeEventCallback) this.resizeEventCallback();
   }
 
   public onSelect(callback: HandlerSliderViewSelect): void {

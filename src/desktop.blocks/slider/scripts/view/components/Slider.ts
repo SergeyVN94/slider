@@ -5,9 +5,13 @@ class Slider {
 
   private _getTargetPosition: (ev: JQuery.MouseEventBase) => number;
 
+  private _callbackMousedown: (position: number) => void;
+
   constructor($slider: JQuery, view: SliderViewName) {
     this.$slider = $slider;
+    this._callbackMousedown = null;
     this.setViewName(view);
+    $slider.on('mousedown.slider.simpleClick', this._handleSliderMousedown.bind(this));
   }
 
   public set showTooltips(state: boolean) {
@@ -45,6 +49,16 @@ class Slider {
     return this._getTargetPosition(ev);
   }
 
+  public onSelect(callback: (position: number) => void): void {
+    this._callbackMousedown = callback;
+  }
+
+  private _handleSliderMousedown(ev: JQuery.MouseEventBase): void {
+    if (this._callbackMousedown) {
+      this._callbackMousedown(this.getTargetPosition(ev));
+    }
+  }
+
   private _horizontalViewTargetPosition(ev: JQuery.MouseEventBase): number {
     const absolutePosition = ev.pageX;
     const offset = this.$slider.offset().left;
@@ -71,7 +85,6 @@ class Slider {
     const { showTooltips, showBgLine } = this;
 
     this.$slider
-      .off()
       .html('')
       .removeClass()
       .addClass('slider js-slider');
