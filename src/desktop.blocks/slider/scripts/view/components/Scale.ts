@@ -140,11 +140,11 @@ class Scale {
   private _setItemPosition($item: JQuery, position: number, containerSize = 0): void {
     if (this.viewName === 'vertical') {
       const offset = $item.outerHeight() / 2;
-      const px = (position * (containerSize || this._getSliderSize())) - offset;
+      const px = (position * containerSize) - offset;
       $item.css('bottom', `${px}px`);
     } else {
       const offset = $item.outerWidth() / 2;
-      const px = (position * (containerSize || this._getSliderSize())) - offset;
+      const px = (position * containerSize) - offset;
       $item.css('left', `${px}px`);
     }
   }

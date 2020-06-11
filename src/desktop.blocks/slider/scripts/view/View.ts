@@ -10,16 +10,18 @@ const enum VIEW_NAMES {
   VERTICAL = 'vertical',
 }
 
+interface IViewComponents {
+  slider: Slider;
+  points: Point[];
+  tooltips: Tooltip[];
+  bgLine: BgLine;
+  scale: Scale;
+}
+
 class View implements ISliderView, ISliderViewConfigManager {
   private awaitingRedrawing: boolean;
 
-  private components: {
-    slider: Slider;
-    points: Point[];
-    tooltips: Tooltip[];
-    bgLine: BgLine;
-    scale: Scale;
-  };
+  private components: IViewComponents;
 
   private readonly cache: IViewCache;
 
@@ -162,7 +164,7 @@ class View implements ISliderView, ISliderViewConfigManager {
   }
 
   public set showBgLine(state: boolean) {
-    this.components.slider.showBgLine = this.showBgLine;
+    this.components.slider.showBgLine = state;
   }
 
   public get showTooltips(): boolean {

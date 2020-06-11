@@ -1,7 +1,7 @@
 import CLASSES from '../classes';
 
 class BgLine {
-  protected readonly $bgLine: JQuery;
+  private readonly $bgLine: JQuery;
 
   private _update: (max: number, min?: number) => void;
 

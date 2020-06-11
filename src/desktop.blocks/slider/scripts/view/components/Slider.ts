@@ -1,9 +1,9 @@
 import CLASSES from '../classes';
 
 class Slider {
-  protected readonly $slider: JQuery;
+  private readonly $slider: JQuery;
 
-  public _getTargetPosition: (ev: JQuery.MouseEventBase) => number;
+  private _getTargetPosition: (ev: JQuery.MouseEventBase) => number;
 
   constructor($slider: JQuery, view: SliderViewName) {
     this.$slider = $slider;
