@@ -51,6 +51,7 @@ class Point {
   }
 
   private _handlePointMousedown(ev: JQuery.MouseDownEvent): void {
+    ev.stopPropagation();
     this.mousedownCallback(this.index, ev);
   }
 }

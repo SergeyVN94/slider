@@ -11,7 +11,9 @@ class Slider {
     this.$slider = $slider;
     this._callbackMousedown = null;
     this.setViewName(view);
-    $slider.on('mousedown.slider.simpleClick', this._handleSliderMousedown.bind(this));
+    $slider
+      .off('mousedown')
+      .on('mousedown.slider.simpleClick', this._handleSliderMousedown.bind(this));
   }
 
   public set showTooltips(state: boolean) {
@@ -54,9 +56,7 @@ class Slider {
   }
 
   private _handleSliderMousedown(ev: JQuery.MouseEventBase): void {
-    if (this._callbackMousedown) {
-      this._callbackMousedown(this.getTargetPosition(ev));
-    }
+    if (this._callbackMousedown) this._callbackMousedown(this.getTargetPosition(ev));
   }
 
   private _horizontalViewTargetPosition(ev: JQuery.MouseEventBase): number {
