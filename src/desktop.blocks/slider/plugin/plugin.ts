@@ -18,6 +18,7 @@ const COMMANDS = {
   SHOW_TOOLTIPS: 'show-tooltips',
   VIEW_NAME: 'view-name',
   BG_LINE: 'show-bg-line',
+  SCALE: 'scale',
 };
 
 const defaultConfig = {
@@ -28,13 +29,14 @@ const defaultConfig = {
 // eslint-disable-next-line @typescript-eslint/unbound-method
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
-  command: 'init' | 'step' | 'value' | 'show-tooltips' | 'view-name' | 'show-bg-line',
+  command: 'init' | 'step' | 'value' | 'show-tooltips' | 'view-name' | 'show-bg-line' | 'scale',
   args: ISliderConfig
   | number
   | string[]
   | number[]
   | boolean
   | SliderViewName
+  | SliderScale
   = null,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
@@ -90,6 +92,14 @@ $.fn.slider = function pluginMainFunction(
       }
 
       slider.showBgLine = Boolean(args);
+      return this;
+
+    case COMMANDS.SCALE:
+      if (args === null) {
+        return [...slider.scale];
+      }
+
+      slider.scale = args as SliderScale;
       return this;
 
     default:

@@ -8,12 +8,15 @@ class Model implements ISliderModel, ISliderModelStateManager {
 
   private readonly scaleUpdateCallbackList: HandlerModelUpdateScale[];
 
+  private sliderScale: SliderScale;
+
   constructor(config: {
     scale: [number, number] | string[];
     start: number[] | string[];
     step: number;
   }) {
     const { scale, step, start } = config;
+    this.sliderScale = scale;
     this.core = new Core({ scaleDriver: createScaleDriver(scale), stepSize: step });
     this.core.values = start;
     this.updateEventCallbackList = [];
@@ -60,6 +63,17 @@ class Model implements ISliderModel, ISliderModelStateManager {
   public onUpdateScale(callback: HandlerModelUpdateScale): void {
     this.scaleUpdateCallbackList.push(callback);
     this._toggleScaleUpdateEvent();
+  }
+
+  public get scale(): SliderScale {
+    return this.sliderScale;
+  }
+
+  public set scale(scale: SliderScale) {
+    this.sliderScale = scale;
+    this.core.setScaleDriver(createScaleDriver(scale));
+    this._toggleScaleUpdateEvent();
+    this._toggleUpdateEvent();
   }
 
   private _toggleUpdateEvent(): void {

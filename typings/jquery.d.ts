@@ -33,4 +33,7 @@ interface JQuery {
     command: 'view-name',
     name: 'horizontal' | 'vertical'
   ): JQuery;
+
+  slider(this: JQuery, command: 'scale'): [number, number] | string[];
+  slider(this: JQuery, command: 'scale', scale: [number, number] | string[]): JQuery;
 }

@@ -6,6 +6,9 @@ const enum CLASSES {
   INPUT_POINTS = 'js-config-panel__input_type_points',
   POINT_OUT_CONTAINER = 'js-config-panel__controls-out',
   CONTROLS_VALUE_OUT = 'js-config-panel__col_type_controls-out',
+  SCALE_MAX = 'js-config-panel__scale-max',
+  SCALE_MIN = 'js-config-panel__scale-min',
+  PANEL_ROW = 'config-panel__row',
 }
 
 export default CLASSES;

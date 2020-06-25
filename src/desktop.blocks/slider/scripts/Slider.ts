@@ -47,6 +47,14 @@ class Slider {
   public set viewName(viewName: 'horizontal' | 'vertical') {
     this.view.viewName = viewName;
   }
+
+  public get scale(): SliderScale {
+    return this.model.scale;
+  }
+
+  public set scale(scale: SliderScale) {
+    this.model.scale = scale;
+  }
 }
 
 export default Slider;

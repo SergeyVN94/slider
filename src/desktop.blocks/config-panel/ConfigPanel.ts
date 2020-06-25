@@ -9,7 +9,7 @@ const createControlValueOut = function createControlValueOut(
     .addClass('config-panel__control-text')
     .text(`Ползунок ${index}`);
   const $controlInput = $('<input/>')
-    .addClass('.config-panel__input_type_value-out')
+    .addClass('config-panel__input config-panel__input_type_value-out')
     .prop('autocomplete', 'off')
     .data('index', index)
     .val(value);
@@ -27,6 +27,8 @@ interface IConfigPanelDomElements {
   $inputPoints: JQuery;
   $controlsValueOutContainer: JQuery;
   inputsValueOut: JQuery[];
+  $scaleMax: JQuery;
+  $scaleMin: JQuery;
 }
 
 class ConfigPanel {
@@ -45,6 +47,8 @@ class ConfigPanel {
     const $checkboxTooltip = $panel.find(`.${CLASSES.CHECKBOX_TOOLTIP}`);
     const $inputPoints = $panel.find(`.${CLASSES.INPUT_POINTS}`);
     const $controlsValueOutContainer = $panel.find(`.${CLASSES.CONTROLS_VALUE_OUT}`);
+    const $scaleMax = $panel.find(`.${CLASSES.SCALE_MAX}`);
+    const $scaleMin = $panel.find(`.${CLASSES.SCALE_MIN}`);
 
     return {
       $panel,
@@ -56,6 +60,8 @@ class ConfigPanel {
       $inputPoints,
       $controlsValueOutContainer,
       inputsValueOut: [],
+      $scaleMax,
+      $scaleMin,
     };
   }
 
@@ -67,6 +73,8 @@ class ConfigPanel {
       $checkboxBgLine,
       $checkboxTooltip,
       $inputPoints,
+      $scaleMax,
+      $scaleMin,
     } = this.domElements;
 
     const step = $slider.slider('step');
@@ -88,6 +96,14 @@ class ConfigPanel {
     const allPoints = $slider.slider('value').length;
     $inputPoints.val(allPoints);
 
+    const scale = $slider.slider('scale');
+    if (scale.length === 2 && typeof scale[0] === 'number') {
+      $scaleMin.val(scale[0]);
+      $scaleMax.val(scale[1]);
+    } else {
+      $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
+    }
+
     this._recreateControlsValueOut();
   }
 
@@ -99,10 +115,12 @@ class ConfigPanel {
       $checkboxTooltip,
       $inputPoints,
       $slider,
+      $scaleMax,
+      $scaleMin,
     } = this.domElements;
 
     $inputStep.on(
-      'input.configPanel.updateStep',
+      'focusout.configPanel.updateStep',
       this._handleInputStepInput.bind(this),
     );
 
@@ -122,14 +140,46 @@ class ConfigPanel {
     );
 
     $inputPoints.on(
-      'input.configPanel.changeNumberOfPoints',
+      'focusout.configPanel.changeNumberOfPoints',
       this._handleInputPointsInput.bind(this),
+    );
+
+    $scaleMax.on(
+      'focusout.configPanel.setScaleMax',
+      this._handleScaleMaxFocusout.bind(this),
+    );
+
+    $scaleMin.on(
+      'focusout.configPanel.setScaleMin',
+      this._handleScaleMinFocusout.bind(this),
     );
 
     $slider.on(
       'select.configPanel.updateControlsValueOutContainer',
       this._handleSliderSelect.bind(this),
     );
+  }
+
+  private _handleScaleMaxFocusout(): void {
+    const { $slider, $scaleMax } = this.domElements;
+    const scale = $slider.slider('scale') as [number, number];
+    try {
+      scale[1] = parseInt($scaleMax.val().toString(), 10);
+      $slider.slider('scale', scale);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  private _handleScaleMinFocusout(): void {
+    const { $slider, $scaleMin } = this.domElements;
+    const scale = $slider.slider('scale') as [number, number];
+    try {
+      scale[0] = parseInt($scaleMin.val().toString(), 10);
+      $slider.slider('scale', scale);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   private _recreateControlsValueOut(): void {

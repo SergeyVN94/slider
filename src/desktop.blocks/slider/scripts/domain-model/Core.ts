@@ -1,11 +1,11 @@
 class Core {
   private pointSteps: number[];
 
-  private readonly maxStep: number;
+  private maxStep: number;
 
   private stepSize: number;
 
-  private readonly scaleDriver: ISliderScaleDriver;
+  private scaleDriver: ISliderScaleDriver;
 
   private lastStep: number;
 
@@ -18,8 +18,7 @@ class Core {
     this.pointSteps = [];
     this.maxStep = scaleDriver.getMaxStep();
     this.stepSize = stepSize;
-    this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
-    if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
+    this._initLastStep();
     this.scaleDriver = scaleDriver;
   }
 
@@ -82,6 +81,23 @@ class Core {
 
   public stepToValue(step: number): string {
     return String(this.scaleDriver.stepToValue(step));
+  }
+
+  public setScaleDriver(scaleDriver: ISliderScaleDriver): void {
+    const pointPositions = this.getPointPositions();
+    this.pointSteps.length = 0;
+    this.scaleDriver = scaleDriver;
+    this.maxStep = scaleDriver.getMaxStep();
+    this._initLastStep();
+    pointPositions.forEach((pos: number) => {
+      const step = this._adjustStep(Math.round(pos * this.maxStep));
+      this.pointSteps.push(step);
+    });
+  }
+
+  private _initLastStep(): void {
+    this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
+    if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
   }
 
   private _updatePointStepsForPoint(targetPosition: number, pointIndex: number): boolean {

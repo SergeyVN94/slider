@@ -14,6 +14,7 @@ interface ISliderModel {
 interface ISliderModelStateManager {
   step: number;
   value: string[] | number[];
+  scale: SliderScale;
 }
 
 interface ISliderScaleDriver {

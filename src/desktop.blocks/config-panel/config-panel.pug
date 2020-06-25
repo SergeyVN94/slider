@@ -45,6 +45,14 @@ mixin config-panel(id = "")
                     ) 
                     span.config-panel__control-text.config-panel__control-text_right Показать фоновую линию
         .config-panel__row
+            .config-panel__col
+                label.config-panel__control
+                    span.config-panel__control-text Минимум шкалы
+                    input.config-panel__input.config-panel__scale-min.js-config-panel__scale-min(type="number")
+                label.config-panel__control
+                    span.config-panel__control-text Максимум шкалы
+                    input.config-panel__input.config-panel__scale-max.js-config-panel__scale-max(type="number")
+        .config-panel__row
             label.config-panel__control 
                 span.config-panel__control-text Количество ползунков
                 input.config-panel__input.config-panel__input_type_points.js-config-panel__input_type_points(
