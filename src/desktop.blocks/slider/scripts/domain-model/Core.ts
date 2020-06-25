@@ -85,16 +85,22 @@ class Core {
     return String(this.scaleDriver.stepToValue(step));
   }
 
-  public setScaleDriver(scaleDriver: ISliderScaleDriver): void {
-    const pointPositions = this.getPointPositions();
-    this.pointSteps.length = 0;
-    this.scaleDriver = scaleDriver;
-    this.maxStep = scaleDriver.getMaxStep();
-    this._initLastStep();
-    pointPositions.forEach((pos: number) => {
-      const step = this._adjustStep(Math.round(pos * this.maxStep));
-      this.pointSteps.push(step);
-    });
+  public setScaleDriver(scaleDriver: ISliderScaleDriver): boolean {
+    if (this.stepSize < scaleDriver.getMaxStep()) {
+      const pointPositions = this.getPointPositions();
+      this.pointSteps.length = 0;
+      this.scaleDriver = scaleDriver;
+      this.maxStep = scaleDriver.getMaxStep();
+      this._initLastStep();
+      pointPositions.forEach((pos: number) => {
+        const step = this._adjustStep(Math.round(pos * this.maxStep));
+        this.pointSteps.push(step);
+      });
+      return true;
+    }
+
+    console.error(new Error('Invalid scale.'));
+    return false;
   }
 
   private _initLastStep(): void {

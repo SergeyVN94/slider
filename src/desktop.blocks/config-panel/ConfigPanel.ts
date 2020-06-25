@@ -121,7 +121,7 @@ class ConfigPanel {
 
     $inputStep.on(
       'focusout.configPanel.updateStep',
-      this._handleInputStepInput.bind(this),
+      this._handleInputStepFocusout.bind(this),
     );
 
     $radioViewName.on(
@@ -141,7 +141,7 @@ class ConfigPanel {
 
     $inputPoints.on(
       'focusout.configPanel.changeNumberOfPoints',
-      this._handleInputPointsInput.bind(this),
+      this._handleInputPointsFocusout.bind(this),
     );
 
     $scaleMax.on(
@@ -169,6 +169,8 @@ class ConfigPanel {
     } catch (error) {
       console.error(error);
     }
+
+    $scaleMax.val($slider.slider('scale')[1]);
   }
 
   private _handleScaleMinFocusout(): void {
@@ -180,6 +182,8 @@ class ConfigPanel {
     } catch (error) {
       console.error(error);
     }
+
+    $scaleMin.val($slider.slider('scale')[0]);
   }
 
   private _recreateControlsValueOut(): void {
@@ -234,7 +238,7 @@ class ConfigPanel {
     values.forEach((value: string | number, index: number) => inputsValueOut[index].val(value));
   }
 
-  private _handleInputPointsInput(): boolean {
+  private _handleInputPointsFocusout(): boolean {
     const {
       $inputPoints,
       $slider,
@@ -300,19 +304,14 @@ class ConfigPanel {
     $slider.slider('show-bg-line', isShowBgLine);
   }
 
-  private _handleInputStepInput(): void {
+  private _handleInputStepFocusout(): void {
     const {
       $slider,
       $inputStep,
     } = this.domElements;
 
-    const step = $inputStep.val().toString();
-
-    try {
-      $slider.slider('step', parseInt(step, 10));
-    } catch (error) {
-      console.error(error);
-    }
+    $slider.slider('step', parseInt($inputStep.val().toString(), 10));
+    $inputStep.val($slider.slider('step'));
   }
 
   private _handleRadioViewNameInput(ev: JQuery.EventBase): void {

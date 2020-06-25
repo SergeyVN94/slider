@@ -70,8 +70,9 @@ class Model implements ISliderModel, ISliderModelStateManager {
   }
 
   public set scale(scale: SliderScale) {
-    this.sliderScale = scale;
-    this.core.setScaleDriver(createScaleDriver(scale));
+    if (this.core.setScaleDriver(createScaleDriver(scale))) {
+      this.sliderScale = scale;
+    }
     this._toggleScaleUpdateEvent();
     this._toggleUpdateEvent();
   }
