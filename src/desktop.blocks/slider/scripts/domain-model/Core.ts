@@ -42,12 +42,14 @@ class Core {
   }
 
   public set step(stepSize: number) {
-    const values = [...this.values] as string[] | number[];
-    this.stepSize = stepSize;
-    this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
-    if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
-
-    this.values = values;
+    if (stepSize > 0 && stepSize <= this.maxStep) {
+      const values = [...this.values] as string[] | number[];
+      this.stepSize = stepSize;
+      this._initLastStep();
+      this.values = values;
+    } else {
+      console.error(new Error(`Invalid step size: ${stepSize}.`));
+    }
   }
 
   public get values(): string[] | number[] {
@@ -65,7 +67,7 @@ class Core {
     values.forEach((value: string | number) => {
       const step = this.scaleDriver.valueToStep(value);
       if (step === null) {
-        isCorrectValues = false;
+        if (isCorrectValues) isCorrectValues = false;
         console.error(new Error(`The value '${value}' cannot be set for this scale.`));
       }
 

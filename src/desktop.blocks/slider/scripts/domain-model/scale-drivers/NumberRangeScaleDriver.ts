@@ -9,18 +9,20 @@ class NumberRangeScaleDriver implements ISliderScaleDriver {
     this.maxStep = rangeMax - rangeMin;
   }
 
-  getMaxStep(): number {
+  public getMaxStep(): number {
     return this.maxStep;
   }
 
-  valueToStep(value: number): number {
+  public valueToStep(value: number): number {
+    // eslint-disable-next-line no-restricted-globals
+    if (typeof value !== 'number' || isNaN(value)) return null;
     const [rangeMin] = this.scale;
     const step = value - rangeMin;
     if (step < 0 || step > this.maxStep) return null;
     return step;
   }
 
-  stepToValue(step: number): number | null {
+  public stepToValue(step: number): number | null {
     if (step < 0 || step > this.maxStep) return null;
     const [rangeMin] = this.scale;
     return step + rangeMin;

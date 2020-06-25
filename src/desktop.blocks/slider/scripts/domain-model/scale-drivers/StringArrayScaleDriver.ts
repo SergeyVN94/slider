@@ -8,17 +8,18 @@ class StringArrayScaleDriver implements ISliderScaleDriver {
     this.maxStep = scale.length - 1;
   }
 
-  getMaxStep(): number {
+  public getMaxStep(): number {
     return this.maxStep;
   }
 
-  valueToStep(value: string): number {
+  public valueToStep(value: string): number {
+    if (typeof value !== 'string') return null;
     const step = this.scale.indexOf(value);
     if (step === -1) return null;
     return step;
   }
 
-  stepToValue(step: number): string | null {
+  public stepToValue(step: number): string | null {
     if (step < 0 || step > this.maxStep) return null;
     return this.scale[step];
   }
