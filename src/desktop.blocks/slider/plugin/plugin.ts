@@ -1,5 +1,6 @@
 import initSlider from '../scripts/initSlider';
 import Slider from '../scripts/Slider';
+import '../slider.sass';
 
 interface ISliderConfig {
   readonly start?: string[] | number[];
