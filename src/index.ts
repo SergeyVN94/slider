@@ -4,8 +4,8 @@ const importAll = function importAll(resolve: __WebpackModuleApi.RequireContext)
   resolve.keys().forEach(resolve);
 };
 
-importAll(require.context('./desktop.blocks', true, /.ts$/));
-importAll(require.context('./desktop.blocks', true, /.(sa|sc|c)ss$/));
+importAll(require.context('./components', true, /.ts$/));
+importAll(require.context('./components', true, /.(sa|sc|c)ss$/));
 require('./index.sass');
 
 ((fun: Function): void => {

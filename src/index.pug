@@ -1,4 +1,4 @@
-include ./desktop.blocks/demo-panel/demo-panel.pug
+include ./components/config-panel/config-panel.pug
 
 doctype html
 html(lang="ru")
@@ -15,23 +15,9 @@ html(lang="ru")
         meta(name="msapplication-TileColor", content="#da532c")
         meta(name="theme-color", content="#ffffff")
     body.page
-        .page__demo-panel
-            +demo-panel({
-                id: "panel1",
-                sliderId: "slider1",
-            })
-        .page__demo-panel
-            +demo-panel({
-                id: "panel2",
-                sliderId: "slider2",
-            })
-        .page__demo-panel
-            +demo-panel({
-                id: "panel3",
-                sliderId: "slider3",
-            })
-        .page__demo-panel
-            +demo-panel({
-                id: "panel4",
-                sliderId: "slider4",
-            })
+        -for(let i = 1; i <= 4; i += 1)
+            .page__demo-panel
+                .page__slider
+                    .slider(id=`slider${i}`)
+                .page__config-panel
+                    +config-panel(`panel${i}`)
