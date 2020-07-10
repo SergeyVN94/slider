@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import StringArrayScaleDriver from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/StringArrayScaleDriver';
+import StringArrayScaleDriver from '../../components/slider/scripts/domain-model/scale-drivers/StringArrayScaleDriver';
 
 describe('[StringArrayScaleDriver]', () => {
   describe('[getMaxStep]', () => {

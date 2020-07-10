@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import createScaleDriver from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/createScaleDriver';
-import Core from '../../desktop.blocks/slider/scripts/domain-model/Core';
+import createScaleDriver from '../../components/slider/scripts/domain-model/scale-drivers/createScaleDriver';
+import Core from '../../components/slider/scripts/domain-model/Core';
 
 describe('[Core]', () => {
   describe('[updatePointSteps]', () => {

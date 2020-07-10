@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import BgLine from '../../desktop.blocks/slider/scripts/view/components/BgLine';
-import CLASSES from '../../desktop.blocks/slider/scripts/view/classes';
-import Slider from '../../desktop.blocks/slider/scripts/view/components/Slider';
+import BgLine from '../../components/slider/scripts/view/components/BgLine';
+import CLASSES from '../../components/slider/scripts/view/classes';
+import Slider from '../../components/slider/scripts/view/components/Slider';
 
 require('../../desktop.blocks/slider/slider.sass');
 

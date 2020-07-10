@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import NumberRangeScaleDriver from '../../desktop.blocks/slider/scripts/domain-model/scale-drivers/NumberRangeScaleDriver';
+import NumberRangeScaleDriver from '../../components/slider/scripts/domain-model/scale-drivers/NumberRangeScaleDriver';
 
 describe('[NumberRangeScaleDriver]', () => {
   describe('[getMaxStep]', () => {

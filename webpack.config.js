@@ -76,7 +76,7 @@ module.exports = [
   {
     context,
     resolve,
-    entry: './desktop.blocks/slider/plugin/plugin.ts',
+    entry: './components/slider/plugin/plugin.ts',
     output: {
       path: `${__dirname}/dist/plugin`,
       filename: 'slider.js',

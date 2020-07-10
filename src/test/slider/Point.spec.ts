@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import Point from '../../desktop.blocks/slider/scripts/view/components/Point';
-import Slider from '../../desktop.blocks/slider/scripts/view/components/Slider';
-import CLASSES from '../../desktop.blocks/slider/scripts/view/classes';
+import Point from '../../components/slider/scripts/view/components/Point';
+import Slider from '../../components/slider/scripts/view/components/Slider';
+import CLASSES from '../../components/slider/scripts/view/classes';
 
 require('../../desktop.blocks/slider/slider.sass');
 
