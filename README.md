@@ -8,6 +8,18 @@ https://sergeyvn94.github.io/slider/
  
 `npm run-script test` - Запуск тестов с помощью KarmaJS и PhantomJS.  
 
+## Подключение
+
+Скоприруйте папку `plugin` из `dist` в корень вашего сайта. В `index.html` добавте следующие строки:  
+```
+<head>
+  <link rel="stylesheet" href="plugin/slider.css">
+</head>
+<body>
+  // контент страницы
+  <script type="text/javascript" src="plugin/slider.js"></script>
+</body>
+```
 
 # Архитектура приложения
 #### Реализована архитектура MVP.  
