@@ -25,44 +25,43 @@ require('./index.sass');
     'Ноябрь',
     'Декабрь',
   ];
-  const scale2: SliderScale = [-1000, 1000];
-  const scale3: SliderScale = [0, 1000];
-  const scale4: SliderScale = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'].reverse();
+  const scale2: SliderScale = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'].reverse();
 
   initConfigPanel(
     $('#panel1'),
     $('#slider1').slider('init', {
       start: ['Январь'],
-      scale: scale1,
+      customScale: scale1,
     }),
   );
 
-  initConfigPanel(
-    $('#panel2'),
-    $('#slider2').slider('init', {
-      start: [-444, 777],
-      scale: scale2,
-      prettify: (value: number) => `${value} -> ${value / 10}`,
-    }),
-  );
+  // initConfigPanel(
+  //   $('#panel2'),
+  //   $('#slider2').slider('init', {
+  //     min: -1000,
+  //     max: 1000,
+  //     start: [-444, 777],
+  //     prettify: (value: number) => `${value} -> ${value / 10}`,
+  //   }),
+  // );
 
-  initConfigPanel(
-    $('#panel3'),
-    $('#slider3').slider('init', {
-      viewName: 'vertical',
-      start: [555],
-      scale: scale3,
-      prettify: (value: number) => `${value} $`,
-    }),
-  );
+  // initConfigPanel(
+  //   $('#panel3'),
+  //   $('#slider3').slider('init', {
+  //     viewName: 'vertical',
+  //     start: [555],
+  //     max: 1000,
+  //     prettify: (value: number) => `${value} $`,
+  //   }),
+  // );
 
-  initConfigPanel(
-    $('#panel4'),
-    $('#slider4').slider('init', {
-      viewName: 'vertical',
-      start: ['Ю', 'М'],
-      scale: scale4,
-      prettify: (value: string) => `${value} -> ${value.toLowerCase()}`,
-    }),
-  );
+  // initConfigPanel(
+  //   $('#panel4'),
+  //   $('#slider4').slider('init', {
+  //     viewName: 'vertical',
+  //     start: ['Ю', 'М'],
+  //     customScale: scale2,
+  //     prettify: (value: string) => `${value} -> ${value.toLowerCase()}`,
+  //   }),
+  // );
 });

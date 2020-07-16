@@ -5,7 +5,9 @@ interface JQuery {
     command: 'init',
     config?: {
       readonly start?: string[] | number[];
-      readonly scale?: [number, number] | string[];
+      readonly customScale?: string[];
+      readonly min?: number;
+      readonly max?: number;
       readonly viewName?: 'horizontal' | 'vertical';
       readonly showTooltips?: boolean;
       readonly step?: number;

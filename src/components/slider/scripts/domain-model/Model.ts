@@ -6,21 +6,15 @@ class Model implements ISliderModel, ISliderModelStateManager {
 
   private readonly core: Core;
 
-  private readonly scaleUpdateCallbackList: HandlerModelUpdateScale[];
-
-  private sliderScale: SliderScale;
-
   constructor(config: {
     scale: [number, number] | string[];
     start: number[] | string[];
     step: number;
   }) {
     const { scale, step, start } = config;
-    this.sliderScale = scale;
     this.core = new Core({ scaleDriver: createScaleDriver(scale), stepSize: step });
     this.core.values = start;
     this.updateEventCallbackList = [];
-    this.scaleUpdateCallbackList = [];
   }
 
   public update(targetPosition: number, pointSelected: number): void {
@@ -33,21 +27,11 @@ class Model implements ISliderModel, ISliderModelStateManager {
     this._toggleUpdateEvent();
   }
 
-  public get step(): number {
-    return this.core.step;
-  }
-
-  public set step(newStepSize: number) {
-    this.core.step = newStepSize;
-    this._toggleUpdateEvent();
-    this._toggleScaleUpdateEvent();
-  }
-
-  public get value(): string[] | number[] {
+  public get values(): string[] | number[] {
     return this.core.values;
   }
 
-  public set value(values: string[] | number[]) {
+  public set values(values: string[] | number[]) {
     this.core.values = values;
     this._toggleUpdateEvent();
   }
@@ -56,36 +40,13 @@ class Model implements ISliderModel, ISliderModelStateManager {
     return this.core.getPointPositions();
   }
 
-  public stepToValue(step: number): string {
-    return this.core.stepToValue(step);
-  }
-
-  public onUpdateScale(callback: HandlerModelUpdateScale): void {
-    this.scaleUpdateCallbackList.push(callback);
-    this._toggleScaleUpdateEvent();
-  }
-
-  public get scale(): SliderScale {
-    return this.sliderScale;
-  }
-
-  public set scale(scale: SliderScale) {
-    if (this.core.setScaleDriver(createScaleDriver(scale))) {
-      this.sliderScale = scale;
-    }
-    this._toggleScaleUpdateEvent();
-    this._toggleUpdateEvent();
+  public getScaleItems(): ScaleItem[] {
+    return this.core.getScaleItems();
   }
 
   private _toggleUpdateEvent(): void {
     this.updateEventCallbackList.forEach(
       (callback) => callback(this.core.getPointPositions()),
-    );
-  }
-
-  private _toggleScaleUpdateEvent(): void {
-    this.scaleUpdateCallbackList.forEach(
-      (callback) => callback(this.core.getMaxStep(), this.core.step),
     );
   }
 }

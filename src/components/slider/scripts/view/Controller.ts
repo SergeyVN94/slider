@@ -1,13 +1,12 @@
 import Slider from './components/Slider';
 import Point from './components/Point';
-import Scale from './components/Scale';
 
 type HandleWindowResize = () => void;
 
 interface IComponents {
   slider: Slider;
   points: Point[];
-  scale: Scale;
+  scaleItems: JQuery[];
 }
 
 class Controller {
@@ -35,18 +34,25 @@ class Controller {
     const {
       slider,
       points,
-      scale,
+      scaleItems,
     } = this.components;
 
     slider.onSelect(this._handleSliderSelect.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
     Controller.$document.on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
     window.addEventListener('resize', this._handleDocumentResize.bind(this));
-    scale.onClick(this._handleScaleClick.bind(this));
   }
 
-  private _handleScaleClick(position: number): void {
-    if (this.selectEventCallback) this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
+  private _handleScaleItemClick(ev: JQuery.MouseEventBase): void {
+    ev.stopPropagation();
+
+    const position = String($(ev.currentTarget).data('position'));
+
+    try {
+      if (this.selectEventCallback) this.selectEventCallback(parseFloat(position), Controller.POINT_NOT_SELECTED);
+    } catch (error) {
+      console.error(new TypeError('Failed to get scale item position.'));
+    }    
   }
 
   private _triggerSelectEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {

@@ -1,20 +1,18 @@
 type SliderScale = [number, number] | string[];
 type HandlerModelUpdate = (pointPositions: number[]) => void;
 type HandlerModelUpdateScale = (maxStep: number, stepSize: number) => void;
+type ScaleItem = {position: number; value: string};
 
 interface ISliderModel {
-  readonly value: string[] | number[];
+  readonly values: string[] | number[];
   getPointPositions(): number[];
   update(targetPosition: number, pointIndex: number): void;
   onUpdate(callback: HandlerModelUpdate): void;
-  onUpdateScale(callback: HandlerModelUpdateScale): void;
-  stepToValue(step: number): string;
+  getScaleItems(): ScaleItem[];
 }
 
 interface ISliderModelStateManager {
-  step: number;
-  value: string[] | number[];
-  scale: SliderScale;
+  values: string[] | number[];
 }
 
 interface ISliderScaleDriver {

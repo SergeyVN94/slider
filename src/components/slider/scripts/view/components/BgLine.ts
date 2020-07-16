@@ -26,23 +26,21 @@ class BgLine {
   }
 
   private _horizontalViewUpdate(max: number, min = 0): void {
-    const containerWidth = this.$bgLine.parent().outerWidth();
-    const marginLeft = min * containerWidth;
-    const marginRight = containerWidth - (max * containerWidth);
+    const marginLeft = min * 100;
+    const marginRight = 100 - (max * 100);
 
     this.$bgLine
-      .css('right', `${marginRight}px`)
-      .css('left', `${marginLeft}px`);
+      .css('right', `${marginRight}%`)
+      .css('left', `${marginLeft}%`);
   }
 
   private _verticalViewUpdate(max: number, min = 0): void {
-    const containerHeight = this.$bgLine.parent().outerHeight();
-    const marginBottom = min * containerHeight;
-    const marginTop = containerHeight - (max * containerHeight);
+    const marginBottom = min * 100;
+    const marginTop = 100 - (max * 100);
 
     this.$bgLine
-      .css('top', `${marginTop}px`)
-      .css('bottom', `${marginBottom}px`);
+      .css('top', `${marginTop}%`)
+      .css('bottom', `${marginBottom}%`);
   }
 }
 

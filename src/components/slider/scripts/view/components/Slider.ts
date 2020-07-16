@@ -10,10 +10,8 @@ class Slider {
   constructor($slider: JQuery, view: SliderViewName) {
     this.$slider = $slider;
     this._callbackMousedown = null;
-    this.setViewName(view);
-    $slider
-      .off('mousedown')
-      .on('mousedown.slider.simpleClick', this._handleSliderMousedown.bind(this));
+    this._setViewName(view);
+    $slider.on('mousedown.slider.simpleClick', this._handleSliderMousedown.bind(this));
   }
 
   public set showTooltips(state: boolean) {
@@ -36,17 +34,6 @@ class Slider {
     return this.$slider;
   }
 
-  public setViewName(name: SliderViewName): void {
-    this._resetSlider();
-
-    if (name === 'vertical') {
-      this.$slider.addClass('slider_view-name_vertical');
-      this._getTargetPosition = this._verticalViewTargetPosition.bind(this);
-    } else {
-      this._getTargetPosition = this._horizontalViewTargetPosition.bind(this);
-    }
-  }
-
   public getTargetPosition(ev: JQuery.MouseEventBase): number {
     return this._getTargetPosition(ev);
   }
@@ -55,8 +42,25 @@ class Slider {
     this._callbackMousedown = callback;
   }
 
+  public static resetSlider($slider: JQuery): void {
+    $slider
+      .html('')
+      .removeClass()
+      .addClass('slider js-slider')
+      .off('mousedown.slider.simpleClick');
+  }
+
   private _handleSliderMousedown(ev: JQuery.MouseEventBase): void {
     if (this._callbackMousedown) this._callbackMousedown(this.getTargetPosition(ev));
+  }
+
+  private _setViewName(name: SliderViewName): void {
+    if (name === 'vertical') {
+      this.$slider.addClass('slider_view-name_vertical');
+      this._getTargetPosition = this._verticalViewTargetPosition.bind(this);
+    } else {
+      this._getTargetPosition = this._horizontalViewTargetPosition.bind(this);
+    }
   }
 
   private _horizontalViewTargetPosition(ev: JQuery.MouseEventBase): number {
@@ -79,18 +83,6 @@ class Slider {
     if (position < 0) position = 0;
 
     return 1 - position;
-  }
-
-  private _resetSlider(): void {
-    const { showTooltips, showBgLine } = this;
-
-    this.$slider
-      .html('')
-      .removeClass()
-      .addClass('slider js-slider');
-
-    this.showBgLine = showBgLine;
-    this.showTooltips = showTooltips;
   }
 }
 

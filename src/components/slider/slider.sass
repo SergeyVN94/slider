@@ -63,21 +63,15 @@ $scale-item-line-offset: 3px
         border-right: $triangle solid $tooltip-bg
 
     .slider__scale-item
-      right: ($slider-height + $point-offset + $tooltip-margin + $scale-item-line + $scale-item-line-offset)
+      right: ($slider-height + $point-offset + $scale-item-line-offset)
       left: auto
       top: auto
-      width: auto
-      text-align: right
+      width: $scale-item-size / 2
+      height: 2px
 
-      &::after
-        position: absolute
-        top: 50%
-        bottom: auto
-        left: auto    
-        right: -($scale-item-size / 2) - $scale-item-line-offset
-        margin: 0
-        width: $scale-item-size / 2
-        height: 2px
+    .slider__scale-item-text
+      right: $scale-item-line + ($scale-item-line-offset * 2)
+      top: auto
 
   &_bg-line-hide
     .slider__bg-line
@@ -147,20 +141,15 @@ $scale-item-line-offset: 3px
 
   &__scale-item
     position: absolute
-    top: ($slider-height + $point-offset + $tooltip-margin + $scale-item-line + $scale-item-line-offset)
-    // width: 40px
-    text-align: center
-    user-select: none
-    cursor: pointer
+    top: ($slider-height + $point-offset + $scale-item-line-offset)
+    width: 2px
+    height: $scale-item-line
+    background-color: $dark-green
 
-    &::after
-      position: absolute
-      top: -($scale-item-size / 2) - $scale-item-line-offset
-      left: 0
-      right: 0
-      margin: 0 auto
-      width: 2px
-      height: $scale-item-line
-      content: ''
-      display: block
-      background-color: $dark-green
+  &__scale-item-text
+    display: block
+    position: absolute
+    line-height: 16px
+    top: 16px
+    cursor: pointer
+    user-select: none

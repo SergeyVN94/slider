@@ -1,11 +1,11 @@
 class Core {
   private pointSteps: number[];
 
-  private maxStep: number;
+  private readonly maxStep: number;
 
-  private stepSize: number;
+  private readonly stepSize: number;
 
-  private scaleDriver: ISliderScaleDriver;
+  private readonly scaleDriver: ISliderScaleDriver;
 
   private lastStep: number;
 
@@ -37,30 +37,11 @@ class Core {
     return this.pointSteps.map((pointStep) => pointStep / this.maxStep);
   }
 
-  public get step(): number {
-    return this.stepSize;
-  }
-
-  public set step(stepSize: number) {
-    if (stepSize > 0 && stepSize <= this.maxStep) {
-      const values = [...this.values] as string[] | number[];
-      this.stepSize = stepSize;
-      this._initLastStep();
-      this.values = values;
-    } else {
-      console.error(new Error(`Invalid step size: ${stepSize}.`));
-    }
-  }
-
   public get values(): string[] | number[] {
     return this.pointSteps.map((step) => this.scaleDriver.stepToValue(step)) as string[] | number[];
   }
 
   public set values(values: string[] | number[]) {
-    if (values.length === 0) {
-      console.error(new Error('At least one value must be passed.'));
-    }
-
     let isCorrectValues = true;
     const steps: number[] = [];
 
@@ -77,30 +58,20 @@ class Core {
     if (isCorrectValues) this.pointSteps = steps;
   }
 
-  public getMaxStep(): number {
-    return this.maxStep;
-  }
+  public getScaleItems(): ScaleItem[] {
+    const items: ScaleItem[] = [];
 
-  public stepToValue(step: number): string {
-    return String(this.scaleDriver.stepToValue(step));
-  }
+    const steps = new Set<number>();
+    for (let i = 0; i <= this.maxStep; i += 1) steps.add(this._adjustStep(i));
 
-  public setScaleDriver(scaleDriver: ISliderScaleDriver): boolean {
-    if (this.stepSize < scaleDriver.getMaxStep()) {
-      const pointPositions = this.getPointPositions();
-      this.pointSteps.length = 0;
-      this.scaleDriver = scaleDriver;
-      this.maxStep = scaleDriver.getMaxStep();
-      this._initLastStep();
-      pointPositions.forEach((pos: number) => {
-        const step = this._adjustStep(Math.round(pos * this.maxStep));
-        this.pointSteps.push(step);
-      });
-      return true;
-    }
+    steps.forEach((step) => {
+      items.push({
+        position: step / this.maxStep,
+        value: String(this.scaleDriver.stepToValue(step)),
+      })
+    });
 
-    console.error(new Error('Invalid scale.'));
-    return false;
+    return items;
   }
 
   private _initLastStep(): void {

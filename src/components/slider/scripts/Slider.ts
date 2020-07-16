@@ -8,20 +8,12 @@ class Slider {
     this.model = model;
   }
 
-  public get value(): string[] | number[] {
-    return this.model.value;
+  public get values(): string[] | number[] {
+    return this.model.values;
   }
 
-  public set value(value: string[] | number[]) {
-    this.model.value = value;
-  }
-
-  public get step(): number {
-    return this.model.step;
-  }
-
-  public set step(value: number) {
-    this.model.step = value;
+  public set values(values: string[] | number[]) {
+    this.model.values = values;
   }
 
   public get showTooltips(): boolean {
@@ -38,22 +30,6 @@ class Slider {
 
   public set showBgLine(state: boolean) {
     this.view.showBgLine = state;
-  }
-
-  public get viewName(): 'horizontal' | 'vertical' {
-    return this.view.viewName;
-  }
-
-  public set viewName(viewName: 'horizontal' | 'vertical') {
-    this.view.viewName = viewName;
-  }
-
-  public get scale(): SliderScale {
-    return this.model.scale;
-  }
-
-  public set scale(scale: SliderScale) {
-    this.model.scale = scale;
   }
 }
 

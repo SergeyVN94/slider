@@ -3,10 +3,9 @@ import View from './view/View';
 import Slider from './Slider';
 import Presenter from './Presenter';
 
-const initSlider = function initSlider(config: {
-  readonly $slider: JQuery;
-  readonly start?: string[] | number[];
+const initSlider = function initSlider($slider: JQuery, config: {
   readonly scale?: SliderScale;
+  readonly start?: string[] | number[];
   readonly viewName?: SliderViewName;
   readonly showTooltips?: boolean;
   readonly step?: number;
@@ -14,20 +13,22 @@ const initSlider = function initSlider(config: {
   readonly showBgLine?: boolean;
 }): Slider {
   const {
-    scale = [0, 100] as [number, number],
-    step = 1,
-    start = [scale[0]] as string[] | number[],
+    scale,
+    step,
+    start,
   } = config;
-
-  const view = new View({
-    points: start.length,
-    ...config,
-  });
 
   const model = new Model({
     start,
     scale,
     step,
+  });
+
+  const view = new View({
+    $slider,
+    points: start.length,
+    scaleItems: model.getScaleItems(),
+    ...config,
   });
 
   new Presenter(view, model);

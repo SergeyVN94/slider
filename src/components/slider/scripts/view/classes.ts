@@ -7,6 +7,7 @@ const enum CLASSES {
   HIDE_BG_LINE = 'slider_bg-line-hide',
   POINT = 'slider__point',
   SCALE_ITEM = 'slider__scale-item',
+  SCALE_ITEM_TEXT = 'slider__scale-item-text',
 }
 
 export default CLASSES;

@@ -3,7 +3,7 @@ import Slider from './components/Slider';
 import Point from './components/Point';
 import Tooltip from './components/Tooltip';
 import BgLine from './components/BgLine';
-import Scale from './components/Scale';
+import CLASSES from './classes';
 
 const enum VIEW_NAMES {
   HORIZONTAL = 'horizontal',
@@ -15,27 +15,28 @@ interface IViewComponents {
   points: Point[];
   tooltips: Tooltip[];
   bgLine: BgLine;
-  scale: Scale;
+  scaleItems: JQuery[];
+}
+
+interface IViewCache {
+  pointPositions: number[];
+  pointValues: string[] | number[];
 }
 
 class View implements ISliderView, ISliderViewConfigManager {
   private awaitingRedrawing: boolean;
 
-  private components: IViewComponents;
+  private readonly components: IViewComponents;
 
   private readonly cache: IViewCache;
 
-  private selectEventCallback: HandlerSliderViewSelect;
-
   private readonly prettify: PrettifyFunc;
 
-  private currentViewName: SliderViewName;
+  private static readonly REDRAWING_TIMEOUT = 1000 / 60;
 
-  private static redrawingTimeout = 1000 / 60;
+  private readonly controller: Controller;
 
-  private controller: Controller;
-
-  private $slider: JQuery;
+  private readonly $slider: JQuery;
 
   constructor(config: {
     $slider: JQuery;
@@ -44,6 +45,7 @@ class View implements ISliderView, ISliderViewConfigManager {
     showBgLine?: boolean;
     viewName?: SliderViewName;
     prettify?: (value: number | string) => string;
+    scaleItems: ScaleItem[];
   }) {
     const {
       $slider,
@@ -52,27 +54,24 @@ class View implements ISliderView, ISliderViewConfigManager {
       showBgLine = true,
       prettify = (value: string): string => value,
       viewName = VIEW_NAMES.HORIZONTAL,
+      scaleItems,
     } = config;
 
     this.$slider = $slider;
-    this.currentViewName = viewName;
     this.prettify = prettify;
     this.awaitingRedrawing = false;
 
     this.cache = {
       pointPositions: [],
       pointValues: [],
-      maxStep: 0,
-      stepSize: 1,
-      stepToValue: null,
     };
 
     // при инициализации сладера нужно будет знать количество кругляшей на слайдере.
-    // Это число получается из pointPositions.length
     for (let i = 0; i < points; i += 1) this.cache.pointPositions.push(0);
 
-    this._initSlider();
-    this._initController();
+    this.components = this._initSlider(viewName, scaleItems);
+    this.controller = new Controller(this.components);
+    this.controller.onResize(this._handleSliderResize.bind(this));
 
     this.showTooltips = showTooltips;
     this.showBgLine = showBgLine;
@@ -85,7 +84,6 @@ class View implements ISliderView, ISliderViewConfigManager {
     } = this.cache;
 
     this.update(pointPositions, pointValues);
-    this.components.scale.redraw();
   }
 
   private _redrawAll(): void {
@@ -121,42 +119,57 @@ class View implements ISliderView, ISliderViewConfigManager {
       setTimeout(() => {
         this._redrawAll();
         this.awaitingRedrawing = false;
-      }, View.redrawingTimeout);
+      }, View.REDRAWING_TIMEOUT);
     }
   }
 
-  private _initController(): void {
-    this.controller = new Controller(this.components);
-    this.controller.onSelect(this.selectEventCallback);
-    this.controller.onResize(this._handleSliderResize.bind(this));
-  }
-
-  private _initSlider(): void {
-    const slider = new Slider(this.$slider, this.currentViewName);
-    const bgLine = new BgLine(this.$slider, this.currentViewName);
+  private _initSlider(viewName: SliderViewName, scaleItems: ScaleItem[]): IViewComponents {
+    Slider.resetSlider(this.$slider);
 
     const points: Point[] = [];
     const tooltips: Tooltip[] = [];
 
     for (let i = 0; i < this.cache.pointPositions.length; i += 1) {
-      const point = new Point(this.$slider, i, this.currentViewName);
-      const tooltip = new Tooltip(this.$slider, this.currentViewName);
+      const point = new Point(this.$slider, i, viewName);
+      const tooltip = new Tooltip(this.$slider, viewName);
       points.push(point);
       tooltips.push(tooltip);
     }
 
-    const scale = new Scale(this.$slider, this.currentViewName);
-    scale.setMaxStep(this.cache.maxStep);
-    scale.setStepSize(this.cache.stepSize);
-    scale.onStepToValue(this.cache.stepToValue);
-
-    this.components = {
-      slider,
-      bgLine,
+    return {
+      slider: new Slider(this.$slider, viewName),
+      bgLine: new BgLine(this.$slider, viewName),
       points,
       tooltips,
-      scale,
+      scaleItems: this._drawScale(viewName, scaleItems),
     };
+  }
+
+  private _drawScale(viewName: SliderViewName, scaleItems: ScaleItem[]): JQuery[] {
+    const items: JQuery[] = [];
+    const containerSize = (viewName === 'horizontal') ? this.$slider.outerWidth() : this.$slider.outerHeight();
+
+    scaleItems.forEach(({ position, value }) => {
+      const $item = $('<div/>', {
+        class: `${CLASSES.SCALE_ITEM} js-${CLASSES.SCALE_ITEM}`,
+        'data-position': position,
+      });
+      const $itemText = ($('<p>', {
+        class: CLASSES.SCALE_ITEM_TEXT,
+        text: value,
+      }));
+
+      this.$slider.append($item.append($itemText));
+      items.push($item);
+
+      const itemTextSize = (viewName === 'horizontal') ? $itemText.outerWidth() : $itemText.outerHeight();
+      const itemSize = (viewName === 'horizontal') ? $item.outerWidth() : $item.outerHeight();
+      $itemText.css(viewName === 'horizontal' ? 'left' : 'bottom', `-${(itemTextSize / 2) - (itemSize / 2)}px`);
+      const itemOffset = (itemSize / 2) / containerSize;
+      $item.css(viewName === 'horizontal' ? 'left' : 'bottom', `${(position * 100) - itemOffset}%`);
+    });
+
+    return items;
   }
 
   public get showBgLine(): boolean {
@@ -175,55 +188,14 @@ class View implements ISliderView, ISliderViewConfigManager {
     this.components.slider.showTooltips = state;
   }
 
-  public get viewName(): SliderViewName {
-    return this.currentViewName;
-  }
-
-  public set viewName(viewName: SliderViewName) {
-    this.currentViewName = viewName;
-    this._initSlider();
-    this._initController();
-    this._requestRedrawing();
-  }
-
   public onSelect(callback: HandlerSliderViewSelect): void {
-    this.selectEventCallback = callback;
-    if (this.controller) {
-      this.controller.onSelect(callback);
-    } else {
-      this._initController();
-    }
+    this.controller.onSelect(callback);
   }
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
-    const isNeedRecreateSlider = this.cache.pointPositions.length !== pointPositions.length;
-
     this.cache.pointPositions = pointPositions;
     this.cache.pointValues = pointValues;
-
-    if (isNeedRecreateSlider) {
-      this._initSlider();
-      this._initController();
-    }
-
     this._requestRedrawing();
-  }
-
-  public updateScale(maxStep: number, stepSize: number): void {
-    if (maxStep !== this.cache.maxStep) {
-      this.cache.maxStep = maxStep;
-      this.components.scale.setMaxStep(maxStep);
-    }
-
-    if (stepSize !== this.cache.stepSize) {
-      this.cache.stepSize = stepSize;
-      this.components.scale.setStepSize(stepSize);
-    }
-  }
-
-  public onStepToValue(callback: HandlerStepToValueEvent): void {
-    this.cache.stepToValue = callback;
-    this.components.scale.onStepToValue(callback);
   }
 }
 
