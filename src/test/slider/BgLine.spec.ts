@@ -3,7 +3,7 @@ import BgLine from '../../components/slider/scripts/view/components/BgLine';
 import CLASSES from '../../components/slider/scripts/view/classes';
 import Slider from '../../components/slider/scripts/view/components/Slider';
 
-require('../../desktop.blocks/slider/slider.sass');
+require('../../components/slider/slider.sass');
 
 const $body = $(document.body).css('padding', '50px');
 
@@ -32,7 +32,7 @@ describe('[BgLine]', () => {
           max: 0.6,
           result: {
             min: 0,
-            max: 400,
+            max: 40,
           },
         },
         {
@@ -40,8 +40,8 @@ describe('[BgLine]', () => {
           min: 0.33,
           max: 0.65,
           result: {
-            min: 330,
-            max: 350,
+            min: 33,
+            max: 35,
           },
         },
         {
@@ -49,8 +49,8 @@ describe('[BgLine]', () => {
           min: 0.342,
           max: 0.789,
           result: {
-            min: 189.81,
-            max: 117.105,
+            min: 34.2,
+            max: 21.1,
           },
         },
         {
@@ -58,8 +58,8 @@ describe('[BgLine]', () => {
           min: 0.225,
           max: 0.345,
           result: {
-            min: 124.875,
-            max: 363.525,
+            min: 22.5,
+            max: 65.5,
           },
         },
         {
@@ -67,8 +67,8 @@ describe('[BgLine]', () => {
           min: 0.888,
           max: 0.999,
           result: {
-            min: 492.84,
-            max: 0.555,
+            min: 88.8,
+            max: 0.1,
           },
         },
       ];
@@ -83,8 +83,8 @@ describe('[BgLine]', () => {
           $slider.css('width', `${sliderSize}px`);
           bgLine.update(max, min);
 
-          const reallyMax = parseInt($bgLine.css('right'), 10);
-          const reallyMin = parseInt($bgLine.css('left'), 10);
+          const reallyMax = parseFloat($bgLine.get()[0].style.right);
+          const reallyMin = parseFloat($bgLine.get()[0].style.left);
           const isCorrectMax = (Math.abs(result.max - reallyMax) < 1);
           const isCorrectMin = (Math.abs(result.min - reallyMin) < 1);
 
@@ -117,7 +117,7 @@ describe('[BgLine]', () => {
           max: 0.6,
           result: {
             min: 0,
-            max: 400,
+            max: 40,
           },
         },
         {
@@ -125,8 +125,8 @@ describe('[BgLine]', () => {
           min: 0.33,
           max: 0.65,
           result: {
-            min: 330,
-            max: 350,
+            min: 33,
+            max: 35,
           },
         },
         {
@@ -134,8 +134,8 @@ describe('[BgLine]', () => {
           min: 0.342,
           max: 0.789,
           result: {
-            min: 189.81,
-            max: 117.105,
+            min: 34.2,
+            max: 21.1,
           },
         },
         {
@@ -143,8 +143,8 @@ describe('[BgLine]', () => {
           min: 0.225,
           max: 0.345,
           result: {
-            min: 124.875,
-            max: 363.525,
+            min: 22.5,
+            max: 65.5,
           },
         },
         {
@@ -152,8 +152,8 @@ describe('[BgLine]', () => {
           min: 0.888,
           max: 0.999,
           result: {
-            min: 492.84,
-            max: 0.555,
+            min: 88.8,
+            max: 0.1,
           },
         },
       ];
@@ -168,8 +168,8 @@ describe('[BgLine]', () => {
           $slider.css('height', `${sliderSize}px`);
           bgLine.update(max, min);
 
-          const reallyMax = parseInt($bgLine.css('top'), 10);
-          const reallyMin = parseInt($bgLine.css('bottom'), 10);
+          const reallyMax = parseFloat($bgLine.get()[0].style.top);
+          const reallyMin = parseFloat($bgLine.get()[0].style.bottom);
           const isCorrectMax = (Math.abs(result.max - reallyMax) < 1);
           const isCorrectMin = (Math.abs(result.min - reallyMin) < 1);
 

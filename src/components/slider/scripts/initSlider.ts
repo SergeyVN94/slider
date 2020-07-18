@@ -6,11 +6,11 @@ import Presenter from './Presenter';
 const initSlider = function initSlider($slider: JQuery, config: {
   readonly scale?: SliderScale;
   readonly start?: string[] | number[];
-  readonly viewName?: SliderViewName;
-  readonly showTooltips?: boolean;
+  readonly viewName?: ViewName;
+  readonly tooltips?: boolean;
   readonly step?: number;
   readonly prettify?: PrettifyFunc;
-  readonly showBgLine?: boolean;
+  readonly bgLine?: boolean;
 }): Slider {
   const {
     scale,
@@ -26,10 +26,12 @@ const initSlider = function initSlider($slider: JQuery, config: {
 
   const view = new View({
     $slider,
-    points: start.length,
+    allPoints: start.length,
     scaleItems: model.getScaleItems(),
     ...config,
   });
+
+  view.update(model.getPointPositions(), model.values);
 
   new Presenter(view, model);
 

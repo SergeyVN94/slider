@@ -14,7 +14,7 @@ class Controller {
 
   private static readonly $document = $(document);
 
-  private selectEventCallback: HandlerSliderViewSelect;
+  private selectEventCallback: HandlerViewSelect;
 
   private resizeEventCallback: HandleWindowResize;
 
@@ -30,29 +30,21 @@ class Controller {
     this._initEventListeners();
   }
 
+  public onSelect(callback: HandlerViewSelect): void {
+    this.selectEventCallback = callback;
+  }
+
+  public onResize(callback: HandleWindowResize): void {
+    this.resizeEventCallback = callback;
+  }
+
   private _initEventListeners(): void {
-    const {
-      slider,
-      points,
-      scaleItems,
-    } = this.components;
+    const { slider, points } = this.components;
 
     slider.onSelect(this._handleSliderSelect.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
     Controller.$document.on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
     window.addEventListener('resize', this._handleDocumentResize.bind(this));
-  }
-
-  private _handleScaleItemClick(ev: JQuery.MouseEventBase): void {
-    ev.stopPropagation();
-
-    const position = String($(ev.currentTarget).data('position'));
-
-    try {
-      if (this.selectEventCallback) this.selectEventCallback(parseFloat(position), Controller.POINT_NOT_SELECTED);
-    } catch (error) {
-      console.error(new TypeError('Failed to get scale item position.'));
-    }    
   }
 
   private _triggerSelectEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
@@ -81,14 +73,6 @@ class Controller {
 
   private _handleDocumentResize(): void {
     if (this.resizeEventCallback) this.resizeEventCallback();
-  }
-
-  public onSelect(callback: HandlerSliderViewSelect): void {
-    this.selectEventCallback = callback;
-  }
-
-  public onResize(callback: HandleWindowResize): void {
-    this.resizeEventCallback = callback;
   }
 }
 

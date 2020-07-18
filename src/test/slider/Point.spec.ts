@@ -3,7 +3,7 @@ import Point from '../../components/slider/scripts/view/components/Point';
 import Slider from '../../components/slider/scripts/view/components/Slider';
 import CLASSES from '../../components/slider/scripts/view/classes';
 
-require('../../desktop.blocks/slider/slider.sass');
+require('../../components/slider/slider.sass');
 
 const $body = $(document.body).css('padding', '50px');
 

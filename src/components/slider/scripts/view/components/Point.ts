@@ -9,14 +9,14 @@ class Point {
 
   private _setPosition: (position: number) => void;
 
-  constructor($slider: JQuery, index: number, view: SliderViewName) {
+  constructor($slider: JQuery, index: number, view: ViewName) {
     this.index = index;
     this.$point = $('<div/>', {
       class: `${CLASSES.POINT} js-${CLASSES.POINT}`,
       'data-index': this.index,
     });
     $slider.append(this.$point);
-    this.setViewName(view);
+    this._setViewName(view);
   }
 
   public onMousedown(callback: HandlePointMousedown): void {
@@ -24,16 +24,16 @@ class Point {
     this.$point.on('mousedown', this._handlePointMousedown.bind(this));
   }
 
-  public setViewName(name: SliderViewName): void {
+  public setPosition(position: number): void {
+    this._setPosition(position);
+  }
+
+  private _setViewName(name: ViewName): void {
     if (name === 'vertical') {
       this._setPosition = this._verticalViewSetPosition.bind(this);
     } else {
       this._setPosition = this._horizontalViewSetPosition.bind(this);
     }
-  }
-
-  public setPosition(position: number): void {
-    this._setPosition(position);
   }
 
   private _horizontalViewSetPosition(position: number): void {

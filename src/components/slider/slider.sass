@@ -67,17 +67,22 @@ $scale-item-line-offset: 3px
       left: auto
       top: auto
       width: $scale-item-size / 2
-      height: 2px
+      height: 0px
 
+      &::after
+        width:  $scale-item-line
+        height: 2px
+        top: -1px
+        
     .slider__scale-item-text
       right: $scale-item-line + ($scale-item-line-offset * 2)
       top: auto
 
-  &_bg-line-hide
+  &_bg-line-hidden
     .slider__bg-line
       display: none
 
-  &_tooltips-hide
+  &_tooltips-hidden
     .slider__tooltip
       display: none    
 
@@ -94,6 +99,7 @@ $scale-item-line-offset: 3px
     -moz-user-select: none
     -webkit-user-select: none
     z-index: 2
+    cursor: pointer
 
   &__bg-line
     background-color: $dark-green
@@ -142,9 +148,17 @@ $scale-item-line-offset: 3px
   &__scale-item
     position: absolute
     top: ($slider-height + $point-offset + $scale-item-line-offset)
-    width: 2px
+    width: 0px
     height: $scale-item-line
-    background-color: $dark-green
+
+    &::after
+      position: relative
+      content: ''
+      display: block
+      background-color: $dark-green
+      height: $scale-item-line
+      width: 2px
+      left: -1px
 
   &__scale-item-text
     display: block

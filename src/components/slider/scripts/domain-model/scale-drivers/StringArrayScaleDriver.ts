@@ -1,4 +1,4 @@
-class StringArrayScaleDriver implements ISliderScaleDriver {
+class StringArrayScaleDriver implements IScaleDriver {
   private readonly scale: string[];
 
   private readonly maxStep: number;

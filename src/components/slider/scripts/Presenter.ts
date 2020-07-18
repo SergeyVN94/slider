@@ -1,14 +1,13 @@
 class Presenter {
-  readonly view: ISliderView;
+  readonly view: IView;
 
-  readonly model: ISliderModel;
+  readonly model: IModel;
 
-  constructor(view: ISliderView, model: ISliderModel) {
+  constructor(view: IView, model: IModel) {
     this.view = view;
     this.model = model;
 
     this._initEventListeners();
-    this.view.update(this.model.getPointPositions(), model.values);
   }
 
   private _initEventListeners(): void {

@@ -7,21 +7,21 @@ interface ISliderConfig {
   customScale?: string[];
   min?: number;
   max?: number;
-  viewName?: SliderViewName;
-  showTooltips?: boolean;
+  viewName?: ViewName;
+  tooltips?: boolean;
   step?: number;
   prettify?: PrettifyFunc;
-  showBgLine?: boolean;
+  bgLine?: boolean;
 }
 
 interface IResConfig {
   start?: string[] | number[];
   scale?: [number, number] | string[];
-  viewName?: SliderViewName;
-  showTooltips?: boolean;
+  viewName?: ViewName;
+  tooltips?: boolean;
   step?: number;
   prettify?: PrettifyFunc;
-  showBgLine?: boolean;
+  bgLine?: boolean;
 }
 
 const COMMANDS = {
@@ -38,9 +38,9 @@ const DEFAULT_CONFIG = {
   scale: [0, 100] as [number, number],
   start: [0],
   step: 1,
-  viewName: 'horizontal' as SliderViewName,
-  showBgLine: true,
-  showTooltips: true,
+  viewName: 'horizontal' as ViewName,
+  bgLine: true,
+  tooltips: true,
   prettify: (value: string | number): string => String(value),
 };
 
@@ -55,14 +55,14 @@ const normalizeConfig = function normalizeConfig(config: ISliderConfig): IResCon
     max = (min + 1) * 100,
     start = [min],
     prettify = DEFAULT_CONFIG.prettify,
-    showTooltips = true,
-    showBgLine = true,
+    tooltips = true,
+    bgLine = true,
     step = 1,
     viewName = 'horizontal',
   } = config;
 
-  newConfig.showTooltips = Boolean(showTooltips);
-  newConfig.showBgLine = Boolean(showBgLine);
+  newConfig.tooltips = Boolean(tooltips);
+  newConfig.bgLine = Boolean(bgLine);
 
   if (['horizontal', 'vertical'].includes(viewName)) {
     newConfig.viewName = viewName;
@@ -154,7 +154,7 @@ $.fn.slider = function pluginMainFunction(
   | string[]
   | number[]
   | boolean
-  | SliderViewName
+  | ViewName
   | SliderScale
   = null, // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
@@ -209,7 +209,7 @@ $.fn.slider = function pluginMainFunction(
       if (args === null) return config.viewName;
 
       if (['horizontal', 'vertical'].includes(String(args))) {
-        config.viewName = args as SliderViewName;
+        config.viewName = args as ViewName;
       } else {
         console.error(new TypeError('Expected values ​​of "horizontal" or "vertical".'));
         return this;
@@ -243,16 +243,16 @@ $.fn.slider = function pluginMainFunction(
       return this;
 
     case COMMANDS.BG_LINE:
-      if (args === null) return slider.showBgLine;
+      if (args === null) return slider.areBgLineVisible;
       if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
-      slider.showBgLine = Boolean(args);
+      slider.areBgLineVisible = Boolean(args);
 
       return this;
 
     case COMMANDS.SHOW_TOOLTIPS:
-      if (args === null) return slider.showTooltips;
+      if (args === null) return slider.areTooltipsVisible;
       if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
-      slider.showTooltips = Boolean(args);
+      slider.areTooltipsVisible = Boolean(args);
 
       return this;
 

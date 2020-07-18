@@ -1,14 +1,14 @@
 import { expect } from 'chai';
-import createScaleDriver from '../../components/slider/scripts/domain-model/scale-drivers/createScaleDriver';
-import Core from '../../components/slider/scripts/domain-model/Core';
+import Model from '../../components/slider/scripts/domain-model/Model';
 
-describe('[Core]', () => {
-  describe('[updatePointSteps]', () => {
+describe('[Model]', () => {
+  describe('[update]', () => {
     describe('[1 point]', () => {
       describe('[step size 1]', () => {
-        const core = new Core({
-          stepSize: 1,
-          scaleDriver: createScaleDriver([-1000, 1000]), // maxStep = 2000
+        const model = new Model({
+          step: 1,
+          scale: [-1000, 1000], // maxStep = 2000
+          start: [0],
         });
 
         [
@@ -19,12 +19,12 @@ describe('[Core]', () => {
           { targetPos: 0.973, result: [946] },
         ].forEach(({ targetPos, result }) => {
           it(`[targetPos: ${targetPos}, result: [${result.join()}]]`, () => {
-            core.values = [0];
+            model.values = [0];
 
-            core.updatePointSteps(targetPos, -1);
+            model.update(targetPos, -1);
 
             let isCorrectValues = true;
-            core.values.forEach((value, index) => {
+            model.values.forEach((value, index) => {
               if (value !== result[index]) isCorrectValues = false;
             });
 
@@ -34,9 +34,10 @@ describe('[Core]', () => {
         });
       });
       describe('[step size 333]', () => {
-        const core = new Core({
-          stepSize: 333,
-          scaleDriver: createScaleDriver([-1000, 1000]), // maxStep = 2000
+        const model = new Model({
+          step: 333,
+          scale: [-1000, 1000], // maxStep = 2000
+          start: [0],
         });
 
         [
@@ -48,12 +49,12 @@ describe('[Core]', () => {
           { targetPos: 0.995, result: [998] },
         ].forEach(({ targetPos, result }) => {
           it(`[targetPos: ${targetPos}, result: [${result.join()}]]`, () => {
-            core.values = [0];
+            model.values = [0];
 
-            core.updatePointSteps(targetPos, -1);
+            model.update(targetPos, -1);
 
             let isCorrectValues = true;
-            core.values.forEach((value, index) => {
+            model.values.forEach((value, index) => {
               if (value !== result[index]) isCorrectValues = false;
             });
 
@@ -64,9 +65,10 @@ describe('[Core]', () => {
       });
     });
     describe('[2 point]', () => {
-      const core = new Core({
-        stepSize: 1,
-        scaleDriver: createScaleDriver([-1000, 1000]), // maxStep = 2000
+      const model = new Model({
+        step: 1,
+        scale: [-1000, 1000], // maxStep = 2000
+        start: [0, 0],
       });
 
       [
@@ -78,12 +80,12 @@ describe('[Core]', () => {
         { targetPos: 0.973, result: [-1000, 946] },
       ].forEach(({ targetPos, result }) => {
         it(`[targetPos: ${targetPos}, result: [${result.join()}]]`, () => {
-          core.values = [-1000, 1000];
+          model.values = [-1000, 1000];
 
-          core.updatePointSteps(targetPos, -1);
+          model.update(targetPos, -1);
 
           let isCorrectValues = true;
-          core.values.forEach((value, index) => {
+          model.values.forEach((value, index) => {
             if (value !== result[index]) isCorrectValues = false;
           });
 
@@ -93,9 +95,10 @@ describe('[Core]', () => {
       });
     });
     describe('[2 point, witch a specific point]', () => {
-      const core = new Core({
-        stepSize: 1,
-        scaleDriver: createScaleDriver([-1000, 1000]), // maxStep = 2000
+      const model = new Model({
+        step: 1,
+        scale: [-1000, 1000], // maxStep = 2000
+        start: [0, 0],
       });
 
       [
@@ -124,12 +127,12 @@ describe('[Core]', () => {
         point,
       }) => {
         it(`[values: [${values.join()}], point: ${point}, targetPos: ${targetPos}, result: [${result.join()}]]`, () => {
-          core.values = values;
+          model.values = values;
 
-          core.updatePointSteps(targetPos, point);
+          model.update(targetPos, point);
 
           let isCorrectValues = true;
-          core.values.forEach((value, index) => {
+          model.values.forEach((value, index) => {
             if (value !== result[index]) isCorrectValues = false;
           });
 

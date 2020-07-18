@@ -5,24 +5,24 @@ class Tooltip {
 
   private _setState: (position: number, value: string) => void;
 
-  constructor($slider: JQuery, viewName: SliderViewName) {
+  constructor($slider: JQuery, viewName: ViewName) {
     this.$tooltip = $('<div>', {
       class: CLASSES.TOOLTIP,
     });
     $slider.append(this.$tooltip);
-    this.setViewName(viewName);
+    this._setViewName(viewName);
   }
 
-  public setViewName(name: SliderViewName): void {
+  public setState(position: number, value: string): void {
+    this._setState(position, value);
+  }
+
+  private _setViewName(name: ViewName): void {
     if (name === 'vertical') {
       this._setState = this._verticalViewSetState.bind(this);
     } else {
       this._setState = this._horizontalViewSetState.bind(this);
     }
-  }
-
-  public setState(position: number, value: string): void {
-    this._setState(position, value);
   }
 
   private _horizontalViewSetState(position: number, value: string): void {

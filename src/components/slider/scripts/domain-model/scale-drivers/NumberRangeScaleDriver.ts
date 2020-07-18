@@ -1,4 +1,4 @@
-class NumberRangeScaleDriver implements ISliderScaleDriver {
+class NumberRangeScaleDriver implements IScaleDriver {
   private readonly scale: [number, number];
 
   private readonly maxStep: number;

@@ -7,31 +7,31 @@ class Slider {
 
   private _callbackMousedown: (position: number) => void;
 
-  constructor($slider: JQuery, view: SliderViewName) {
+  constructor($slider: JQuery, view: ViewName) {
     this.$slider = $slider;
     this._callbackMousedown = null;
     this._setViewName(view);
-    $slider.on('mousedown.slider.simpleClick', this._handleSliderMousedown.bind(this));
+    $slider.on('mousedown.slider.select', this._handleSliderMousedown.bind(this));
   }
 
-  public set showTooltips(state: boolean) {
-    this.$slider.toggleClass(CLASSES.HIDE_TOOLTIPS, !state);
+  public set areTooltipsVisible(state: boolean) {
+    this.$slider.toggleClass(CLASSES.TOOLTIPS_HIDDEN, !state);
   }
 
-  public get showTooltips(): boolean {
-    return !this.$slider.hasClass(CLASSES.HIDE_TOOLTIPS);
+  public get areTooltipsVisible(): boolean {
+    return !this.$slider.hasClass(CLASSES.TOOLTIPS_HIDDEN);
   }
 
-  public set showBgLine(state: boolean) {
-    this.$slider.toggleClass(CLASSES.HIDE_BG_LINE, !state);
+  public set areBgLineVisible(state: boolean) {
+    this.$slider.toggleClass(CLASSES.BG_LINE_HIDDEN, !state);
   }
 
-  public get showBgLine(): boolean {
-    return !this.$slider.hasClass(CLASSES.HIDE_BG_LINE);
+  public get areBgLineVisible(): boolean {
+    return !this.$slider.hasClass(CLASSES.BG_LINE_HIDDEN);
   }
 
-  public getElement(): JQuery {
-    return this.$slider;
+  public triggerSelectEvent(values: string[] | number[]): void {
+    this.$slider.trigger('select', values);
   }
 
   public getTargetPosition(ev: JQuery.MouseEventBase): number {
@@ -54,7 +54,7 @@ class Slider {
     if (this._callbackMousedown) this._callbackMousedown(this.getTargetPosition(ev));
   }
 
-  private _setViewName(name: SliderViewName): void {
+  private _setViewName(name: ViewName): void {
     if (name === 'vertical') {
       this.$slider.addClass('slider_view-name_vertical');
       this._getTargetPosition = this._verticalViewTargetPosition.bind(this);

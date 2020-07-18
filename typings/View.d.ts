@@ -1,16 +1,14 @@
-type SliderViewName = 'horizontal' | 'vertical';
+type ViewName = 'horizontal' | 'vertical';
 type PrettifyFunc = (value: number | string) => string;
-type HandlerSliderViewSelect = (targetPosition: number, pointSelected: number) => void;
-type HandlerStepToValueEvent = (step: number) => string;
-type HandleScaleItemClickEvent = (position: number) => void;
+type HandlerViewSelect = (targetPosition: number, pointSelected: number) => void;
 type HandlePointMousedown = (index: number, ev: JQuery.MouseDownEvent) => void;
 
-interface ISliderViewConfigManager {
-  showTooltips: boolean;
-  showBgLine: boolean;
+interface IViewConfigManager {
+  areTooltipsVisible: boolean;
+  areBgLineVisible: boolean;
 }
 
-interface ISliderView {
-  onSelect(callback: HandlerSliderViewSelect): void;
+interface IView {
+  onSelect(callback: HandlerViewSelect): void;
   update(pointPositions: number[], pointValues: number[] | string[]): void;
 }

@@ -87,11 +87,11 @@ class ConfigPanel {
       }
     });
 
-    const isShowBgLine = $slider.slider('show-bg-line');
-    $checkboxBgLine.prop('checked', isShowBgLine);
+    const areBgLineVisible = $slider.slider('show-bg-line');
+    $checkboxBgLine.prop('checked', areBgLineVisible);
 
-    const isShowTooltips = $slider.slider('show-tooltips');
-    $checkboxTooltip.prop('checked', isShowTooltips);
+    const areTooltipsVisible = $slider.slider('show-tooltips');
+    $checkboxTooltip.prop('checked', areTooltipsVisible);
 
     const allPoints = $slider.slider('value').length;
     $inputPoints.val(allPoints);
@@ -130,12 +130,12 @@ class ConfigPanel {
     );
 
     $checkboxBgLine.on(
-      'input.configPanel.showBgLineToggle',
+      'input.configPanel.bgLineToggle',
       this._handleCheckboxBgLineInput.bind(this),
     );
 
     $checkboxTooltip.on(
-      'input.configPanel.showTooltips',
+      'input.configPanel.tooltips',
       this._handleCheckboxTooltipInput.bind(this),
     );
 
@@ -290,8 +290,8 @@ class ConfigPanel {
       $checkboxTooltip,
     } = this.domElements;
 
-    const isShowTooltips = Boolean($checkboxTooltip.prop('checked'));
-    $slider.slider('show-tooltips', isShowTooltips);
+    const areTooltipsVisible = Boolean($checkboxTooltip.prop('checked'));
+    $slider.slider('show-tooltips', areTooltipsVisible);
   }
 
   private _handleCheckboxBgLineInput(): void {
@@ -300,8 +300,8 @@ class ConfigPanel {
       $checkboxBgLine,
     } = this.domElements;
 
-    const isShowBgLine = Boolean($checkboxBgLine.prop('checked'));
-    $slider.slider('show-bg-line', isShowBgLine);
+    const areBgLineVisible = Boolean($checkboxBgLine.prop('checked'));
+    $slider.slider('show-bg-line', areBgLineVisible);
   }
 
   private _handleInputStepFocusout(): void {
