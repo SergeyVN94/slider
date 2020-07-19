@@ -12,8 +12,7 @@ class StringArrayScaleDriver implements IScaleDriver {
     return this.maxStep;
   }
 
-  public valueToStep(value: string): number {
-    if (typeof value !== 'string') return null;
+  public valueToStep(value: string): number | null {
     const step = this.scale.indexOf(value);
     if (step === -1) return null;
     return step;

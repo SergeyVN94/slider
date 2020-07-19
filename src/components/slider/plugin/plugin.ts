@@ -30,7 +30,7 @@ const COMMANDS = {
   VALUE: 'value',
   SHOW_TOOLTIPS: 'show-tooltips',
   VIEW_NAME: 'view-name',
-  BG_LINE: 'show-bg-line',
+  SHOW_BG_LINE: 'show-bg-line',
   SCALE: 'scale',
 };
 
@@ -44,16 +44,85 @@ const DEFAULT_CONFIG = {
   prettify: (value: string | number): string => String(value),
 };
 
+const normalizeScale = function normalizeScale(
+  customScale: string[],
+  min: number,
+  max: number,
+): SliderScale {
+  const scaleRange: number[] = [];
+
+  if (typeof min !== 'number') {
+    try {
+      scaleRange[0] = parseInt(min, 10);
+    } catch (error) {
+      scaleRange[0] = 0;
+      console.error(new TypeError('The minimum scale value must be a number'));
+    }
+  } else scaleRange[0] = min;
+
+  if (typeof max !== 'number') {
+    try {
+      scaleRange[1] = parseInt(max, 10);
+    } catch (error) {
+      scaleRange[1] = scaleRange[0] + 100;
+      console.error(new TypeError('The maximum scale value must be a number'));
+    }
+  } else scaleRange[1] = max;
+
+  const useCustomScale = Array.isArray(customScale) && customScale.length;
+
+  if (useCustomScale) {
+    return customScale.map((item) => String(item));
+  }
+
+  return scaleRange as [number, number];
+};
+
+const normalizeStartValues = function normalizeStartValues(
+  values: number[] | string[],
+  scale: SliderScale,
+): number[] | string[] {
+  // if (typeof values === 'string' || typeof values === 'number') return [values];
+
+  if (!Array.isArray(values)) {
+    console.error(new Error('Starting values ​​must be an array.'));
+    return [scale[0]] as string[] | number[];
+  }
+
+  if (values.length === 0) {
+    console.error('The array of start values ​​must not be empty.');
+    return [scale[0]] as string[] | number[];
+  }
+
+  const isScaleAreNumberRange = typeof scale[0] === 'number';
+  if (!isScaleAreNumberRange) return (values as string[]).map((value) => String(value));
+
+  const isCorrectValues = values.every((value: number | string) => {
+    try {
+      parseInt(String(value), 10);
+    } catch (error) {
+      return false;
+    }
+
+    return true;
+  });
+
+  if (!isCorrectValues) {
+    console.error(new Error(''));
+    return [scale[0]] as string[] | number[];
+  }
+
+  return (values as number[]).map((value) => parseInt(String(value), 10));
+};
+
 const normalizeConfig = function normalizeConfig(config: ISliderConfig): IResConfig {
   if (config === null) return DEFAULT_CONFIG;
 
-  const newConfig: IResConfig = {};
-
   const {
     customScale,
-    min = 0,
-    max = (min + 1) * 100,
-    start = [min],
+    min,
+    max,
+    start,
     prettify = DEFAULT_CONFIG.prettify,
     tooltips = true,
     bgLine = true,
@@ -61,6 +130,10 @@ const normalizeConfig = function normalizeConfig(config: ISliderConfig): IResCon
     viewName = 'horizontal',
   } = config;
 
+  const newConfig: IResConfig = {};
+
+  newConfig.scale = normalizeScale(customScale, min, max);
+  newConfig.start = normalizeStartValues(start, newConfig.scale);
   newConfig.tooltips = Boolean(tooltips);
   newConfig.bgLine = Boolean(bgLine);
 
@@ -85,62 +158,10 @@ const normalizeConfig = function normalizeConfig(config: ISliderConfig): IResCon
     console.error(new TypeError('prettify should be a function.'));
   } else newConfig.prettify = prettify;
 
-  const scaleRange: number[] = [];
-
-  if (typeof min !== 'number') {
-    try {
-      scaleRange[0] = parseInt(min, 10);
-    } catch (error) {
-      scaleRange[0] = 0;
-      console.error(new TypeError('The minimum scale value must be a number'));
-    }
-  } else scaleRange[0] = min;
-
-  if (typeof max !== 'number') {
-    try {
-      scaleRange[1] = parseInt(max, 10);
-    } catch (error) {
-      scaleRange[1] = 0;
-      console.error(new TypeError('The maximum scale value must be a number'));
-    }
-  } else scaleRange[1] = max;
-
-  const useCustomScale = Array.isArray(customScale) && customScale.length;
-
-  if (useCustomScale) {
-    newConfig.scale = customScale.map((item) => String(item));
-  } else {
-    newConfig.scale = scaleRange as [number, number];
-  }
-
   let _start: number[] | string[] = [];
 
   if (!Array.isArray(start)) _start[0] = start;
   else _start = start;
-
-  newConfig.start = [];
-
-  if (_start.length === 0) {
-    // eslint-disable-next-line max-len
-    newConfig.start = useCustomScale ? [customScale[0]] as string[] : [newConfig.scale[0]] as number[];
-  } else if (useCustomScale) {
-    _start.forEach((item: string | number) => {
-      (newConfig.start as string[]).push(String(item));
-    });
-  } else {
-    let itIsPossibleToNormalize = true;
-
-    _start.forEach((item: string | number) => {
-      try {
-        (newConfig.start as number[]).push(parseInt(String(item), 10));
-      } catch (error) {
-        console.error(new TypeError('The start value must be a number.'));
-        itIsPossibleToNormalize = false;
-      }
-    });
-
-    if (!itIsPossibleToNormalize) newConfig.start = [newConfig.scale[0] as number];
-  }
 
   return newConfig;
 };
@@ -159,105 +180,138 @@ $.fn.slider = function pluginMainFunction(
   = null, // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   const slider = this.data('slider') as Slider;
-  const config = (this.data('config') || DEFAULT_CONFIG) as ISliderConfig;
+  const config = (this.data('config') || DEFAULT_CONFIG) as IResConfig;
 
-  switch (command) {
-    case COMMANDS.INIT:
-      this
-        .data('slider', initSlider(this, normalizeConfig(args as ISliderConfig)))
-        .data('config', normalizeConfig(args as ISliderConfig));
+  if (command === COMMANDS.INIT) {
+    this
+      .data('slider', initSlider(this, normalizeConfig(args as ISliderConfig)))
+      .data('config', normalizeConfig(args as ISliderConfig));
 
-      return this;
-
-    case COMMANDS.STEP:
-      if (args === null) return config.step;
-
-      try {
-        config.step = parseInt(String(args), 10);
-      } catch (error) {
-        console.error(new TypeError('A number was expected, or a string from which to get a number.'));
-        return this;
-      }
-
-      if (config.step < 1) config.step = 1;
-
-      this
-        .data('slider', initSlider(this, config))
-        .data('config', config);
-
-      return this;
-
-    case COMMANDS.VALUE:
-      if (args === null) return slider.values;
-
-      if (slider.values.length === (args as string[] | number[]).length) {
-        slider.values = (args as string[] | number[]);
-        return this;
-      }
-
-      if ((args as string[] | number[]).length === 0) {
-        console.error(new Error('The array must not be empty.'));
-      } else {
-        config.start = (args as string[] | number[]);
-      }
-
-      return this
-        .data('slider', initSlider(this, config))
-        .data('config', config);
-
-    case COMMANDS.VIEW_NAME:
-      if (args === null) return config.viewName;
-
-      if (['horizontal', 'vertical'].includes(String(args))) {
-        config.viewName = args as ViewName;
-      } else {
-        console.error(new TypeError('Expected values ​​of "horizontal" or "vertical".'));
-        return this;
-      }
-
-      return this
-        .data('slider', initSlider(this, config))
-        .data('config', config);
-
-    case COMMANDS.SCALE:
-      if (args === null) {
-        return (config.customScale ? config.customScale : [config.min, config.max]);
-      }
-
-      if (!Array.isArray(args)) {
-        console.error(new TypeError('The scale must be an array'));
-        return this;
-      }
-
-      if (args.length === 2) {
-        config.min = parseInt(String(args[0]), 10);
-        config.max = parseInt(String(args[1]), 10);
-      } else {
-        config.customScale = (args as string[]).map((item) => String(item));
-      }
-
-      this
-        .data('slider', initSlider(this, config))
-        .data('config', config);
-
-      return this;
-
-    case COMMANDS.BG_LINE:
-      if (args === null) return slider.areBgLineVisible;
-      if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
-      slider.areBgLineVisible = Boolean(args);
-
-      return this;
-
-    case COMMANDS.SHOW_TOOLTIPS:
-      if (args === null) return slider.areTooltipsVisible;
-      if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
-      slider.areTooltipsVisible = Boolean(args);
-
-      return this;
-
-    default:
-      console.error(new Error(`Unknown command ${command}`));
-      return this;
+    return this;
   }
+
+  if (command === COMMANDS.SHOW_TOOLTIPS) {
+    if (args === null) return slider.areTooltipsVisible;
+    if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
+    slider.areTooltipsVisible = Boolean(args);
+
+    return this;
+  }
+
+  if (command === COMMANDS.SHOW_BG_LINE) {
+    if (args === null) return slider.areBgLineVisible;
+    if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
+    slider.areBgLineVisible = Boolean(args);
+
+    return this;
+  }
+
+  if (command === COMMANDS.VIEW_NAME) {
+    if (args === null) return config.viewName;
+
+    if (['horizontal', 'vertical'].includes(String(args))) {
+      config.viewName = args as ViewName;
+      return this
+        .data('slider', initSlider(this, config))
+        .data('config', config);
+    }
+
+    console.error(new TypeError('Expected values ​​of "horizontal" or "vertical".'));
+    return this;
+  }
+
+  if (command === COMMANDS.STEP) {
+    if (args === null) return config.step;
+
+    try {
+      config.step = parseInt(String(args), 10);
+    } catch (error) {
+      console.error(new TypeError('A number was expected, or a string from which to get a number.'));
+      return this;
+    }
+
+    return this
+      .data('slider', initSlider(this, config))
+      .data('config', config);
+  }
+
+  if (command === COMMANDS.VALUE) {
+    if (args === null) return slider.values;
+
+    if (!Array.isArray(args)) {
+      console.error(new Error('The parameter must be an array.'));
+      return this;
+    }
+
+    if ((args as string[] | number[]).length === 0) {
+      console.error(new Error('The array must be not empty.'));
+      return this;
+    }
+
+    let values: string[] | number[];
+
+    if (typeof config.scale[0] === 'string') {
+      values = (args as string[]).map((value) => String(value));
+    } else {
+      const isCorrectValues = args.every((value: string | number) => {
+        if (typeof value === 'number') return true;
+
+        try {
+          parseInt(String(value), 10);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      });
+      if (isCorrectValues) {
+        values = (args as number[]).map((value: number) => parseInt(String(value), 10));
+      }
+    }
+
+    if (slider.values.length === values.length) {
+      slider.values = values;
+      return this;
+    }
+
+    config.start = values;
+
+    return this
+      .data('slider', initSlider(this, config))
+      .data('config', config);
+  }
+
+  if (command === COMMANDS.SCALE) {
+    if (args === null) {
+      return config.scale;
+    }
+
+    if (!Array.isArray(args)) {
+      console.error(new TypeError('The scale must be an array'));
+      return this;
+    }
+
+    if (args.length < 2) {
+      console.error(new Error('The scale array must be at least 2 elements.'));
+      return this;
+    }
+
+    if (args.length === 2) {
+      try {
+        const min = parseInt(String(args[0]), 10);
+        const max = parseInt(String(args[1]), 10);
+        config.scale = [min, max];
+      } catch (error) {
+        config.scale = (args as string[]).map((item) => String(item));
+      }
+    } else {
+      config.scale = (args as string[]).map((item) => String(item));
+    }
+
+    return this
+      .data('slider', initSlider(this, config))
+      .data('config', config);
+  }
+
+  console.error(new Error(`Unknown command ${command}`));
+  return this;
 };

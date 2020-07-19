@@ -57,9 +57,9 @@ class Model implements IModel, IModelStateManager {
       if (step === null) {
         if (isCorrectValues) isCorrectValues = false;
         console.error(new Error(`The value '${value}' cannot be set for this scale.`));
+      } else {
+        steps.push(this._adjustStep(step));
       }
-
-      steps.push(this._adjustStep(step));
     });
 
     if (isCorrectValues) this.pointSteps = steps;
@@ -99,13 +99,13 @@ class Model implements IModel, IModelStateManager {
     pointIndex: number,
   ): void {
     if (pointIndex === -1) {
-      this._updateStepWithoutPoint(targetPosition);
+      this._updateStepOfNearestPoint(targetPosition);
     } else {
-      this._updateStepForPoint(targetPosition, pointIndex);
+      this._updatePointStep(targetPosition, pointIndex);
     }
   }
 
-  private _updateStepForPoint(targetPosition: number, pointIndex: number): boolean {
+  private _updatePointStep(targetPosition: number, pointIndex: number): boolean {
     const targetStep = Math.round(targetPosition * this.maxStep);
     const currentPointStep = this.pointSteps[pointIndex];
 
@@ -151,7 +151,7 @@ class Model implements IModel, IModelStateManager {
     return true;
   }
 
-  private _updateStepWithoutPoint(targetPosition: number): boolean {
+  private _updateStepOfNearestPoint(targetPosition: number): boolean {
     const targetStep = Math.round(targetPosition * this.maxStep);
 
     if (this.pointSteps.length === 1) {

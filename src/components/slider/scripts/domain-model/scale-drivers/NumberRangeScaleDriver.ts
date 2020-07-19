@@ -13,9 +13,7 @@ class NumberRangeScaleDriver implements IScaleDriver {
     return this.maxStep;
   }
 
-  public valueToStep(value: number): number {
-    // eslint-disable-next-line no-restricted-globals
-    if (typeof value !== 'number' || isNaN(value)) return null;
+  public valueToStep(value: number): number | null {
     const [rangeMin] = this.scale;
     const step = value - rangeMin;
     if (step < 0 || step > this.maxStep) return null;
