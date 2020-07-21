@@ -47,7 +47,7 @@ class Slider {
       .html('')
       .removeClass()
       .addClass('slider js-slider')
-      .off('mousedown.slider.simpleClick');
+      .off('mousedown.slider.select');
   }
 
   private _handleSliderMousedown(ev: JQuery.MouseEventBase): void {

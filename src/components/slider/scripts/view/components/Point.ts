@@ -7,6 +7,8 @@ class Point {
 
   private mousedownCallback: HandlePointMousedown;
 
+  private viewName: ViewName;
+
   private _setPosition: (position: number) => void;
 
   constructor($slider: JQuery, index: number, view: ViewName) {
@@ -19,6 +21,18 @@ class Point {
     this._setViewName(view);
   }
 
+  public static handleCollisions(points: Point[], selectedPoint: number): void {
+    if (points.length) {
+      const movedPoint = points[selectedPoint];
+
+      points.forEach((point, index) => {
+        if (selectedPoint !== index && movedPoint._checkCollision(point)) {
+          if (movedPoint.zIndex <= point.zIndex) movedPoint.zIndex = point.zIndex + 1;
+        }
+      });
+    }
+  }
+
   public onMousedown(callback: HandlePointMousedown): void {
     this.mousedownCallback = callback;
     this.$point.on('mousedown', this._handlePointMousedown.bind(this));
@@ -28,7 +42,34 @@ class Point {
     this._setPosition(position);
   }
 
+  public get zIndex(): number {
+    return parseInt(this.$point.css('z-index') || '0', 10);
+  }
+
+  public set zIndex(index: number) {
+    this.$point.css('z-index', index);
+  }
+
+  private _checkCollision(point: Point): boolean {
+    const pointSize = (
+      this.viewName === 'horizontal' ? this.$point.outerWidth() : this.$point.outerHeight()
+    );
+
+    const position = this._getStart();
+    const anotherPosition = point._getStart();
+
+    return Math.abs(position - anotherPosition) < pointSize;
+  }
+
+  private _getStart(): number {
+    return parseFloat(
+      this.$point.css(this.viewName === 'horizontal' ? 'left' : 'top'),
+    );
+  }
+
   private _setViewName(name: ViewName): void {
+    this.viewName = name;
+
     if (name === 'vertical') {
       this._setPosition = this._verticalViewSetPosition.bind(this);
     } else {

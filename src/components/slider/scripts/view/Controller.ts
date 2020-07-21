@@ -43,7 +43,9 @@ class Controller {
 
     slider.onSelect(this._handleSliderSelect.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
-    Controller.$document.on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
+    Controller.$document
+      .off('mouseup.slider.removeEventListeners')
+      .on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
     window.addEventListener('resize', this._handleDocumentResize.bind(this));
   }
 

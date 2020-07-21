@@ -31,8 +31,6 @@ const initSlider = function initSlider($slider: JQuery, config: {
     ...config,
   });
 
-  view.update(model.getPointPositions(), model.values);
-
   new Presenter(view, model);
 
   return new Slider(view, model);

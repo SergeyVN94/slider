@@ -1,4 +1,5 @@
 import CLASSES from '../classes';
+import Point from './Point';
 
 class Tooltip {
   private readonly $tooltip: JQuery;
@@ -13,8 +14,18 @@ class Tooltip {
     this._setViewName(viewName);
   }
 
+  public static updateZIndexes(tooltips: Tooltip[], points: Point[]): void {
+    points.forEach((point, index) => {
+      tooltips[index]._setZIndex(point.zIndex);
+    });
+  }
+
   public setState(position: number, value: string): void {
     this._setState(position, value);
+  }
+
+  private _setZIndex(zIndex: number): void {
+    this.$tooltip.css('z-index', zIndex);
   }
 
   private _setViewName(name: ViewName): void {

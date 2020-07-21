@@ -24,15 +24,15 @@ interface IViewCache {
 }
 
 class View implements IView, IViewConfigManager {
-  private isPendingRedrawing: boolean;
-
   private readonly components: IViewComponents;
 
   private readonly cache: IViewCache;
 
   private readonly prettify: PrettifyFunc;
 
-  private static readonly REDRAWING_TIMEOUT = 1000 / 60;
+  private static readonly POINT_NOT_MOVED = -1;
+
+  private indexMovedPoint: number;
 
   private readonly controller: Controller;
 
@@ -59,16 +59,16 @@ class View implements IView, IViewConfigManager {
 
     this.$slider = $slider;
     this.prettify = prettify;
-    this.isPendingRedrawing = false;
+    this.indexMovedPoint = 1;
 
     this.cache = {
       pointPositions: [],
       pointValues: [],
     };
 
-    // при инициализации сладера нужно будет знать количество кругляшей на слайдере.
-    for (let i = 0; i < allPoints; i += 1) this.cache.pointPositions.push(0);
+    for (let i = 0; i < allPoints; i += 1) this.cache.pointPositions[i] = -1;
 
+    Slider.resetSlider($slider);
     this.components = this._initSlider(viewName, scaleItems);
     this.controller = new Controller(this.components);
     this.controller.onResize(this._handleSliderResize.bind(this));
@@ -98,9 +98,39 @@ class View implements IView, IViewConfigManager {
   }
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
-    this.cache.pointPositions = pointPositions;
-    this.cache.pointValues = pointValues;
-    this._requestRedrawing();
+    const {
+      pointPositions: currentPositions,
+      pointValues: currentValues,
+    } = this.cache;
+
+    const lastIndex = pointPositions.length - 1;
+    const isNeedUpdateBgLine = pointPositions[lastIndex] !== currentPositions[lastIndex]
+    || pointPositions[0] !== currentPositions[0];
+
+    if (isNeedUpdateBgLine) {
+      this.components.bgLine.update(
+        pointPositions[lastIndex],
+        pointPositions.length > 1 ? pointPositions[0] : 0,
+      );
+    }
+
+    let isValuesUpdated = false;
+
+    pointPositions.forEach((position, index) => {
+      if (currentPositions[index] === position) return;
+
+      isValuesUpdated = true;
+
+      currentPositions[index] = position;
+      currentValues[index] = pointValues[index];
+      this.components.points[index].setPosition(position);
+      this.components.tooltips[index].setState(position, this.prettify(pointValues[index]));
+
+      Point.handleCollisions(this.components.points, index);
+      Tooltip.updateZIndexes(this.components.tooltips, this.components.points);
+    });
+
+    if (isValuesUpdated) this.components.slider.triggerSelectEvent(pointValues);
   }
 
   private _handleSliderResize(): void {
@@ -109,21 +139,7 @@ class View implements IView, IViewConfigManager {
       pointValues,
     } = this.cache;
 
-    this.update(pointPositions, pointValues);
-  }
-
-  private _redrawAll(): void {
-    const {
-      pointPositions,
-      pointValues,
-    } = this.cache;
-
-    const {
-      points,
-      tooltips,
-      slider,
-      bgLine,
-    } = this.components;
+    const { points, tooltips } = this.components;
 
     points.forEach((point, index) => point.setPosition(pointPositions[index]));
     tooltips.forEach((tooltip, index) => tooltip.setState(
@@ -131,42 +147,33 @@ class View implements IView, IViewConfigManager {
       this.prettify(pointValues[index]),
     ));
 
-    const bgLineMax = pointPositions[pointPositions.length - 1];
-    const bgLineMin = pointPositions.length > 1 ? pointPositions[0] : 0;
-    bgLine.update(bgLineMax, bgLineMin);
-
-    slider.triggerSelectEvent(pointValues);
-  }
-
-  private _requestRedrawing(): void {
-    if (!this.isPendingRedrawing) {
-      this.isPendingRedrawing = true;
-
-      setTimeout(() => {
-        this._redrawAll();
-        this.isPendingRedrawing = false;
-      }, View.REDRAWING_TIMEOUT);
-    }
+    Point.handleCollisions(this.components.points, this.indexMovedPoint);
   }
 
   private _initSlider(viewName: ViewName, scaleItems: ScaleItem[]): IViewComponents {
-    Slider.resetSlider(this.$slider);
+    const { pointPositions, pointValues } = this.cache;
 
     const points: Point[] = [];
     const tooltips: Tooltip[] = [];
 
-    for (let i = 0; i < this.cache.pointPositions.length; i += 1) {
+    for (let i = 0; i < pointPositions.length; i += 1) {
       const point = new Point(this.$slider, i, viewName);
       const tooltip = new Tooltip(this.$slider, viewName);
+      point.setPosition(pointPositions[i]);
+      tooltip.setState(pointPositions[i], this.prettify(pointValues[i]));
       points.push(point);
       tooltips.push(tooltip);
     }
 
+    const bgLine = new BgLine(this.$slider, viewName);
+    if (pointPositions.length === 1) bgLine.update(pointPositions[0]);
+    else bgLine.update(pointPositions[pointPositions.length - 1], pointPositions[0]);
+
     return {
-      slider: new Slider(this.$slider, viewName),
-      bgLine: new BgLine(this.$slider, viewName),
+      bgLine,
       points,
       tooltips,
+      slider: new Slider(this.$slider, viewName),
       scaleItems: this._drawScale(viewName, scaleItems),
     };
   }
