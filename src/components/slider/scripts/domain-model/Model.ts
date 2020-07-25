@@ -1,4 +1,6 @@
-import createScaleDriver from './scale-drivers/createScaleDriver';
+import CustomScaleDriver from './scale-drivers/CustomScaleDriver';
+import RangeScaleDriver from './scale-drivers/RangeScaleDriver';
+import DEFAULT_CONFIG from '../defaultConfig';
 
 class Model implements IModel, IModelStateManager {
   private readonly updateEventCallbackList: HandlerModelUpdate[];
@@ -7,27 +9,106 @@ class Model implements IModel, IModelStateManager {
 
   private readonly maxStep: number;
 
-  private readonly stepSize: number;
+  private readonly step: number;
 
   private readonly scaleDriver: IScaleDriver;
 
   private lastStep: number;
 
+  private config: IModelConfig;
+
   constructor(config: {
-    scale: [number, number] | string[];
-    start: number[] | string[];
+    customScale?: string[];
+    min?: number;
+    max?: number;
+    values: number[] | string[];
     step: number;
   }) {
-    const { scale, step, start } = config;
+    const {
+      customScale,
+      min,
+      max,
+      values,
+      step,
+    } = config;
 
-    this.scaleDriver = createScaleDriver(scale);
-    this.maxStep = this.scaleDriver.getMaxStep();
-
-    this.updateEventCallbackList = [];
     this.pointSteps = [];
-    this.stepSize = step;
+    this.updateEventCallbackList = [];
+    this.config = { step: 1 };
+    let _values: string[] | number[];
+
+    if (customScale && Model.checkCustomScale(customScale)) {
+      this.scaleDriver = new CustomScaleDriver(customScale);
+      this.config.customScale = customScale;
+      this.step = Model.checkStepForCustomScale(step, customScale)
+        ? step
+        : DEFAULT_CONFIG.step;
+
+      _values = Model.checkValuesForCustomScale(values as string[], customScale)
+        ? values
+        : customScale.slice(0);
+    } else if (Model.checkMinMax(min, max)) {
+      const _min = Math.min(min, max);
+      const _max = Math.max(min, max);
+      this.scaleDriver = new RangeScaleDriver(_min, _max);
+      this.config.min = _min;
+      this.config.max = _max;
+      this.step = Model.checkStepForMinMax(step, _min, _max)
+        ? step
+        : DEFAULT_CONFIG.step;
+
+      _values = Model.checkValuesForMinMax(values as number[], _min, _max)
+        ? values
+        : customScale.slice(0);
+    } else {
+      this.scaleDriver = new RangeScaleDriver(DEFAULT_CONFIG.min, DEFAULT_CONFIG.max);
+      this.config.min = DEFAULT_CONFIG.min;
+      this.config.max = DEFAULT_CONFIG.max;
+      this.step = DEFAULT_CONFIG.step;
+
+      _values = [DEFAULT_CONFIG.min];
+    }
+
+    this.maxStep = this.scaleDriver.getMaxStep();
     this._initLastStep();
-    this.values = start;
+    this.values = _values;
+
+    this.config.step = this.step;
+  }
+
+  public static checkCustomScale(scale: string[]): boolean {
+    if (scale.length < 2) return false;
+    return true;
+  }
+
+  public static checkMinMax(min: number, max: number): boolean {
+    if (min === max || max < min) return false;
+    return true;
+  }
+
+  public static checkStepForCustomScale(step: number, scale: string[]): boolean {
+    if (step < 1 || step > (scale.length - 1)) return false;
+    return true;
+  }
+
+  public static checkStepForMinMax(step: number, min: number, max: number): boolean {
+    if (step < 1) return false;
+    if (step > (max - min)) return false;
+    return true;
+  }
+
+  public static checkValuesForCustomScale(values: string[], scale: string[]): boolean {
+    if (values.length === 0) return false;
+    return values.every((value) => scale.includes(value));
+  }
+
+  public static checkValuesForMinMax(values: number[], min: number, max: number): boolean {
+    if (values.length === 0) return false;
+    return values.every((value) => (value >= min && value <= max));
+  }
+
+  public getConfig(): IModelConfig {
+    return this.config;
   }
 
   public update(targetPosition: number, pointSelected: number): void {
@@ -62,7 +143,7 @@ class Model implements IModel, IModelStateManager {
       }
     });
 
-    if (isCorrectValues) this.pointSteps = steps;
+    if (isCorrectValues) this.pointSteps = steps.sort((numA, numB) => (numA > numB ? 1 : -1));
 
     this._triggerUpdateEvent();
   }
@@ -90,7 +171,7 @@ class Model implements IModel, IModelStateManager {
   }
 
   private _initLastStep(): void {
-    this.lastStep = Math.round((this.maxStep / this.stepSize)) * this.stepSize;
+    this.lastStep = Math.round((this.maxStep / this.step)) * this.step;
     if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
   }
 
@@ -218,7 +299,7 @@ class Model implements IModel, IModelStateManager {
 
   private _adjustStep(step: number): number {
     if (step < this.lastStep) {
-      const targetStep = Math.round((step / this.stepSize)) * this.stepSize;
+      const targetStep = Math.round((step / this.step)) * this.step;
 
       if (targetStep > this.maxStep) {
         return this.maxStep;

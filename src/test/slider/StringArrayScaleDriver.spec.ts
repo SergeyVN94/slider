@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import StringArrayScaleDriver from '../../components/slider/scripts/domain-model/scale-drivers/StringArrayScaleDriver';
+import CustomScaleDriver from '../../components/slider/scripts/domain-model/scale-drivers/CustomScaleDriver';
 
-describe('[StringArrayScaleDriver]', () => {
+describe('[CustomScaleDriver]', () => {
   describe('[getMaxStep]', () => {
     [
       { scale: ['a', 'b', 'c', 'd'], result: 3 },
@@ -9,13 +9,13 @@ describe('[StringArrayScaleDriver]', () => {
       { scale: ['a', 'b', 'c', 'd', 'a', 'b', 'c', 'd'], result: 7 },
     ].forEach(({ scale, result }) => {
       it(`[scale: [${scale.join()}], result: ${result}]`, () => {
-        expect((new StringArrayScaleDriver(scale).getMaxStep())).equal(result);
+        expect((new CustomScaleDriver(scale).getMaxStep())).equal(result);
       });
     });
   });
 
   describe('[valueToStep]', () => {
-    const driver = new StringArrayScaleDriver(['a', 'b', 'c', 'd', 'a1', 'b1', 'c1', 'd1']);
+    const driver = new CustomScaleDriver(['a', 'b', 'c', 'd', 'a1', 'b1', 'c1', 'd1']);
 
     [
       { value: 'g', result: null },
@@ -32,7 +32,7 @@ describe('[StringArrayScaleDriver]', () => {
   });
 
   describe('[stepToValue]', () => {
-    const driver = new StringArrayScaleDriver(['a', 'b', 'c', 'd', 'a1', 'b1', 'c1', 'd1']);
+    const driver = new CustomScaleDriver(['a', 'b', 'c', 'd', 'a1', 'b1', 'c1', 'd1']);
 
     [
       { step: -123, result: null },

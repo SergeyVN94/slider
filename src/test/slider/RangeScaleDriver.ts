@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import NumberRangeScaleDriver from '../../components/slider/scripts/domain-model/scale-drivers/NumberRangeScaleDriver';
+import RangeScaleDriver from '../../components/slider/scripts/domain-model/scale-drivers/RangeScaleDriver';
 
-describe('[NumberRangeScaleDriver]', () => {
+describe('[RangeScaleDriver]', () => {
   describe('[getMaxStep]', () => {
     [
       { scale: [0, 1000], result: 1000 },
@@ -10,13 +10,13 @@ describe('[NumberRangeScaleDriver]', () => {
       { scale: [444, 777], result: 333 },
     ].forEach(({ scale, result }) => {
       it(`[scale: [${scale.join()}], result: ${result}]`, () => {
-        expect((new NumberRangeScaleDriver(scale as [number, number]).getMaxStep())).equal(result);
+        expect((new RangeScaleDriver(scale[0], scale[1]).getMaxStep())).equal(result);
       });
     });
   });
 
   describe('[valueToStep]', () => {
-    const driver = new NumberRangeScaleDriver([-1000, 1000]);
+    const driver = new RangeScaleDriver(-1000, 1000);
 
     [
       { value: 2222, result: null },
@@ -34,7 +34,7 @@ describe('[NumberRangeScaleDriver]', () => {
   });
 
   describe('[stepToValue]', () => {
-    const driver = new NumberRangeScaleDriver([-1000, 1000]);
+    const driver = new RangeScaleDriver(-1000, 1000);
 
     [
       { step: -123, result: null },

@@ -22,11 +22,11 @@ class Slider {
     return !this.$slider.hasClass(CLASSES.TOOLTIPS_HIDDEN);
   }
 
-  public set areBgLineVisible(state: boolean) {
+  public set isBgLineVisible(state: boolean) {
     this.$slider.toggleClass(CLASSES.BG_LINE_HIDDEN, !state);
   }
 
-  public get areBgLineVisible(): boolean {
+  public get isBgLineVisible(): boolean {
     return !this.$slider.hasClass(CLASSES.BG_LINE_HIDDEN);
   }
 

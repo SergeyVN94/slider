@@ -7,8 +7,9 @@ describe('[Model]', () => {
       describe('[step size 1]', () => {
         const model = new Model({
           step: 1,
-          scale: [-1000, 1000], // maxStep = 2000
-          start: [0],
+          min: -1000,
+          max: 1000,
+          values: [0],
         });
 
         [
@@ -36,8 +37,9 @@ describe('[Model]', () => {
       describe('[step size 333]', () => {
         const model = new Model({
           step: 333,
-          scale: [-1000, 1000], // maxStep = 2000
-          start: [0],
+          min: -1000,
+          max: 1000,
+          values: [0],
         });
 
         [
@@ -67,8 +69,9 @@ describe('[Model]', () => {
     describe('[2 point]', () => {
       const model = new Model({
         step: 1,
-        scale: [-1000, 1000], // maxStep = 2000
-        start: [0, 0],
+        min: -1000,
+        max: 1000,
+        values: [0, 0],
       });
 
       [
@@ -97,8 +100,9 @@ describe('[Model]', () => {
     describe('[2 point, witch a specific point]', () => {
       const model = new Model({
         step: 1,
-        scale: [-1000, 1000], // maxStep = 2000
-        start: [0, 0],
+        min: -1000,
+        max: 1000,
+        values: [0, 0],
       });
 
       [

@@ -29,6 +29,7 @@ interface IConfigPanelDomElements {
   inputsValueOut: JQuery[];
   $scaleMax: JQuery;
   $scaleMin: JQuery;
+  $customScale: JQuery;
 }
 
 class ConfigPanel {
@@ -41,27 +42,19 @@ class ConfigPanel {
   }
 
   private static _getDomElements($panel: JQuery, $slider: JQuery): IConfigPanelDomElements {
-    const $inputStep = $panel.find(`.${CLASSES.INPUT_STEP}`);
-    const $radioViewName = $panel.find(`.${CLASSES.RADIO_VIEW_NAME}`);
-    const $checkboxBgLine = $panel.find(`.${CLASSES.CHECKBOX_BG_LINE}`);
-    const $checkboxTooltip = $panel.find(`.${CLASSES.CHECKBOX_TOOLTIP}`);
-    const $inputPoints = $panel.find(`.${CLASSES.INPUT_POINTS}`);
-    const $controlsValueOutContainer = $panel.find(`.${CLASSES.CONTROLS_VALUE_OUT}`);
-    const $scaleMax = $panel.find(`.${CLASSES.SCALE_MAX}`);
-    const $scaleMin = $panel.find(`.${CLASSES.SCALE_MIN}`);
-
     return {
       $panel,
       $slider,
-      $inputStep,
-      $radioViewName,
-      $checkboxBgLine,
-      $checkboxTooltip,
-      $inputPoints,
-      $controlsValueOutContainer,
+      $inputStep: $panel.find(`.${CLASSES.INPUT_STEP}`),
+      $radioViewName: $panel.find(`.${CLASSES.RADIO_VIEW_NAME}`),
+      $checkboxBgLine: $panel.find(`.${CLASSES.CHECKBOX_BG_LINE}`),
+      $checkboxTooltip: $panel.find(`.${CLASSES.CHECKBOX_TOOLTIP}`),
+      $inputPoints: $panel.find(`.${CLASSES.INPUT_POINTS}`),
+      $controlsValueOutContainer: $panel.find(`.${CLASSES.CONTROLS_VALUE_OUT}`),
       inputsValueOut: [],
-      $scaleMax,
-      $scaleMin,
+      $scaleMax: $panel.find(`.${CLASSES.SCALE_MAX}`),
+      $scaleMin: $panel.find(`.${CLASSES.SCALE_MIN}`),
+      $customScale: $panel.find(`.${CLASSES.CUSTOM_SCALE}`),
     };
   }
 
@@ -75,6 +68,7 @@ class ConfigPanel {
       $inputPoints,
       $scaleMax,
       $scaleMin,
+      $customScale,
     } = this.domElements;
 
     const step = $slider.slider('step');
@@ -87,21 +81,28 @@ class ConfigPanel {
       }
     });
 
-    const areBgLineVisible = $slider.slider('show-bg-line');
-    $checkboxBgLine.prop('checked', areBgLineVisible);
+    const isBgLineVisible = $slider.slider('show-bg-line');
+    $checkboxBgLine.prop('checked', isBgLineVisible);
 
     const areTooltipsVisible = $slider.slider('show-tooltips');
     $checkboxTooltip.prop('checked', areTooltipsVisible);
 
-    const allPoints = $slider.slider('value').length;
-    $inputPoints.val(allPoints);
+    const countPoints = $slider.slider('values').length;
+    $inputPoints.val(countPoints);
 
-    const scale = $slider.slider('scale');
-    if (scale.length === 2 && typeof scale[0] === 'number') {
-      $scaleMin.val(scale[0]);
-      $scaleMax.val(scale[1]);
+    const customScale = $slider.slider('custom-scale');
+    if (!customScale) {
+      $customScale.parents(`.${CLASSES.PANEL_ROW}`).remove();
     } else {
+      $customScale.val(customScale.join(','));
+    }
+
+    const minMax = $slider.slider('min-max');
+    if (!minMax) {
       $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
+    } else {
+      $scaleMin.val(minMax[0]);
+      $scaleMax.val(minMax[1]);
     }
 
     this._recreateControlsValueOut();
@@ -162,28 +163,30 @@ class ConfigPanel {
 
   private _handleScaleMaxFocusout(): void {
     const { $slider, $scaleMax } = this.domElements;
-    const scale = $slider.slider('scale') as [number, number];
+    const [min] = $slider.slider('min-max');
+
     try {
-      scale[1] = parseInt($scaleMax.val().toString(), 10);
-      $slider.slider('scale', scale);
+      const newMax = parseInt($scaleMax.val().toString(), 10);
+      $slider.slider('min-max', min, newMax);
     } catch (error) {
       console.error(error);
     }
 
-    $scaleMax.val($slider.slider('scale')[1]);
+    $scaleMax.val($slider.slider('min-max')[1]);
   }
 
   private _handleScaleMinFocusout(): void {
     const { $slider, $scaleMin } = this.domElements;
-    const scale = $slider.slider('scale') as [number, number];
+    const [, max] = $slider.slider('min-max');
+
     try {
-      scale[0] = parseInt($scaleMin.val().toString(), 10);
-      $slider.slider('scale', scale);
+      const newMin = parseInt($scaleMin.val().toString(), 10);
+      $slider.slider('min-max', newMin, max);
     } catch (error) {
       console.error(error);
     }
 
-    $scaleMin.val($slider.slider('scale')[0]);
+    $scaleMin.val($slider.slider('min-max')[0]);
   }
 
   private _recreateControlsValueOut(): void {
@@ -196,7 +199,7 @@ class ConfigPanel {
     $controlsValueOutContainer.html('');
     inputsValueOut.length = 0;
 
-    $slider.slider('value').forEach((value: string | number, index: number) => {
+    $slider.slider('values').forEach((value: string | number, index: number) => {
       const $controlValueOut = createControlValueOut(index, value);
       $controlsValueOutContainer.append($controlValueOut);
       const $input = $controlValueOut.find('input');
@@ -211,7 +214,7 @@ class ConfigPanel {
   private _handleInputValueOutFocusout(ev: JQuery.EventBase): void {
     const { $slider } = this.domElements;
     const $input = $(ev.currentTarget);
-    const currentValues = $slider.slider('value');
+    const currentValues = $slider.slider('values');
     const inputIndex = parseInt($input.data('index').toString(), 10);
 
     if (typeof currentValues[0] === 'number') {
@@ -220,7 +223,7 @@ class ConfigPanel {
       currentValues[inputIndex] = $input.val().toString();
     }
 
-    $slider.slider('value', currentValues);
+    $slider.slider('values', currentValues);
   }
 
   private _handleSliderSelect(): void {
@@ -229,7 +232,7 @@ class ConfigPanel {
       $slider,
     } = this.domElements;
 
-    const values = $slider.slider('value');
+    const values = $slider.slider('values');
 
     if (inputsValueOut.length !== values.length) {
       this._recreateControlsValueOut();
@@ -243,43 +246,29 @@ class ConfigPanel {
       $inputPoints,
       $slider,
     } = this.domElements;
+
     const points = parseInt($inputPoints.val().toString(), 10);
+    if (points < 1) return false;
 
-    if (points < 1) {
-      return false;
-    }
-
-    const currentValues = $slider.slider('value');
+    const currentValues = $slider.slider('values');
     const pointsNow = currentValues.length;
 
-    if (pointsNow === points) {
-      return true;
-    }
+    if (pointsNow === points) return true;
 
     if (points < pointsNow) {
-      $slider.slider('value', currentValues.slice(0, points));
+      $slider.slider('values', currentValues.slice(0, points));
+      this._recreateControlsValueOut();
       return true;
     }
 
     const lastValue = currentValues[currentValues.length - 1];
-
-    if (typeof lastValue === 'number') {
-      const newValues = currentValues as number[];
-      while (newValues.length < points) {
-        newValues.push(lastValue);
-      }
-
-      $slider.slider('value', newValues);
-
-      return true;
+    while (currentValues.length < points) {
+      if (typeof lastValue === 'number') (currentValues as number[]).push(lastValue);
+      else (currentValues as string[]).push(lastValue);
     }
 
-    const newValues = currentValues as string[];
-    while (newValues.length < points) {
-      newValues.push(lastValue);
-    }
-
-    $slider.slider('value', newValues);
+    $slider.slider('values', currentValues);
+    this._recreateControlsValueOut();
 
     return true;
   }
@@ -300,8 +289,8 @@ class ConfigPanel {
       $checkboxBgLine,
     } = this.domElements;
 
-    const areBgLineVisible = Boolean($checkboxBgLine.prop('checked'));
-    $slider.slider('show-bg-line', areBgLineVisible);
+    const isBgLineVisible = Boolean($checkboxBgLine.prop('checked'));
+    $slider.slider('show-bg-line', isBgLineVisible);
   }
 
   private _handleInputStepFocusout(): void {

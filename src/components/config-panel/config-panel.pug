@@ -53,6 +53,11 @@ mixin config-panel(id = "")
                     span.config-panel__control-text Максимум шкалы
                     input.config-panel__input.config-panel__scale-max.js-config-panel__scale-max(type="number")
         .config-panel__row
+            .config-panel__col
+                label.config-panel__control
+                    span.config-panel__control-text Кастомные значения
+                input.config-panel__input.config-panel__custom-scale.js-config-panel__custom-scale(type="text")
+        .config-panel__row
             label.config-panel__control 
                 span.config-panel__control-text Количество ползунков
                 input.config-panel__input.config-panel__input_type_points.js-config-panel__input_type_points(

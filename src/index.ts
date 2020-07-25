@@ -11,7 +11,7 @@ require('./index.sass');
 ((fun: Function): void => {
   jQuery(fun(jQuery));
 })(($: JQueryStatic): void => {
-  const scale1: SliderScale = [
+  const scale1 = [
     'Январь',
     'Февраль',
     'Март',
@@ -25,12 +25,12 @@ require('./index.sass');
     'Ноябрь',
     'Декабрь',
   ];
-  const scale2: SliderScale = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'].reverse();
+  const scale2 = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'].reverse();
 
   initConfigPanel(
     $('#panel1'),
     $('#slider1').slider('init', {
-      start: ['Январь'],
+      values: ['Январь'],
       customScale: scale1,
     }),
   );

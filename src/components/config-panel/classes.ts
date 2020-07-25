@@ -9,6 +9,7 @@ const enum CLASSES {
   SCALE_MAX = 'js-config-panel__scale-max',
   SCALE_MIN = 'js-config-panel__scale-min',
   PANEL_ROW = 'config-panel__row',
+  CUSTOM_SCALE = 'js-config-panel__custom-scale',
 }
 
 export default CLASSES;

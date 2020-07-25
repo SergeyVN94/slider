@@ -1,128 +1,98 @@
 import initSlider from '../scripts/initSlider';
 import Slider from '../scripts/Slider';
 import '../slider.sass';
-
-interface ISliderConfig {
-  start?: string[] | number[];
-  customScale?: string[];
-  min?: number;
-  max?: number;
-  viewName?: ViewName;
-  tooltips?: boolean;
-  step?: number;
-  prettify?: PrettifyFunc;
-  bgLine?: boolean;
-}
-
-interface IResConfig {
-  start?: string[] | number[];
-  scale?: [number, number] | string[];
-  viewName?: ViewName;
-  tooltips?: boolean;
-  step?: number;
-  prettify?: PrettifyFunc;
-  bgLine?: boolean;
-}
+import DEFAULT_CONFIG from '../scripts/defaultConfig';
+import Model from '../scripts/domain-model/Model';
 
 const COMMANDS = {
   INIT: 'init',
   STEP: 'step',
-  VALUE: 'value',
+  VALUES: 'values',
   SHOW_TOOLTIPS: 'show-tooltips',
   VIEW_NAME: 'view-name',
   SHOW_BG_LINE: 'show-bg-line',
-  SCALE: 'scale',
+  CUSTOM_SCALE: 'custom-scale',
+  MIN_MAX: 'min-max',
 };
 
-const DEFAULT_CONFIG = {
-  scale: [0, 100] as [number, number],
-  start: [0],
-  step: 1,
-  viewName: 'horizontal' as ViewName,
-  bgLine: true,
-  tooltips: true,
-  prettify: (value: string | number): string => String(value),
+const convertCustomScale = function convertCustomScale(customScale: string[]): string[] {
+  if (!Array.isArray(customScale)) return DEFAULT_CONFIG.customScale;
+  return customScale.map((value) => String(value));
 };
 
-const normalizeScale = function normalizeScale(
-  customScale: string[],
-  min: number,
-  max: number,
-): SliderScale {
-  const scaleRange: number[] = [];
+const convertMinMax = function convertMinMax(min: number, max: number): {
+  min: number;
+  max: number;
+} {
+  const minMax = { min, max };
 
   if (typeof min !== 'number') {
     try {
-      scaleRange[0] = parseInt(min, 10);
+      minMax.min = parseInt(min, 10);
     } catch (error) {
-      scaleRange[0] = 0;
-      console.error(new TypeError('The minimum scale value must be a number'));
+      minMax.min = DEFAULT_CONFIG.min;
+      console.error(new TypeError('The minimum must be a number'));
     }
-  } else scaleRange[0] = min;
+  }
 
   if (typeof max !== 'number') {
     try {
-      scaleRange[1] = parseInt(max, 10);
+      minMax.max = parseInt(max, 10);
     } catch (error) {
-      scaleRange[1] = scaleRange[0] + 100;
-      console.error(new TypeError('The maximum scale value must be a number'));
+      minMax.max = DEFAULT_CONFIG.max;
+      console.error(new TypeError('The maximum must be a number'));
     }
-  } else scaleRange[1] = max;
-
-  const useCustomScale = Array.isArray(customScale) && customScale.length;
-
-  if (useCustomScale) {
-    return customScale.map((item) => String(item));
   }
 
-  return scaleRange as [number, number];
+  return minMax;
 };
 
-const normalizeStartValues = function normalizeStartValues(
-  values: number[] | string[],
-  scale: SliderScale,
-): number[] | string[] {
-  // if (typeof values === 'string' || typeof values === 'number') return [values];
-
+const convertValuesForCustomScale = function convertValuesForCustomScale(
+  values: string[],
+  customScale: string[],
+): string[] {
   if (!Array.isArray(values)) {
-    console.error(new Error('Starting values ​​must be an array.'));
-    return [scale[0]] as string[] | number[];
+    console.error(new Error('Values ​​must be an array.'));
+    return customScale.slice(0);
   }
 
-  if (values.length === 0) {
-    console.error('The array of start values ​​must not be empty.');
-    return [scale[0]] as string[] | number[];
+  return values.map((value) => String(value));
+};
+
+const convertValuesForMinMax = function convertValuesForMinMax(
+  values: number[],
+  min: number,
+): number[] {
+  if (!Array.isArray(values)) {
+    console.error(new Error('Values ​​must be an array.'));
+    return [min];
   }
 
-  const isScaleAreNumberRange = typeof scale[0] === 'number';
-  if (!isScaleAreNumberRange) return (values as string[]).map((value) => String(value));
-
-  const isCorrectValues = values.every((value: number | string) => {
+  const isPossibleToConvert = values.every((value) => {
     try {
       parseInt(String(value), 10);
+      return true;
     } catch (error) {
       return false;
     }
-
-    return true;
   });
 
-  if (!isCorrectValues) {
-    console.error(new Error(''));
-    return [scale[0]] as string[] | number[];
+  if (!isPossibleToConvert) {
+    console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
+    return [min];
   }
 
-  return (values as number[]).map((value) => parseInt(String(value), 10));
+  return values.map((value) => parseInt(String(value), 10));
 };
 
-const normalizeConfig = function normalizeConfig(config: ISliderConfig): IResConfig {
+const convertConfig = function convertConfig(config: ISliderConfig): ISliderConfig {
   if (config === null) return DEFAULT_CONFIG;
 
   const {
     customScale,
     min,
     max,
-    start,
+    values,
     prettify = DEFAULT_CONFIG.prettify,
     tooltips = true,
     bgLine = true,
@@ -130,10 +100,18 @@ const normalizeConfig = function normalizeConfig(config: ISliderConfig): IResCon
     viewName = 'horizontal',
   } = config;
 
-  const newConfig: IResConfig = {};
+  const newConfig: ISliderConfig = {};
 
-  newConfig.scale = normalizeScale(customScale, min, max);
-  newConfig.start = normalizeStartValues(start, newConfig.scale);
+  if (customScale) {
+    newConfig.customScale = convertCustomScale(customScale);
+    newConfig.values = convertValuesForCustomScale(values as string[], customScale);
+  } else {
+    const minMax = convertMinMax(min, max);
+    newConfig.min = minMax.min;
+    newConfig.max = minMax.max;
+    newConfig.values = convertValuesForMinMax(values as number[], minMax.min);
+  }
+
   newConfig.tooltips = Boolean(tooltips);
   newConfig.bgLine = Boolean(bgLine);
 
@@ -141,7 +119,7 @@ const normalizeConfig = function normalizeConfig(config: ISliderConfig): IResCon
     newConfig.viewName = viewName;
   } else {
     console.error(new TypeError('viewName must be "horizontal" or "vertical".'));
-    newConfig.viewName = 'horizontal';
+    newConfig.viewName = DEFAULT_CONFIG.viewName;
   }
 
   if (typeof step !== 'number') {
@@ -158,34 +136,39 @@ const normalizeConfig = function normalizeConfig(config: ISliderConfig): IResCon
     console.error(new TypeError('prettify should be a function.'));
   } else newConfig.prettify = prettify;
 
-  let _start: number[] | string[] = [];
-
-  if (!Array.isArray(start)) _start[0] = start;
-  else _start = start;
-
   return newConfig;
 };
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
-  command: 'init' | 'step' | 'value' | 'show-tooltips' | 'view-name' | 'show-bg-line' | 'scale',
+  command: 'init' | 'step' | 'values' | 'show-tooltips' | 'view-name' | 'show-bg-line' | 'custom-scale' | 'min-max',
   args: ISliderConfig
   | number
+  | boolean
   | string[]
   | number[]
-  | boolean
   | ViewName
-  | SliderScale
-  = null, // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  = null,
+  args2?: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   const slider = this.data('slider') as Slider;
-  const config = (this.data('config') || DEFAULT_CONFIG) as IResConfig;
+  const config = (this.data('config') || DEFAULT_CONFIG) as ISliderConfig;
 
   if (command === COMMANDS.INIT) {
+    const _config = args ? convertConfig(args as ISliderConfig) : DEFAULT_CONFIG;
+    const _slider = initSlider(this, _config);
+
+    const resultConfig = _slider.getConfig();
+    if (resultConfig.customScale) _config.customScale = resultConfig.customScale;
+    if (resultConfig.min) _config.min = resultConfig.min;
+    if (resultConfig.max) _config.max = resultConfig.max;
+    if (resultConfig.step) _config.step = resultConfig.step;
+
     this
-      .data('slider', initSlider(this, normalizeConfig(args as ISliderConfig)))
-      .data('config', normalizeConfig(args as ISliderConfig));
+      .data('config', _config)
+      .data('slider', _slider);
 
     return this;
   }
@@ -199,9 +182,9 @@ $.fn.slider = function pluginMainFunction(
   }
 
   if (command === COMMANDS.SHOW_BG_LINE) {
-    if (args === null) return slider.areBgLineVisible;
+    if (args === null) return slider.isBgLineVisible;
     if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
-    slider.areBgLineVisible = Boolean(args);
+    slider.isBgLineVisible = Boolean(args);
 
     return this;
   }
@@ -209,15 +192,17 @@ $.fn.slider = function pluginMainFunction(
   if (command === COMMANDS.VIEW_NAME) {
     if (args === null) return config.viewName;
 
-    if (['horizontal', 'vertical'].includes(String(args))) {
-      config.viewName = args as ViewName;
-      return this
-        .data('slider', initSlider(this, config))
-        .data('config', config);
+    if (!['horizontal', 'vertical'].includes(String(args))) {
+      console.error(new TypeError('Expected values ​​of "horizontal" or "vertical".'));
+      return this;
     }
 
-    console.error(new TypeError('Expected values ​​of "horizontal" or "vertical".'));
-    return this;
+    config.viewName = args as ViewName;
+    config.values = slider.values;
+
+    return this
+      .data('config', config)
+      .data('slider', initSlider(this, config));
   }
 
   if (command === COMMANDS.STEP) {
@@ -230,12 +215,16 @@ $.fn.slider = function pluginMainFunction(
       return this;
     }
 
+    if (config.customScale) {
+      if (!Model.checkStepForCustomScale(args as number, config.customScale)) return this;
+    } else if (!Model.checkStepForMinMax(args as number, config.min, config.max)) return this;
+
     return this
-      .data('slider', initSlider(this, config))
-      .data('config', config);
+      .data('config', config)
+      .data('slider', initSlider(this, config));
   }
 
-  if (command === COMMANDS.VALUE) {
+  if (command === COMMANDS.VALUES) {
     if (args === null) return slider.values;
 
     if (!Array.isArray(args)) {
@@ -243,19 +232,14 @@ $.fn.slider = function pluginMainFunction(
       return this;
     }
 
-    if ((args as string[] | number[]).length === 0) {
-      console.error(new Error('The array must be not empty.'));
-      return this;
-    }
-
-    let values: string[] | number[];
-
-    if (typeof config.scale[0] === 'string') {
-      values = (args as string[]).map((value) => String(value));
+    if (config.customScale) {
+      if (!Model.checkValuesForCustomScale(
+        (args as string[]).map((value) => String(value)),
+        config.customScale,
+      )) return this;
     } else {
       const isCorrectValues = args.every((value: string | number) => {
         if (typeof value === 'number') return true;
-
         try {
           parseInt(String(value), 10);
           return true;
@@ -263,55 +247,78 @@ $.fn.slider = function pluginMainFunction(
           return false;
         }
       });
-      if (isCorrectValues) {
-        values = (args as number[]).map((value: number) => parseInt(String(value), 10));
+
+      if (!isCorrectValues) {
+        console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
+        return this;
       }
+
+      if (!Model.checkValuesForMinMax(args as number[], config.min, config.max)) return this;
     }
 
-    if (slider.values.length === values.length) {
-      slider.values = values;
+    if (args.length === slider.values.length) {
+      slider.values = args;
       return this;
     }
 
-    config.start = values;
+    config.values = args;
 
     return this
-      .data('slider', initSlider(this, config))
-      .data('config', config);
+      .data('config', config)
+      .data('slider', initSlider(this, config));
   }
 
-  if (command === COMMANDS.SCALE) {
-    if (args === null) {
-      return config.scale;
-    }
+  if (command === COMMANDS.CUSTOM_SCALE) {
+    if (args === null) return config.customScale;
 
     if (!Array.isArray(args)) {
-      console.error(new TypeError('The scale must be an array'));
+      console.error(new TypeError('The custom scale must be an array'));
       return this;
     }
 
-    if (args.length < 2) {
-      console.error(new Error('The scale array must be at least 2 elements.'));
-      return this;
-    }
+    const _customScale = (args as string[]).map((value) => String(value));
 
-    if (args.length === 2) {
+    if (!Model.checkCustomScale(_customScale)) return this;
+
+    return this
+      .data('config', config)
+      .data('slider', initSlider(this, config));
+  }
+
+  if (command === COMMANDS.MIN_MAX) {
+    if (args === null) return [config.min, config.max];
+
+    let min: number;
+    let max: number;
+
+    if (typeof args !== 'number') {
       try {
-        const min = parseInt(String(args[0]), 10);
-        const max = parseInt(String(args[1]), 10);
-        config.scale = [min, max];
+        min = parseInt(String(args), 10);
       } catch (error) {
-        config.scale = (args as string[]).map((item) => String(item));
+        console.error(new Error('Args parameter must be number or convert to number.'));
+        return this;
       }
-    } else {
-      config.scale = (args as string[]).map((item) => String(item));
-    }
+    } else min = args;
+
+    if (typeof args2 !== 'number') {
+      try {
+        min = parseInt(String(args2), 10);
+      } catch (error) {
+        console.error(new Error('Args2 parameter must be number or convert to number.'));
+        return this;
+      }
+    } else max = args2;
+
+    if (!Model.checkMinMax(min, max)) return this;
+
+    config.min = min;
+    config.max = max;
 
     return this
       .data('slider', initSlider(this, config))
       .data('config', config);
   }
 
-  console.error(new Error(`Unknown command ${command}`));
+  console.error(new Error(`Unknown command "${command}"`));
   return this;
 };

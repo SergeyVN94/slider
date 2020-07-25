@@ -5,7 +5,7 @@ type HandlePointMousedown = (index: number, ev: JQuery.MouseDownEvent) => void;
 
 interface IViewConfigManager {
   areTooltipsVisible: boolean;
-  areBgLineVisible: boolean;
+  isBgLineVisible: boolean;
 }
 
 interface IView {

@@ -1,4 +1,4 @@
-class StringArrayScaleDriver implements IScaleDriver {
+class CustomScaleDriver implements IScaleDriver {
   private readonly scale: string[];
 
   private readonly maxStep: number;
@@ -24,4 +24,4 @@ class StringArrayScaleDriver implements IScaleDriver {
   }
 }
 
-export default StringArrayScaleDriver;
+export default CustomScaleDriver;

@@ -40,7 +40,7 @@ class View implements IView, IViewConfigManager {
 
   constructor(config: {
     $slider: JQuery;
-    allPoints?: number;
+    countPoints?: number;
     tooltips?: boolean;
     bgLine?: boolean;
     viewName?: ViewName;
@@ -49,7 +49,7 @@ class View implements IView, IViewConfigManager {
   }) {
     const {
       $slider,
-      allPoints = 1,
+      countPoints = 1,
       tooltips = true,
       bgLine = true,
       prettify = (value: string): string => value,
@@ -66,7 +66,12 @@ class View implements IView, IViewConfigManager {
       pointValues: [],
     };
 
-    for (let i = 0; i < allPoints; i += 1) this.cache.pointPositions[i] = -1;
+    if (countPoints > 0) {
+      for (let i = 0; i < countPoints; i += 1) this.cache.pointPositions.push(-1);
+    } else {
+      this.cache.pointPositions.push(-1);
+      console.error(new Error('The number of points must be greater than zero'));
+    }
 
     Slider.resetSlider($slider);
     this.components = this._initSlider(viewName, scaleItems);
@@ -77,12 +82,12 @@ class View implements IView, IViewConfigManager {
     this.areTooltipsVisible = bgLine;
   }
 
-  public get areBgLineVisible(): boolean {
-    return this.components.slider.areBgLineVisible;
+  public get isBgLineVisible(): boolean {
+    return this.components.slider.isBgLineVisible;
   }
 
-  public set areBgLineVisible(state: boolean) {
-    this.components.slider.areBgLineVisible = state;
+  public set isBgLineVisible(state: boolean) {
+    this.components.slider.isBgLineVisible = state;
   }
 
   public get areTooltipsVisible(): boolean {

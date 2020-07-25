@@ -8,6 +8,10 @@ class Slider {
     this.model = model;
   }
 
+  public getConfig(): ISliderConfig {
+    return this.model.getConfig();
+  }
+
   public get values(): string[] | number[] {
     return this.model.values;
   }
@@ -24,12 +28,12 @@ class Slider {
     this.view.areTooltipsVisible = state;
   }
 
-  public get areBgLineVisible(): boolean {
-    return this.view.areBgLineVisible;
+  public get isBgLineVisible(): boolean {
+    return this.view.isBgLineVisible;
   }
 
-  public set areBgLineVisible(state: boolean) {
-    this.view.areBgLineVisible = state;
+  public set isBgLineVisible(state: boolean) {
+    this.view.isBgLineVisible = state;
   }
 }
 
