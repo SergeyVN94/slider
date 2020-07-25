@@ -35,33 +35,33 @@ require('./index.sass');
     }),
   );
 
-  // initConfigPanel(
-  //   $('#panel2'),
-  //   $('#slider2').slider('init', {
-  //     min: -1000,
-  //     max: 1000,
-  //     start: [-444, 777],
-  //     prettify: (value: number) => `${value} -> ${value / 10}`,
-  //   }),
-  // );
+  initConfigPanel(
+    $('#panel2'),
+    $('#slider2').slider('init', {
+      min: -1000,
+      max: 1000,
+      values: [-444, 777],
+      prettify: (value: number) => `${value} -> ${value / 10}`,
+    }),
+  );
 
-  // initConfigPanel(
-  //   $('#panel3'),
-  //   $('#slider3').slider('init', {
-  //     viewName: 'vertical',
-  //     start: [555],
-  //     max: 1000,
-  //     prettify: (value: number) => `${value} $`,
-  //   }),
-  // );
+  initConfigPanel(
+    $('#panel3'),
+    $('#slider3').slider('init', {
+      viewName: 'vertical',
+      values: [555],
+      max: 1000,
+      prettify: (value: number) => `${value} $`,
+    }),
+  );
 
-  // initConfigPanel(
-  //   $('#panel4'),
-  //   $('#slider4').slider('init', {
-  //     viewName: 'vertical',
-  //     start: ['Ю', 'М'],
-  //     customScale: scale2,
-  //     prettify: (value: string) => `${value} -> ${value.toLowerCase()}`,
-  //   }),
-  // );
+  initConfigPanel(
+    $('#panel4'),
+    $('#slider4').slider('init', {
+      viewName: 'vertical',
+      values: ['Ю', 'М'],
+      customScale: scale2,
+      prettify: (value: string) => `${value} -> ${String(value).toLowerCase()}`,
+    }),
+  );
 });

@@ -27,21 +27,13 @@ const convertMinMax = function convertMinMax(min: number, max: number): {
   const minMax = { min, max };
 
   if (typeof min !== 'number') {
-    try {
-      minMax.min = parseInt(min, 10);
-    } catch (error) {
-      minMax.min = DEFAULT_CONFIG.min;
-      console.error(new TypeError('The minimum must be a number'));
-    }
+    minMax.min = parseInt(String(min), 10);
+    if (Number.isNaN(minMax.min)) minMax.min = DEFAULT_CONFIG.min;
   }
 
   if (typeof max !== 'number') {
-    try {
-      minMax.max = parseInt(max, 10);
-    } catch (error) {
-      minMax.max = DEFAULT_CONFIG.max;
-      console.error(new TypeError('The maximum must be a number'));
-    }
+    minMax.max = parseInt(String(max), 10);
+    if (Number.isNaN(minMax.max)) minMax.max = minMax.min + 100;
   }
 
   return minMax;
