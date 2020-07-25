@@ -165,12 +165,8 @@ class ConfigPanel {
     const { $slider, $scaleMax } = this.domElements;
     const [min] = $slider.slider('min-max');
 
-    try {
-      const newMax = parseInt($scaleMax.val().toString(), 10);
-      $slider.slider('min-max', min, newMax);
-    } catch (error) {
-      console.error(error);
-    }
+    const newMax = parseInt($scaleMax.val().toString(), 10);
+    if (!Number.isNaN(newMax)) $slider.slider('min-max', min, newMax);
 
     $scaleMax.val($slider.slider('min-max')[1]);
   }
@@ -179,12 +175,8 @@ class ConfigPanel {
     const { $slider, $scaleMin } = this.domElements;
     const [, max] = $slider.slider('min-max');
 
-    try {
-      const newMin = parseInt($scaleMin.val().toString(), 10);
-      $slider.slider('min-max', newMin, max);
-    } catch (error) {
-      console.error(error);
-    }
+    const newMin = parseInt($scaleMin.val().toString(), 10);
+    if (!Number.isNaN(newMin)) $slider.slider('min-max', newMin, max);
 
     $scaleMin.val($slider.slider('min-max')[0]);
   }

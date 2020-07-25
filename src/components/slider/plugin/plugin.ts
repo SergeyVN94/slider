@@ -60,14 +60,7 @@ const convertValuesForMinMax = function convertValuesForMinMax(
     return [min];
   }
 
-  const isPossibleToConvert = values.every((value) => {
-    try {
-      parseInt(String(value), 10);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  });
+  const isPossibleToConvert = values.every((value) => !Number.isNaN(parseInt(String(value), 10)));
 
   if (!isPossibleToConvert) {
     console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
@@ -114,14 +107,11 @@ const convertConfig = function convertConfig(config: ISliderConfig): ISliderConf
     newConfig.viewName = DEFAULT_CONFIG.viewName;
   }
 
-  if (typeof step !== 'number') {
-    try {
-      newConfig.step = parseInt(String(step), 10);
-    } catch (error) {
-      newConfig.step = DEFAULT_CONFIG.step;
-      console.error(new TypeError('The step must be a number.'));
-    }
-  } else newConfig.step = step;
+  newConfig.step = parseInt(String(step), 10);
+  if (Number.isNaN(newConfig.step)) {
+    newConfig.step = DEFAULT_CONFIG.step;
+    console.error(new TypeError('The step must be a number.'));
+  }
 
   if (typeof prettify !== 'function') {
     newConfig.prettify = DEFAULT_CONFIG.prettify;
@@ -169,16 +159,18 @@ $.fn.slider = function pluginMainFunction(
     if (args === null) return slider.areTooltipsVisible;
     if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
     slider.areTooltipsVisible = Boolean(args);
+    config.tooltips = slider.areTooltipsVisible;
 
-    return this;
+    return this.data('config', config);
   }
 
   if (command === COMMANDS.SHOW_BG_LINE) {
     if (args === null) return slider.isBgLineVisible;
     if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
     slider.isBgLineVisible = Boolean(args);
+    config.bgLine = slider.isBgLineVisible;
 
-    return this;
+    return this.data('config', config);
   }
 
   if (command === COMMANDS.VIEW_NAME) {
@@ -200,9 +192,8 @@ $.fn.slider = function pluginMainFunction(
   if (command === COMMANDS.STEP) {
     if (args === null) return config.step;
 
-    try {
-      config.step = parseInt(String(args), 10);
-    } catch (error) {
+    config.step = parseInt(String(args), 10);
+    if (Number.isNaN(config.step)) {
       console.error(new TypeError('A number was expected, or a string from which to get a number.'));
       return this;
     }
@@ -230,15 +221,9 @@ $.fn.slider = function pluginMainFunction(
         config.customScale,
       )) return this;
     } else {
-      const isCorrectValues = args.every((value: string | number) => {
-        if (typeof value === 'number') return true;
-        try {
-          parseInt(String(value), 10);
-          return true;
-        } catch (error) {
-          return false;
-        }
-      });
+      const isCorrectValues = args.every(
+        (value: string | number) => !Number.isNaN(parseInt(String(value), 10)),
+      );
 
       if (!isCorrectValues) {
         console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
@@ -280,26 +265,17 @@ $.fn.slider = function pluginMainFunction(
   if (command === COMMANDS.MIN_MAX) {
     if (args === null) return [config.min, config.max];
 
-    let min: number;
-    let max: number;
+    const min = parseInt(String(args), 10);
+    if (Number.isNaN(min)) {
+      console.error(new Error('Args parameter must be number or convert to number.'));
+      return this;
+    }
 
-    if (typeof args !== 'number') {
-      try {
-        min = parseInt(String(args), 10);
-      } catch (error) {
-        console.error(new Error('Args parameter must be number or convert to number.'));
-        return this;
-      }
-    } else min = args;
-
-    if (typeof args2 !== 'number') {
-      try {
-        min = parseInt(String(args2), 10);
-      } catch (error) {
-        console.error(new Error('Args2 parameter must be number or convert to number.'));
-        return this;
-      }
-    } else max = args2;
+    const max = parseInt(String(args2), 10);
+    if (Number.isNaN(max)) {
+      console.error(new Error('Args2 parameter must be number or convert to number.'));
+      return this;
+    }
 
     if (!Model.checkMinMax(min, max)) return this;
 

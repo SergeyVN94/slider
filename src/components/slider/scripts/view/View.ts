@@ -79,7 +79,7 @@ class View implements IView, IViewConfigManager {
     this.controller.onResize(this._handleSliderResize.bind(this));
 
     this.areTooltipsVisible = tooltips;
-    this.areTooltipsVisible = bgLine;
+    this.isBgLineVisible = bgLine;
   }
 
   public get isBgLineVisible(): boolean {
