@@ -45,7 +45,7 @@ $scale-item-line-offset: 3px
 
     .slider__point
       bottom: auto
-      left: $point-offset
+      left: -$point-offset
       transform: translate(0, -50%)
 
     .slider__tooltip
@@ -62,16 +62,18 @@ $scale-item-line-offset: 3px
         border-right: $triangle solid $tooltip-bg
 
     .slider__scale-item
-      right: ($slider-height + $point-offset + $scale-item-line-offset)
+      right: ($slider-height + $point-offset + ($scale-item-line-offset * 3) + $scale-item-line)
       left: auto
       top: auto
-      width: $scale-item-size / 2
-      height: 0px
+      transform: translate(0, 50%)
 
       &::after
+        top: 50%
+        right: - ($scale-item-line + ($scale-item-line-offset * 2))
+        left: auto
         width:  $scale-item-line
         height: 2px
-        top: -1px
+        transform: translate(0, -50%)
 
   &_bg-line-hidden
     .slider__bg-line
@@ -139,7 +141,7 @@ $scale-item-line-offset: 3px
 
   &__scale-item
     position: absolute
-    top: ($slider-height + $point-offset + $scale-item-line + $scale-item-line-offset * 2)
+    top: ($slider-height + $point-offset + $scale-item-line + ($scale-item-line-offset * 3))
     transform: translateX(-50%)
     line-height: 16px
     cursor: pointer
@@ -147,7 +149,7 @@ $scale-item-line-offset: 3px
 
     &::after
       position: absolute
-      top: - ($scale-item-line-offset + $scale-item-line)
+      top: - (($scale-item-line-offset * 2) + $scale-item-line)
       left: 50%
       transform: translateX(-50%)
       width: 2px
