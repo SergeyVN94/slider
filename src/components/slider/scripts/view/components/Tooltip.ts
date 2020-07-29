@@ -4,14 +4,17 @@ import Point from './Point';
 class Tooltip {
   private readonly $tooltip: JQuery;
 
-  private _setState: (position: number, value: string) => void;
+  private readonly viewName: ViewName;
 
   constructor($slider: JQuery, viewName: ViewName) {
+    this.viewName = viewName;
+
     this.$tooltip = $('<div>', {
       class: CLASSES.TOOLTIP,
+      css: { transform: 'translate(-50%)' },
     });
+
     $slider.append(this.$tooltip);
-    this._setViewName(viewName);
   }
 
   public static updateZIndexes(tooltips: Tooltip[], points: Point[]): void {
@@ -21,37 +24,16 @@ class Tooltip {
   }
 
   public setState(position: number, value: string): void {
-    this._setState(position, value);
+    this.$tooltip
+      .html(value)
+      .css(
+        this.viewName === 'horizontal' ? 'left' : 'top',
+        `${position * 100}%`,
+      );
   }
 
   private _setZIndex(zIndex: number): void {
     this.$tooltip.css('z-index', zIndex);
-  }
-
-  private _setViewName(name: ViewName): void {
-    if (name === 'vertical') {
-      this._setState = this._verticalViewSetState.bind(this);
-    } else {
-      this._setState = this._horizontalViewSetState.bind(this);
-    }
-  }
-
-  private _horizontalViewSetState(position: number, value: string): void {
-    this.$tooltip.html(value);
-    const offset = this.$tooltip.outerWidth() / 2;
-    const containerSize = this.$tooltip.parent().outerWidth();
-    const marginLeft = ((position * containerSize) - offset);
-
-    this.$tooltip.css('left', `${marginLeft}px`);
-  }
-
-  private _verticalViewSetState(position: number, value: string): void {
-    this.$tooltip.html(value);
-    const offset = this.$tooltip.outerHeight() / 2;
-    const containerSize = this.$tooltip.parent().outerHeight();
-    const marginBottom = ((position * containerSize) - offset);
-
-    this.$tooltip.css('bottom', `${marginBottom}px`);
   }
 }
 

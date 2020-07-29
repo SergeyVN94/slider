@@ -26,13 +26,9 @@ interface IViewCache {
 class View implements IView, IViewConfigManager {
   private readonly components: IViewComponents;
 
-  private readonly cache: IViewCache;
+  private readonly pointPositions: number[];
 
   private readonly prettify: PrettifyFunc;
-
-  private static readonly POINT_NOT_MOVED = -1;
-
-  private indexMovedPoint: number;
 
   private readonly controller: Controller;
 
@@ -59,24 +55,19 @@ class View implements IView, IViewConfigManager {
 
     this.$slider = $slider;
     this.prettify = prettify;
-    this.indexMovedPoint = 1;
 
-    this.cache = {
-      pointPositions: [],
-      pointValues: [],
-    };
+    this.pointPositions = [];
 
     if (countPoints > 0) {
-      for (let i = 0; i < countPoints; i += 1) this.cache.pointPositions.push(-1);
+      for (let i = 0; i < countPoints; i += 1) this.pointPositions.push(-1);
     } else {
-      this.cache.pointPositions.push(-1);
+      this.pointPositions.push(-1);
       console.error(new Error('The number of points must be greater than zero'));
     }
 
     Slider.resetSlider($slider);
     this.components = this._initSlider(viewName, scaleItems);
     this.controller = new Controller(this.components);
-    this.controller.onResize(this._handleSliderResize.bind(this));
 
     this.areTooltipsVisible = tooltips;
     this.isBgLineVisible = bgLine;
@@ -103,14 +94,9 @@ class View implements IView, IViewConfigManager {
   }
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
-    const {
-      pointPositions: currentPositions,
-      pointValues: currentValues,
-    } = this.cache;
-
     const lastIndex = pointPositions.length - 1;
-    const isNeedUpdateBgLine = pointPositions[lastIndex] !== currentPositions[lastIndex]
-    || pointPositions[0] !== currentPositions[0];
+    const isNeedUpdateBgLine = pointPositions[lastIndex] !== this.pointPositions[lastIndex]
+    || pointPositions[0] !== this.pointPositions[0];
 
     if (isNeedUpdateBgLine) {
       this.components.bgLine.update(
@@ -122,12 +108,11 @@ class View implements IView, IViewConfigManager {
     let isValuesUpdated = false;
 
     pointPositions.forEach((position, index) => {
-      if (currentPositions[index] === position) return;
+      if (this.pointPositions[index] === position) return;
 
       isValuesUpdated = true;
 
-      currentPositions[index] = position;
-      currentValues[index] = pointValues[index];
+      this.pointPositions[index] = position;
       this.components.points[index].setPosition(position);
       this.components.tooltips[index].setState(position, this.prettify(pointValues[index]));
 
@@ -138,41 +123,20 @@ class View implements IView, IViewConfigManager {
     if (isValuesUpdated) this.components.slider.triggerSelectEvent(pointValues);
   }
 
-  private _handleSliderResize(): void {
-    const {
-      pointPositions,
-      pointValues,
-    } = this.cache;
-
-    const { points, tooltips } = this.components;
-
-    points.forEach((point, index) => point.setPosition(pointPositions[index]));
-    tooltips.forEach((tooltip, index) => tooltip.setState(
-      pointPositions[index],
-      this.prettify(pointValues[index]),
-    ));
-
-    Point.handleCollisions(this.components.points, this.indexMovedPoint);
-  }
-
   private _initSlider(viewName: ViewName, scaleItems: ScaleItem[]): IViewComponents {
-    const { pointPositions, pointValues } = this.cache;
-
     const points: Point[] = [];
     const tooltips: Tooltip[] = [];
 
-    for (let i = 0; i < pointPositions.length; i += 1) {
+    for (let i = 0; i < this.pointPositions.length; i += 1) {
       const point = new Point(this.$slider, i, viewName);
       const tooltip = new Tooltip(this.$slider, viewName);
-      point.setPosition(pointPositions[i]);
-      tooltip.setState(pointPositions[i], this.prettify(pointValues[i]));
       points.push(point);
       tooltips.push(tooltip);
     }
 
     const bgLine = new BgLine(this.$slider, viewName);
-    if (pointPositions.length === 1) bgLine.update(pointPositions[0]);
-    else bgLine.update(pointPositions[pointPositions.length - 1], pointPositions[0]);
+    if (this.pointPositions.length === 1) bgLine.update(this.pointPositions[0]);
+    else bgLine.update(this.pointPositions[this.pointPositions.length - 1], this.pointPositions[0]);
 
     return {
       bgLine,
@@ -199,8 +163,6 @@ class View implements IView, IViewConfigManager {
       this.$slider.append($item.append($itemText));
       items.push($item);
 
-      const itemTextSize = (viewName === 'horizontal') ? $itemText.outerWidth() : $itemText.outerHeight();
-      $itemText.css(viewName === 'horizontal' ? 'left' : 'bottom', `-${(itemTextSize / 2)}px`);
       $item.css(viewName === 'horizontal' ? 'left' : 'bottom', `${(position * 100)}%`);
     });
 

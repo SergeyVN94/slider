@@ -16,8 +16,6 @@ class Controller {
 
   private selectEventCallback: HandlerViewSelect;
 
-  private resizeEventCallback: HandleWindowResize;
-
   private pointSelected: number;
 
   private static readonly POINT_NOT_SELECTED = -1;
@@ -25,17 +23,12 @@ class Controller {
   constructor(components: IComponents) {
     this.components = components;
     this.selectEventCallback = null;
-    this.resizeEventCallback = null;
     this.pointSelected = Controller.POINT_NOT_SELECTED;
     this._initEventListeners();
   }
 
   public onSelect(callback: HandlerViewSelect): void {
     this.selectEventCallback = callback;
-  }
-
-  public onResize(callback: HandleWindowResize): void {
-    this.resizeEventCallback = callback;
   }
 
   private _initEventListeners(): void {
@@ -46,7 +39,6 @@ class Controller {
     Controller.$document
       .off('mouseup.slider.removeEventListeners')
       .on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
-    window.addEventListener('resize', this._handleDocumentResize.bind(this));
   }
 
   private _triggerSelectEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
@@ -71,10 +63,6 @@ class Controller {
   private _handleDocumentMouseup(): void {
     Controller.$document.off('mousemove.slider.checkTargetPosition');
     this.pointSelected = Controller.POINT_NOT_SELECTED;
-  }
-
-  private _handleDocumentResize(): void {
-    if (this.resizeEventCallback) this.resizeEventCallback();
   }
 }
 

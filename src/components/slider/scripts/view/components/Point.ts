@@ -7,18 +7,19 @@ class Point {
 
   private mousedownCallback: HandlePointMousedown;
 
-  private viewName: ViewName;
-
-  private _setPosition: (position: number) => void;
+  private readonly viewName: ViewName;
 
   constructor($slider: JQuery, index: number, view: ViewName) {
     this.index = index;
+    this.viewName = view;
+
     this.$point = $('<div/>', {
       class: `${CLASSES.POINT} js-${CLASSES.POINT}`,
       'data-index': this.index,
+      css: { transform: 'translate(-50%)' },
     });
+
     $slider.append(this.$point);
-    this._setViewName(view);
   }
 
   public static handleCollisions(points: Point[], selectedPoint: number): void {
@@ -39,7 +40,10 @@ class Point {
   }
 
   public setPosition(position: number): void {
-    this._setPosition(position);
+    this.$point.css(
+      this.viewName === 'horizontal' ? 'left' : 'top',
+      `${position * 100}%`,
+    );
   }
 
   public get zIndex(): number {
@@ -55,40 +59,16 @@ class Point {
       this.viewName === 'horizontal' ? this.$point.outerWidth() : this.$point.outerHeight()
     );
 
-    const position = this._getStart();
-    const anotherPosition = point._getStart();
+    const position = this._getPosition();
+    const anotherPosition = point._getPosition();
 
     return Math.abs(position - anotherPosition) < pointSize;
   }
 
-  private _getStart(): number {
+  private _getPosition(): number {
     return parseFloat(
       this.$point.css(this.viewName === 'horizontal' ? 'left' : 'top'),
     );
-  }
-
-  private _setViewName(name: ViewName): void {
-    this.viewName = name;
-
-    if (name === 'vertical') {
-      this._setPosition = this._verticalViewSetPosition.bind(this);
-    } else {
-      this._setPosition = this._horizontalViewSetPosition.bind(this);
-    }
-  }
-
-  private _horizontalViewSetPosition(position: number): void {
-    const containerWidth = this.$point.parent().outerWidth();
-    const offset = this.$point.outerWidth() / 2;
-    const marginLeft = (position * containerWidth) - offset;
-    this.$point.css('left', `${marginLeft}px`);
-  }
-
-  private _verticalViewSetPosition(position: number): void {
-    const containerHeight = this.$point.parent().outerHeight();
-    const offset = this.$point.outerHeight() / 2;
-    const marginBottom = (position * containerHeight) - offset;
-    this.$point.css('bottom', `${marginBottom}px`);
   }
 
   private _handlePointMousedown(ev: JQuery.MouseDownEvent): void {
