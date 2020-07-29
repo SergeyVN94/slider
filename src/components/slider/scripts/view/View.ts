@@ -18,11 +18,6 @@ interface IViewComponents {
   scaleItems: JQuery[];
 }
 
-interface IViewCache {
-  pointPositions: number[];
-  pointValues: string[] | number[];
-}
-
 class View implements IView, IViewConfigManager {
   private readonly components: IViewComponents;
 
@@ -154,13 +149,10 @@ class View implements IView, IViewConfigManager {
       const $item = $('<div/>', {
         class: `${CLASSES.SCALE_ITEM} js-${CLASSES.SCALE_ITEM}`,
         'data-position': position,
-      });
-      const $itemText = ($('<p>', {
-        class: CLASSES.SCALE_ITEM_TEXT,
         text: value,
-      }));
+      });
 
-      this.$slider.append($item.append($itemText));
+      this.$slider.append($item);
       items.push($item);
 
       $item.css(viewName === 'horizontal' ? 'left' : 'bottom', `${(position * 100)}%`);

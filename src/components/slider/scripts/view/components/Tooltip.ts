@@ -8,11 +8,7 @@ class Tooltip {
 
   constructor($slider: JQuery, viewName: ViewName) {
     this.viewName = viewName;
-
-    this.$tooltip = $('<div>', {
-      class: CLASSES.TOOLTIP,
-      css: { transform: 'translate(-50%)' },
-    });
+    this.$tooltip = $('<div>', { class: CLASSES.TOOLTIP });
 
     $slider.append(this.$tooltip);
   }
@@ -24,12 +20,9 @@ class Tooltip {
   }
 
   public setState(position: number, value: string): void {
-    this.$tooltip
-      .html(value)
-      .css(
-        this.viewName === 'horizontal' ? 'left' : 'top',
-        `${position * 100}%`,
-      );
+    this.$tooltip.html(value);
+    if (this.viewName === 'horizontal') this.$tooltip.css('left', `${position * 100}%`);
+    else this.$tooltip.css('top', `${100 - (position * 100)}%`);
   }
 
   private _setZIndex(zIndex: number): void {

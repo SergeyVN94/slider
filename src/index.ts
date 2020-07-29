@@ -32,6 +32,7 @@ require('./index.sass');
     $('#slider1').slider('init', {
       values: ['Январь'],
       customScale: scale1,
+      viewName: 'vertical',
     }),
   );
 

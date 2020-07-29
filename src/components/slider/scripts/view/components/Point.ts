@@ -16,7 +16,6 @@ class Point {
     this.$point = $('<div/>', {
       class: `${CLASSES.POINT} js-${CLASSES.POINT}`,
       'data-index': this.index,
-      css: { transform: 'translate(-50%)' },
     });
 
     $slider.append(this.$point);
@@ -40,10 +39,8 @@ class Point {
   }
 
   public setPosition(position: number): void {
-    this.$point.css(
-      this.viewName === 'horizontal' ? 'left' : 'top',
-      `${position * 100}%`,
-    );
+    if (this.viewName === 'horizontal') this.$point.css('left', `${position * 100}%`);
+    else this.$point.css('top', `${100 - (position * 100)}%`);
   }
 
   public get zIndex(): number {

@@ -44,14 +44,13 @@ $scale-item-line-offset: 3px
       height: auto
 
     .slider__point
-      top: auto
-      bottom: -($point-diameter / 2)
-      left: -$point-offset
+      bottom: auto
+      left: $point-offset
+      transform: translate(0, -50%)
 
     .slider__tooltip
-      left: auto
-      top: auto
       left: $tooltip-offset - $tooltip-height + $slider-height
+      transform: translate(0, -50%)
       padding: 3px 8px
 
       &::after
@@ -73,10 +72,6 @@ $scale-item-line-offset: 3px
         width:  $scale-item-line
         height: 2px
         top: -1px
-        
-    .slider__scale-item-text
-      right: $scale-item-line + ($scale-item-line-offset * 2)
-      top: auto
 
   &_bg-line-hidden
     .slider__bg-line
@@ -87,19 +82,18 @@ $scale-item-line-offset: 3px
       display: none    
 
   &__point
-    display: block
-    width: $point-diameter
-    height: $point-diameter
-    border-radius: 50%
-    background-color: $point-color
     position: absolute
     top: -$point-offset
     left: -($point-diameter / 2)
-    user-select: none
-    -moz-user-select: none
-    -webkit-user-select: none
+    transform: translateX(-50%)
+    width: $point-diameter
+    height: $point-diameter
+    display: block
+    border-radius: 50%
+    background-color: $point-color
     z-index: 2
     cursor: pointer
+    user-select: none
 
   &__bg-line
     background-color: $dark-green
@@ -111,26 +105,24 @@ $scale-item-line-offset: 3px
     z-index: 1
 
   &__tooltip
-    display: block
+    position: absolute
+    top: -$tooltip-offset
+    left: 0
+    transform: translateX(-50%)
+    padding: 2px 8px
     width: auto
     height: $tooltip-height
+    display: block
     background-color: $tooltip-bg
     color: #fcfcfc
-    position: absolute
     text-align: center
-    padding: 2px 8px
     font-size: $tooltip-font-size
     line-height: $tooltip-line-height
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
     box-sizing: border-box
     border-radius: 6px
     white-space: nowrap
-    top: -$tooltip-offset
-
-    left: 0
     user-select: none
-    -moz-user-select: none
-    -webkit-user-select: none
 
     &::after
       content: ''
@@ -147,23 +139,19 @@ $scale-item-line-offset: 3px
 
   &__scale-item
     position: absolute
-    top: ($slider-height + $point-offset + $scale-item-line-offset)
-    width: 0px
-    height: $scale-item-line
-
-    &::after
-      position: relative
-      content: ''
-      display: block
-      background-color: $dark-green
-      height: $scale-item-line
-      width: 2px
-      left: -1px
-
-  &__scale-item-text
-    display: block
-    position: absolute
+    top: ($slider-height + $point-offset + $scale-item-line + $scale-item-line-offset * 2)
+    transform: translateX(-50%)
     line-height: 16px
-    top: 16px
     cursor: pointer
     user-select: none
+
+    &::after
+      position: absolute
+      top: - ($scale-item-line-offset + $scale-item-line)
+      left: 50%
+      transform: translateX(-50%)
+      width: 2px
+      height: $scale-item-line
+      content: ''
+      display: block
+      background-color: $dark-green      
