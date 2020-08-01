@@ -33,25 +33,25 @@ const convertMinMax = function convertMinMax(min: number, max: number): {
 
   if (typeof max !== 'number') {
     minMax.max = parseInt(String(max), 10);
-    if (Number.isNaN(minMax.max)) minMax.max = minMax.min + 100;
+    if (Number.isNaN(minMax.max)) minMax.max = (minMax.min + DEFAULT_CONFIG.range);
   }
 
   return minMax;
 };
 
-const convertValuesForCustomScale = function convertValuesForCustomScale(
+const convertStringValues = function convertStringValues(
   values: string[],
   customScale: string[],
 ): string[] {
   if (!Array.isArray(values)) {
     console.error(new Error('Values ​​must be an array.'));
-    return customScale.slice(0);
+    return [customScale[0]];
   }
 
   return values.map((value) => String(value));
 };
 
-const convertValuesForMinMax = function convertValuesForMinMax(
+const convertNumberValues = function convertNumberValues(
   values: number[],
   min: number,
 ): number[] {
@@ -71,7 +71,7 @@ const convertValuesForMinMax = function convertValuesForMinMax(
 };
 
 const convertConfig = function convertConfig(config: ISliderConfig): ISliderConfig {
-  if (config === null) return DEFAULT_CONFIG;
+  if (!config) return DEFAULT_CONFIG;
 
   const {
     customScale,
@@ -79,30 +79,29 @@ const convertConfig = function convertConfig(config: ISliderConfig): ISliderConf
     max,
     values,
     prettify = DEFAULT_CONFIG.prettify,
-    tooltips = true,
-    bgLine = true,
-    step = 1,
-    viewName = 'horizontal',
+    tooltips = DEFAULT_CONFIG.tooltips,
+    bgLine = DEFAULT_CONFIG.bgLine,
+    step = DEFAULT_CONFIG.step,
+    viewName = DEFAULT_CONFIG.viewName,
   } = config;
 
   const newConfig: ISliderConfig = {};
 
   if (customScale) {
     newConfig.customScale = convertCustomScale(customScale);
-    newConfig.values = convertValuesForCustomScale(values as string[], customScale);
+    newConfig.values = convertStringValues(values as string[], newConfig.customScale);
   } else {
     const minMax = convertMinMax(min, max);
     newConfig.min = minMax.min;
     newConfig.max = minMax.max;
-    newConfig.values = convertValuesForMinMax(values as number[], minMax.min);
+    newConfig.values = convertNumberValues(values as number[], minMax.min);
   }
 
   newConfig.tooltips = Boolean(tooltips);
   newConfig.bgLine = Boolean(bgLine);
 
-  if (['horizontal', 'vertical'].includes(viewName)) {
-    newConfig.viewName = viewName;
-  } else {
+  if (['horizontal', 'vertical'].includes(viewName)) newConfig.viewName = viewName;
+  else {
     console.error(new TypeError('viewName must be "horizontal" or "vertical".'));
     newConfig.viewName = DEFAULT_CONFIG.viewName;
   }
@@ -221,11 +220,11 @@ $.fn.slider = function pluginMainFunction(
         config.customScale,
       )) return this;
     } else {
-      const isCorrectValues = args.every(
+      const areValuesCorrect = args.every(
         (value: string | number) => !Number.isNaN(parseInt(String(value), 10)),
       );
 
-      if (!isCorrectValues) {
+      if (!areValuesCorrect) {
         console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
         return this;
       }
@@ -256,6 +255,7 @@ $.fn.slider = function pluginMainFunction(
     const _customScale = (args as string[]).map((value) => String(value));
 
     if (!Model.checkCustomScale(_customScale)) return this;
+    config.customScale = _customScale;
 
     return this
       .data('config', config)
@@ -263,7 +263,10 @@ $.fn.slider = function pluginMainFunction(
   }
 
   if (command === COMMANDS.MIN_MAX) {
-    if (args === null) return [config.min, config.max];
+    if (args === null) {
+      if (!config.min && !config.max) return null;
+      return [config.min, config.max];
+    }
 
     const min = parseInt(String(args), 10);
     if (Number.isNaN(min)) {

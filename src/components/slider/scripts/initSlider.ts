@@ -22,7 +22,7 @@ const initSlider = function initSlider($slider: JQuery, config: {
 
   const view = new View({
     $slider,
-    countPoints: model.values.length,
+    pointsCount: model.values.length,
     scaleItems: model.getScaleItems(),
     ...config,
   });

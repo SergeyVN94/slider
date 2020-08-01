@@ -24,13 +24,13 @@ describe('[Model]', () => {
 
             model.update(targetPos, -1);
 
-            let isCorrectValues = true;
+            let areValuesCorrect = true;
             model.values.forEach((value, index) => {
-              if (value !== result[index]) isCorrectValues = false;
+              if (value !== result[index]) areValuesCorrect = false;
             });
 
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            expect(isCorrectValues).to.be.true;
+            expect(areValuesCorrect).to.be.true;
           });
         });
       });
@@ -55,13 +55,13 @@ describe('[Model]', () => {
 
             model.update(targetPos, -1);
 
-            let isCorrectValues = true;
+            let areValuesCorrect = true;
             model.values.forEach((value, index) => {
-              if (value !== result[index]) isCorrectValues = false;
+              if (value !== result[index]) areValuesCorrect = false;
             });
 
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            expect(isCorrectValues).to.be.true;
+            expect(areValuesCorrect).to.be.true;
           });
         });
       });
@@ -87,13 +87,13 @@ describe('[Model]', () => {
 
           model.update(targetPos, -1);
 
-          let isCorrectValues = true;
+          let areValuesCorrect = true;
           model.values.forEach((value, index) => {
-            if (value !== result[index]) isCorrectValues = false;
+            if (value !== result[index]) areValuesCorrect = false;
           });
 
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          expect(isCorrectValues).to.be.true;
+          expect(areValuesCorrect).to.be.true;
         });
       });
     });
@@ -135,13 +135,13 @@ describe('[Model]', () => {
 
           model.update(targetPos, point);
 
-          let isCorrectValues = true;
+          let areValuesCorrect = true;
           model.values.forEach((value, index) => {
-            if (value !== result[index]) isCorrectValues = false;
+            if (value !== result[index]) areValuesCorrect = false;
           });
 
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          expect(isCorrectValues).to.be.true;
+          expect(areValuesCorrect).to.be.true;
         });
       });
     });

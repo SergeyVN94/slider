@@ -1,4 +1,4 @@
-const DEFAULT_CONFIG: ISliderConfig = {
+const DEFAULT_CONFIG = {
   customScale: [
     'Январь',
     'Февраль',
@@ -15,8 +15,10 @@ const DEFAULT_CONFIG: ISliderConfig = {
   ],
   min: 0,
   max: 100,
+  range: 100,
   step: 1,
   values: ['Январь'],
+  pointsCount: 1,
   viewName: 'horizontal' as ViewName,
   bgLine: true,
   tooltips: true,

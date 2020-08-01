@@ -29,7 +29,7 @@ interface IConfigPanelDomElements {
   inputsValueOut: JQuery[];
   $scaleMax: JQuery;
   $scaleMin: JQuery;
-  $customScale: JQuery;
+  $customValues: JQuery;
 }
 
 class ConfigPanel {
@@ -54,7 +54,7 @@ class ConfigPanel {
       inputsValueOut: [],
       $scaleMax: $panel.find(`.${CLASSES.SCALE_MAX}`),
       $scaleMin: $panel.find(`.${CLASSES.SCALE_MIN}`),
-      $customScale: $panel.find(`.${CLASSES.CUSTOM_SCALE}`),
+      $customValues: $panel.find(`.${CLASSES.INPUT_CUSTOM_VALUES}`),
     };
   }
 
@@ -68,7 +68,7 @@ class ConfigPanel {
       $inputPoints,
       $scaleMax,
       $scaleMin,
-      $customScale,
+      $customValues,
     } = this.domElements;
 
     const step = $slider.slider('step');
@@ -87,20 +87,16 @@ class ConfigPanel {
     const areTooltipsVisible = $slider.slider('show-tooltips');
     $checkboxTooltip.prop('checked', areTooltipsVisible);
 
-    const countPoints = $slider.slider('values').length;
-    $inputPoints.val(countPoints);
+    const pointsCount = $slider.slider('values').length;
+    $inputPoints.val(pointsCount);
 
     const customScale = $slider.slider('custom-scale');
-    if (!customScale) {
-      $customScale.parents(`.${CLASSES.PANEL_ROW}`).remove();
-    } else {
-      $customScale.val(customScale.join(','));
-    }
+    if (customScale) $customValues.val(customScale.join(','));
+    else $customValues.parents(`.${CLASSES.PANEL_ROW}`).remove();
 
     const minMax = $slider.slider('min-max');
-    if (!minMax) {
-      $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
-    } else {
+    if (!minMax) $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
+    else {
       $scaleMin.val(minMax[0]);
       $scaleMax.val(minMax[1]);
     }
@@ -118,6 +114,7 @@ class ConfigPanel {
       $slider,
       $scaleMax,
       $scaleMin,
+      $customValues,
     } = this.domElements;
 
     $inputStep.on(
@@ -155,10 +152,25 @@ class ConfigPanel {
       this._handleScaleMinFocusout.bind(this),
     );
 
+    $customValues.on(
+      'focusout.configPanel.setCustomScale',
+      this._handleCustomValuesFocusout.bind(this),
+    );
+
     $slider.on(
       'select.configPanel.updateControlsValueOutContainer',
       this._handleSliderSelect.bind(this),
     );
+  }
+
+  private _handleCustomValuesFocusout(): void {
+    const { $slider, $customValues } = this.domElements;
+
+    const values = $customValues.val().toString();
+    const customScale = values.split(',');
+
+    $slider.slider('custom-scale', customScale);
+    $customValues.val($slider.slider('custom-scale').toString());
   }
 
   private _handleScaleMaxFocusout(): void {

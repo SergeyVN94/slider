@@ -7,10 +7,15 @@ class Slider {
 
   private _callbackMousedown: (position: number) => void;
 
-  constructor($slider: JQuery, view: ViewName) {
+  constructor($slider: JQuery, viewName: ViewName) {
     this.$slider = $slider;
     this._callbackMousedown = null;
-    this._setViewName(view);
+
+    if (viewName === 'vertical') {
+      this.$slider.addClass('slider_view-name_vertical');
+      this._getTargetPosition = this._getTargetPositionForVerticalView.bind(this);
+    } else this._getTargetPosition = this._getTargetPositionForHorizontalView.bind(this);
+
     $slider.on('mousedown.slider.select', this._handleSliderMousedown.bind(this));
   }
 
@@ -54,16 +59,7 @@ class Slider {
     if (this._callbackMousedown) this._callbackMousedown(this.getTargetPosition(ev));
   }
 
-  private _setViewName(name: ViewName): void {
-    if (name === 'vertical') {
-      this.$slider.addClass('slider_view-name_vertical');
-      this._getTargetPosition = this._verticalViewTargetPosition.bind(this);
-    } else {
-      this._getTargetPosition = this._horizontalViewTargetPosition.bind(this);
-    }
-  }
-
-  private _horizontalViewTargetPosition(ev: JQuery.MouseEventBase): number {
+  private _getTargetPositionForHorizontalView(ev: JQuery.MouseEventBase): number {
     const absolutePosition = ev.pageX;
     const offset = this.$slider.offset().left;
     const position = (absolutePosition - offset) / this.$slider.outerWidth();
@@ -74,7 +70,7 @@ class Slider {
     return position;
   }
 
-  private _verticalViewTargetPosition(ev: JQuery.MouseEventBase): number {
+  private _getTargetPositionForVerticalView(ev: JQuery.MouseEventBase): number {
     const absolutePosition = ev.pageY;
     const offset = this.$slider.offset().top;
     let position = (absolutePosition - offset) / this.$slider.outerHeight();

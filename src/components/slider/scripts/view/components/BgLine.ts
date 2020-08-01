@@ -10,28 +10,23 @@ class BgLine {
       class: `${CLASSES.BG_LINE} js-${CLASSES.BG_LINE}`,
     });
     $slider.append(this.$bgLine);
-    this._setViewName(viewName);
+
+    this._update = viewName === 'vertical'
+      ? this._updateForVerticalView.bind(this)
+      : this._updateForHorizontalView.bind(this);
   }
 
   public update(max: number, min = 0): void {
     this._update(max, min);
   }
 
-  public _setViewName(name: ViewName): void {
-    if (name === 'vertical') {
-      this._update = this._verticalViewUpdate.bind(this);
-    } else {
-      this._update = this._horizontalViewUpdate.bind(this);
-    }
-  }
-
-  private _horizontalViewUpdate(max: number, min = 0): void {
+  private _updateForHorizontalView(max: number, min = 0): void {
     this.$bgLine
       .css('right', `${100 - (max * 100)}%`)
       .css('left', `${min * 100}%`);
   }
 
-  private _verticalViewUpdate(max: number, min = 0): void {
+  private _updateForVerticalView(max: number, min = 0): void {
     this.$bgLine
       .css('top', `${100 - (max * 100)}%`)
       .css('bottom', `${min * 100}%`);
