@@ -158,7 +158,7 @@ class ConfigPanel {
     );
 
     $slider.on(
-      'select.configPanel.updateControlsValueOutContainer',
+      'thumb-move.configPanel.updateControlsValueOutContainer',
       this._handleSliderSelect.bind(this),
     );
   }

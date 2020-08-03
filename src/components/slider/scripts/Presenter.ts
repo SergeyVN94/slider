@@ -11,11 +11,11 @@ class Presenter {
   }
 
   private _initEventListeners(): void {
-    this.view.onSelect(this._handleViewSelect.bind(this));
+    this.view.onThumbPositionChange(this._handleViewPositionChange.bind(this));
     this.model.onUpdate(this._handleModelUpdate.bind(this));
   }
 
-  private _handleViewSelect(targetPosition: number, pointSelected: number): void {
+  private _handleViewPositionChange(targetPosition: number, pointSelected: number): void {
     this.model.update(targetPosition, pointSelected);
   }
 

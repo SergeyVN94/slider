@@ -14,7 +14,7 @@ class Controller {
 
   private static readonly $document = $(document);
 
-  private selectEventCallback: HandlerViewSelect;
+  private positionChangeEventCallback: HandlerThumbPositionChange;
 
   private pointSelected: number;
 
@@ -22,13 +22,13 @@ class Controller {
 
   constructor(components: IComponents) {
     this.components = components;
-    this.selectEventCallback = null;
+    this.positionChangeEventCallback = null;
     this.pointSelected = Controller.POINT_NOT_SELECTED;
     this._initEventListeners();
   }
 
-  public onSelect(callback: HandlerViewSelect): void {
-    this.selectEventCallback = callback;
+  public onThumbPositionChange(callback: HandlerThumbPositionChange): void {
+    this.positionChangeEventCallback = callback;
   }
 
   private _initEventListeners(): void {
@@ -43,11 +43,13 @@ class Controller {
 
   private _triggerSelectEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
     const position = this.components.slider.getTargetPosition(ev);
-    if (this.selectEventCallback) this.selectEventCallback(position, pointIndex);
+    if (this.positionChangeEventCallback) this.positionChangeEventCallback(position, pointIndex);
   }
 
   private _handleSliderSelect(position: number): void {
-    if (this.selectEventCallback) this.selectEventCallback(position, Controller.POINT_NOT_SELECTED);
+    if (this.positionChangeEventCallback) {
+      this.positionChangeEventCallback(position, Controller.POINT_NOT_SELECTED);
+    }
   }
 
   private _handlePointMousedown(index: number, ev: JQuery.MouseDownEvent): void {

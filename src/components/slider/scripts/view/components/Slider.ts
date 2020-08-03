@@ -20,23 +20,23 @@ class Slider {
   }
 
   public set areTooltipsVisible(state: boolean) {
-    this.$slider.toggleClass(CLASSES.TOOLTIPS_HIDDEN, !state);
+    this.$slider.toggleClass(CLASSES.WITHOUT_TOOLTIPS, !state);
   }
 
   public get areTooltipsVisible(): boolean {
-    return !this.$slider.hasClass(CLASSES.TOOLTIPS_HIDDEN);
+    return !this.$slider.hasClass(CLASSES.WITHOUT_TOOLTIPS);
   }
 
   public set isBgLineVisible(state: boolean) {
-    this.$slider.toggleClass(CLASSES.BG_LINE_HIDDEN, !state);
+    this.$slider.toggleClass(CLASSES.WITHOUT_BG_LINE, !state);
   }
 
   public get isBgLineVisible(): boolean {
-    return !this.$slider.hasClass(CLASSES.BG_LINE_HIDDEN);
+    return !this.$slider.hasClass(CLASSES.WITHOUT_BG_LINE);
   }
 
-  public triggerSelectEvent(values: string[] | number[]): void {
-    this.$slider.trigger('select', values);
+  public triggerThumbMoveEvent(values: string[] | number[]): void {
+    this.$slider.trigger('thumb-move', values);
   }
 
   public getTargetPosition(ev: JQuery.MouseEventBase): number {

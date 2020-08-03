@@ -5,7 +5,7 @@ const enum CLASSES {
   CHECKBOX_BG_LINE = 'js-config-panel__bg-line',
   INPUT_POINTS = 'js-config-panel__input_type_points',
   POINT_OUT_CONTAINER = 'js-config-panel__controls-out',
-  CONTROLS_VALUE_OUT = 'js-config-panel__col_type_controls-out',
+  CONTROLS_VALUE_OUT = 'js-config-panel__column_type_container',
   SCALE_MAX = 'js-config-panel__scale-max',
   SCALE_MIN = 'js-config-panel__scale-min',
   PANEL_ROW = 'config-panel__row',
