@@ -3,7 +3,7 @@ import View from './view/View';
 import Slider from './Slider';
 import Presenter from './Presenter';
 
-const initSlider = function initSlider($slider: JQuery, config: {
+const initSlider = ($slider: JQuery, config: {
   readonly customScale?: string[];
   readonly min?: number;
   readonly max?: number;
@@ -13,7 +13,7 @@ const initSlider = function initSlider($slider: JQuery, config: {
   readonly step?: number;
   readonly prettify?: PrettifyFunc;
   readonly bgLine?: boolean;
-}): Slider {
+}): Slider => {
   const model = new Model({
     values: config.values,
     step: config.step,

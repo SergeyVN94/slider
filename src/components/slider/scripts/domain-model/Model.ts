@@ -122,7 +122,9 @@ class Model implements IModel, IModelStateManager {
   }
 
   public get values(): string[] | number[] {
-    return this.pointsSteps.map((step) => this.scaleDriver.stepToValue(step)) as string[] | number[];
+    return this.pointsSteps.map(
+      (step) => this.scaleDriver.stepToValue(step),
+    ) as string[] | number[];
   }
 
   public set values(values: string[] | number[]) {

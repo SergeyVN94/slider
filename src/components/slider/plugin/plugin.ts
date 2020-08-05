@@ -15,34 +15,31 @@ const COMMANDS = {
   MIN_MAX: 'min-max',
 };
 
-const convertCustomScale = function convertCustomScale(customScale: string[]): string[] {
+const convertCustomScale = (customScale: unknown): string[] => {
   if (!Array.isArray(customScale)) return DEFAULT_CONFIG.customScale;
   return customScale.map((value) => String(value));
 };
 
-const convertMinMax = function convertMinMax(min: number, max: number): {
+const convertMinMax = (min: unknown, max: unknown): {
   min: number;
   max: number;
-} {
-  const minMax = { min, max };
+} => {
+  const minMax = { min: 0, max: 0 };
 
   if (typeof min !== 'number') {
     minMax.min = parseInt(String(min), 10);
     if (Number.isNaN(minMax.min)) minMax.min = DEFAULT_CONFIG.min;
-  }
+  } else minMax.min = min;
 
   if (typeof max !== 'number') {
     minMax.max = parseInt(String(max), 10);
     if (Number.isNaN(minMax.max)) minMax.max = (minMax.min + DEFAULT_CONFIG.range);
-  }
+  } else minMax.max = max;
 
   return minMax;
 };
 
-const convertStringValues = function convertStringValues(
-  values: string[],
-  customScale: string[],
-): string[] {
+const convertStringValues = (values: unknown, customScale: string[]): string[] => {
   if (!Array.isArray(values)) {
     console.error(new Error('Values ​​must be an array.'));
     return [customScale[0]];
@@ -51,10 +48,7 @@ const convertStringValues = function convertStringValues(
   return values.map((value) => String(value));
 };
 
-const convertNumberValues = function convertNumberValues(
-  values: number[],
-  min: number,
-): number[] {
+const convertNumberValues = (values: unknown, min: number): number[] => {
   if (!Array.isArray(values)) {
     console.error(new Error('Values ​​must be an array.'));
     return [min];
@@ -70,8 +64,8 @@ const convertNumberValues = function convertNumberValues(
   return values.map((value) => parseInt(String(value), 10));
 };
 
-const convertConfig = function convertConfig(config: ISliderConfig): ISliderConfig {
-  if (!config) return DEFAULT_CONFIG;
+const convertConfig = (config: unknown): ISliderConfig => {
+  if (!config || typeof config !== 'object') return DEFAULT_CONFIG;
 
   const {
     customScale,
@@ -83,18 +77,18 @@ const convertConfig = function convertConfig(config: ISliderConfig): ISliderConf
     bgLine = DEFAULT_CONFIG.bgLine,
     step = DEFAULT_CONFIG.step,
     viewName = DEFAULT_CONFIG.viewName,
-  } = config;
+  } = config as ISliderConfig;
 
   const newConfig: ISliderConfig = {};
 
   if (customScale) {
     newConfig.customScale = convertCustomScale(customScale);
-    newConfig.values = convertStringValues(values as string[], newConfig.customScale);
+    newConfig.values = convertStringValues(values, newConfig.customScale);
   } else {
     const minMax = convertMinMax(min, max);
     newConfig.min = minMax.min;
     newConfig.max = minMax.max;
-    newConfig.values = convertNumberValues(values as number[], minMax.min);
+    newConfig.values = convertNumberValues(values, minMax.min);
   }
 
   newConfig.tooltips = Boolean(tooltips);
@@ -124,13 +118,7 @@ const convertConfig = function convertConfig(config: ISliderConfig): ISliderConf
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
   command: 'init' | 'step' | 'values' | 'show-tooltips' | 'view-name' | 'show-bg-line' | 'custom-scale' | 'min-max',
-  args: ISliderConfig
-  | number
-  | boolean
-  | string[]
-  | number[]
-  | ViewName
-  = null,
+  args: unknown = null,
   args2?: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
@@ -138,7 +126,7 @@ $.fn.slider = function pluginMainFunction(
   const config = (this.data('config') || DEFAULT_CONFIG) as ISliderConfig;
 
   if (command === COMMANDS.INIT) {
-    const _config = args ? convertConfig(args as ISliderConfig) : DEFAULT_CONFIG;
+    const _config = args ? convertConfig(args) : DEFAULT_CONFIG;
     const _slider = initSlider(this, _config);
 
     const resultConfig = _slider.getConfig();
@@ -198,8 +186,8 @@ $.fn.slider = function pluginMainFunction(
     }
 
     if (config.customScale) {
-      if (!Model.checkStepForCustomScale(args as number, config.customScale)) return this;
-    } else if (!Model.checkStepForMinMax(args as number, config.min, config.max)) return this;
+      if (!Model.checkStepForCustomScale(config.step, config.customScale)) return this;
+    } else if (!Model.checkStepForMinMax(config.step, config.min, config.max)) return this;
 
     return this
       .data('config', config)
@@ -216,20 +204,18 @@ $.fn.slider = function pluginMainFunction(
 
     if (config.customScale) {
       if (!Model.checkValuesForCustomScale(
-        (args as string[]).map((value) => String(value)),
+        args.map((value) => String(value)),
         config.customScale,
       )) return this;
     } else {
-      const areValuesCorrect = args.every(
-        (value: string | number) => !Number.isNaN(parseInt(String(value), 10)),
-      );
+      const areValuesCorrect = args.every((value) => !Number.isNaN(parseInt(String(value), 10)));
 
       if (!areValuesCorrect) {
         console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
         return this;
       }
 
-      if (!Model.checkValuesForMinMax(args as number[], config.min, config.max)) return this;
+      if (!Model.checkValuesForMinMax(args, config.min, config.max)) return this;
     }
 
     if (args.length === slider.values.length) {
@@ -252,7 +238,7 @@ $.fn.slider = function pluginMainFunction(
       return this;
     }
 
-    const _customScale = (args as string[]).map((value) => String(value));
+    const _customScale = args.map((value) => String(value));
 
     if (!Model.checkCustomScale(_customScale)) return this;
     config.customScale = _customScale;
@@ -264,7 +250,7 @@ $.fn.slider = function pluginMainFunction(
 
   if (command === COMMANDS.MIN_MAX) {
     if (args === null) {
-      if (!config.min && !config.max) return null;
+      if (!config.min || !config.max) return null;
       return [config.min, config.max];
     }
 

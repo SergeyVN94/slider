@@ -1,9 +1,6 @@
 import CLASSES from './classes';
 
-const createControlValueOut = function createControlValueOut(
-  index: number,
-  value: string | number,
-): JQuery {
+const createControlValueOut = (index: number, value: string | number): JQuery => {
   const $control = $('<label/>').addClass('config-panel__control');
   const $controlText = $('<span/>')
     .addClass('config-panel__control-text')

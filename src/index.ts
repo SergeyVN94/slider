@@ -1,6 +1,6 @@
 import initConfigPanel from './components/config-panel/initConfigPanel';
 
-const importAll = function importAll(resolve: __WebpackModuleApi.RequireContext): void {
+const importAll = (resolve: __WebpackModuleApi.RequireContext): void => {
   resolve.keys().forEach(resolve);
 };
 
