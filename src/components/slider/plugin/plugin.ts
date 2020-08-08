@@ -29,12 +29,16 @@ const convertMinMax = (min: unknown, max: unknown): {
   if (typeof min !== 'number') {
     minMax.min = parseInt(String(min), 10);
     if (Number.isNaN(minMax.min)) minMax.min = DEFAULT_CONFIG.min;
-  } else minMax.min = min;
+  } else {
+    minMax.min = min;
+  }
 
   if (typeof max !== 'number') {
     minMax.max = parseInt(String(max), 10);
     if (Number.isNaN(minMax.max)) minMax.max = (minMax.min + DEFAULT_CONFIG.range);
-  } else minMax.max = max;
+  } else {
+    minMax.max = max;
+  }
 
   return minMax;
 };
@@ -94,8 +98,9 @@ const convertConfig = (config: unknown): ISliderConfig => {
   newConfig.tooltips = Boolean(tooltips);
   newConfig.bgLine = Boolean(bgLine);
 
-  if (['horizontal', 'vertical'].includes(viewName)) newConfig.viewName = viewName;
-  else {
+  if (['horizontal', 'vertical'].includes(viewName)) {
+    newConfig.viewName = viewName;
+  } else {
     console.error(new TypeError('viewName must be "horizontal" or "vertical".'));
     newConfig.viewName = DEFAULT_CONFIG.viewName;
   }
@@ -109,7 +114,9 @@ const convertConfig = (config: unknown): ISliderConfig => {
   if (typeof prettify !== 'function') {
     newConfig.prettify = DEFAULT_CONFIG.prettify;
     console.error(new TypeError('prettify should be a function.'));
-  } else newConfig.prettify = prettify;
+  } else {
+    newConfig.prettify = prettify;
+  }
 
   return newConfig;
 };
@@ -187,7 +194,9 @@ $.fn.slider = function pluginMainFunction(
 
     if (config.customScale) {
       if (!Model.checkStepForCustomScale(config.step, config.customScale)) return this;
-    } else if (!Model.checkStepForMinMax(config.step, config.min, config.max)) return this;
+    } else if (!Model.checkStepForMinMax(config.step, config.min, config.max)) {
+      return this;
+    }
 
     return this
       .data('config', config)

@@ -73,9 +73,7 @@ class ConfigPanel {
 
     const viewName = $slider.slider('view-name');
     $radioViewName.each((index, element) => {
-      if (element.getAttribute('value') === viewName) {
-        element.setAttribute('checked', 'true');
-      }
+      if (element.getAttribute('value') === viewName) element.setAttribute('checked', 'true');
     });
 
     const isBgLineVisible = $slider.slider('show-bg-line');
@@ -92,8 +90,9 @@ class ConfigPanel {
     else $customValues.parents(`.${CLASSES.PANEL_ROW}`).remove();
 
     const minMax = $slider.slider('min-max');
-    if (!minMax) $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
-    else {
+    if (!minMax) {
+      $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
+    } else {
       $scaleMin.val(minMax[0]);
       $scaleMax.val(minMax[1]);
     }
@@ -235,9 +234,7 @@ class ConfigPanel {
 
     const values = $slider.slider('values');
 
-    if (inputsValueOut.length !== values.length) {
-      this._recreateControlsValueOut();
-    }
+    if (inputsValueOut.length !== values.length) this._recreateControlsValueOut();
 
     values.forEach((value: string | number, index: number) => inputsValueOut[index].val(value));
   }

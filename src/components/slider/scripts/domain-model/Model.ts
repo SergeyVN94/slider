@@ -185,9 +185,7 @@ class Model implements IModel, IModelStateManager {
     const targetStep = Math.round(targetPosition * this.maxStep);
     const currentPointStep = this.pointsSteps[pointIndex];
 
-    if (targetStep === currentPointStep) {
-      return true;
-    }
+    if (targetStep === currentPointStep) return true;
 
     if (this.pointsSteps.length === 1) {
       this.pointsSteps[0] = this._adjustStep(targetStep);
@@ -240,17 +238,12 @@ class Model implements IModel, IModelStateManager {
     this.pointsSteps.forEach((step) => {
       const distance = Math.abs((step / this.maxStep) - targetPosition);
 
-      if (distance < minDistance) {
-        minDistance = distance;
-      }
+      if (distance < minDistance) minDistance = distance;
     });
 
     const nearestPoints = this.pointsSteps.filter((step) => {
       const distance = Math.abs((step / this.maxStep) - targetPosition);
-      if (distance === minDistance) {
-        return true;
-      }
-
+      if (distance === minDistance) return true;
       return false;
     });
 
@@ -260,16 +253,10 @@ class Model implements IModel, IModelStateManager {
       return true;
     }
 
-    let isAllPointsInOnePosition = true;
     const [tmpStep] = nearestPoints;
+    const areAllPointsInOnePosition = nearestPoints.every((step) => step === tmpStep);
 
-    nearestPoints.forEach((step) => {
-      if (step !== tmpStep) {
-        isAllPointsInOnePosition = false;
-      }
-    });
-
-    if (isAllPointsInOnePosition) {
+    if (areAllPointsInOnePosition) {
       if (targetStep > tmpStep) {
         const index = this.pointsSteps.lastIndexOf(nearestPoints[0]);
         this.pointsSteps[index] = this._adjustStep(targetStep);
@@ -283,7 +270,7 @@ class Model implements IModel, IModelStateManager {
       return true;
     }
 
-    if (!isAllPointsInOnePosition) {
+    if (!areAllPointsInOnePosition) {
       const index = this.pointsSteps.lastIndexOf(tmpStep);
       this.pointsSteps[index] = this._adjustStep(targetStep);
       return true;
@@ -296,19 +283,13 @@ class Model implements IModel, IModelStateManager {
     if (step < this.lastStep) {
       const targetStep = Math.round((step / this.step)) * this.step;
 
-      if (targetStep > this.maxStep) {
-        return this.maxStep;
-      }
-
+      if (targetStep > this.maxStep) return this.maxStep;
       return targetStep;
     }
 
     const targetStep = Math.round((step - this.lastStep) / (this.maxStep - this.lastStep));
 
-    if (targetStep) {
-      return this.maxStep;
-    }
-
+    if (targetStep) return this.maxStep;
     return this.lastStep;
   }
 }

@@ -49,8 +49,9 @@ class View implements IView, IViewConfigManager {
 
     this.pointPositions = [];
 
-    if (pointsCount > 0) for (let i = 0; i < pointsCount; i += 1) this.pointPositions.push(-1);
-    else {
+    if (pointsCount > 0) {
+      for (let i = 0; i < pointsCount; i += 1) this.pointPositions.push(-1);
+    } else {
       this.pointPositions.push(-1);
       console.error(new Error('The number of points must be greater than zero'));
     }
@@ -85,10 +86,10 @@ class View implements IView, IViewConfigManager {
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
     const lastIndex = pointPositions.length - 1;
-    const isNeedingUpdateBgLine = pointPositions[lastIndex] !== this.pointPositions[lastIndex]
+    const needToUpdateBgLine = pointPositions[lastIndex] !== this.pointPositions[lastIndex]
     || pointPositions[0] !== this.pointPositions[0];
 
-    if (isNeedingUpdateBgLine) {
+    if (needToUpdateBgLine) {
       this.components.bgLine.update(
         pointPositions[lastIndex],
         pointPositions.length > 1 ? pointPositions[0] : 0,

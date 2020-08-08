@@ -14,7 +14,9 @@ class Slider {
     if (viewName === 'vertical') {
       this.$slider.addClass('slider_view-name_vertical');
       this._getTargetPosition = this._getTargetPositionForVerticalView.bind(this);
-    } else this._getTargetPosition = this._getTargetPositionForHorizontalView.bind(this);
+    } else {
+      this._getTargetPosition = this._getTargetPositionForHorizontalView.bind(this);
+    }
 
     $slider.on('mousedown.slider.select', this._handleSliderMousedown.bind(this));
   }
