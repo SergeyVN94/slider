@@ -1,8 +1,6 @@
 import Slider from './components/Slider';
 import Point from './components/Point';
 
-type HandleWindowResize = () => void;
-
 interface IComponents {
   slider: Slider;
   points: Point[];
@@ -34,7 +32,7 @@ class Controller {
   private _initEventListeners(): void {
     const { slider, points } = this.components;
 
-    slider.onSelect(this._handleSliderSelect.bind(this));
+    slider.onMousedown(this._handleSliderSelect.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
     Controller.$document
       .off('mouseup.slider.removeEventListeners')

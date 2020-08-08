@@ -18,7 +18,7 @@ class Slider {
       this._getTargetPosition = this._getTargetPositionForHorizontalView.bind(this);
     }
 
-    $slider.on('mousedown.slider.select', this._handleSliderMousedown.bind(this));
+    $slider.on('mousedown.slider.click', this._handleSliderMousedown.bind(this));
   }
 
   public set areTooltipsVisible(state: boolean) {
@@ -45,7 +45,7 @@ class Slider {
     return this._getTargetPosition(ev);
   }
 
-  public onSelect(callback: (position: number) => void): void {
+  public onMousedown(callback: (position: number) => void): void {
     this._callbackMousedown = callback;
   }
 
