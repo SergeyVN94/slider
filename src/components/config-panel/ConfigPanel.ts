@@ -89,12 +89,13 @@ class ConfigPanel {
     if (customScale) $customValues.val(customScale.join(','));
     else $customValues.parents(`.${CLASSES.PANEL_ROW}`).remove();
 
-    const minMax = $slider.slider('min-max');
-    if (!minMax) {
+    const min = $slider.slider('min');
+    const max = $slider.slider('max');
+    if (!min || !max) {
       $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
     } else {
-      $scaleMin.val(minMax[0]);
-      $scaleMax.val(minMax[1]);
+      $scaleMin.val(min);
+      $scaleMax.val(max);
     }
 
     this._recreateControlsValueOut();
@@ -140,12 +141,12 @@ class ConfigPanel {
 
     $scaleMax.on(
       'focusout.configPanel.setScaleMax',
-      this._handleScaleMaxFocusout.bind(this),
+      this._handleMaxFocusout.bind(this),
     );
 
     $scaleMin.on(
       'focusout.configPanel.setScaleMin',
-      this._handleScaleMinFocusout.bind(this),
+      this._handleMinFocusout.bind(this),
     );
 
     $customValues.on(
@@ -169,24 +170,20 @@ class ConfigPanel {
     $customValues.val($slider.slider('custom-scale').toString());
   }
 
-  private _handleScaleMaxFocusout(): void {
+  private _handleMaxFocusout(): void {
     const { $slider, $scaleMax } = this.domElements;
-    const [min] = $slider.slider('min-max');
-
     const newMax = parseInt($scaleMax.val().toString(), 10);
-    if (!Number.isNaN(newMax)) $slider.slider('min-max', min, newMax);
 
-    $scaleMax.val($slider.slider('min-max')[1]);
+    if (!Number.isNaN(newMax)) $slider.slider('max', newMax);
+    $scaleMax.val($slider.slider('max'));
   }
 
-  private _handleScaleMinFocusout(): void {
+  private _handleMinFocusout(): void {
     const { $slider, $scaleMin } = this.domElements;
-    const [, max] = $slider.slider('min-max');
-
     const newMin = parseInt($scaleMin.val().toString(), 10);
-    if (!Number.isNaN(newMin)) $slider.slider('min-max', newMin, max);
 
-    $scaleMin.val($slider.slider('min-max')[0]);
+    if (!Number.isNaN(newMin)) $slider.slider('min', newMin);
+    $scaleMin.val($slider.slider('min'));
   }
 
   private _recreateControlsValueOut(): void {

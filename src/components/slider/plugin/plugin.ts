@@ -12,7 +12,8 @@ const COMMANDS = {
   VIEW_NAME: 'view-name',
   SHOW_BG_LINE: 'show-bg-line',
   CUSTOM_SCALE: 'custom-scale',
-  MIN_MAX: 'min-max',
+  MIN: 'min',
+  MAX: 'max',
 };
 
 const convertCustomScale = (customScale: unknown): string[] => {
@@ -124,9 +125,16 @@ const convertConfig = (config: unknown): ISliderConfig => {
 // eslint-disable-next-line @typescript-eslint/unbound-method
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
-  command: 'init' | 'step' | 'values' | 'show-tooltips' | 'view-name' | 'show-bg-line' | 'custom-scale' | 'min-max',
+  command: 'init' 
+  | 'step' 
+  | 'values' 
+  | 'show-tooltips' 
+  | 'view-name' 
+  | 'show-bg-line' 
+  | 'custom-scale' 
+  | 'min'
+  | 'max',
   args: unknown = null,
-  args2?: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   const slider = this.data('slider') as Slider;
@@ -257,28 +265,21 @@ $.fn.slider = function pluginMainFunction(
       .data('slider', initSlider(this, config));
   }
 
-  if (command === COMMANDS.MIN_MAX) {
-    if (args === null) {
-      if (!config.min || !config.max) return null;
-      return [config.min, config.max];
-    }
+  if (command === COMMANDS.MIN || command === COMMANDS.MAX) {
+    const isCommandMin = command === COMMANDS.MIN;
 
-    const min = parseInt(String(args), 10);
-    if (Number.isNaN(min)) {
+    if (args === null) return (isCommandMin ? config.min : config.max);
+
+    const minOrMax = parseInt(String(args), 10);
+    if (Number.isNaN(minOrMax)) {
       console.error(new Error('Args parameter must be number or convert to number.'));
       return this;
     }
 
-    const max = parseInt(String(args2), 10);
-    if (Number.isNaN(max)) {
-      console.error(new Error('Args2 parameter must be number or convert to number.'));
-      return this;
-    }
+    if (isCommandMin && !Model.checkMinMax(minOrMax, config.max)) return this;
+    if (!isCommandMin && !Model.checkMinMax(config.min, minOrMax)) return this;
 
-    if (!Model.checkMinMax(min, max)) return this;
-
-    config.min = min;
-    config.max = max;
+    isCommandMin ? config.min = minOrMax : config.max = minOrMax;
 
     return this
       .data('slider', initSlider(this, config))

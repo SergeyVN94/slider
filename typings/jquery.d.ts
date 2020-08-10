@@ -31,6 +31,6 @@ interface JQuery {
   slider(this: JQuery, command: 'custom-scale'): string[];
   slider(this: JQuery, command: 'custom-scale', scale: string[]): JQuery;
 
-  slider(this: JQuery, command: 'min-max'): [number, number];
-  slider(this: JQuery, command: 'min-max', min: number, max: number): JQuery;
+  slider(this: JQuery, command: 'min' | 'max'): number;
+  slider(this: JQuery, command: 'min' | 'max', minOrMax: number): JQuery;
 }
