@@ -39,7 +39,7 @@ class Controller {
       .on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
   }
 
-  private _triggerSelectEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
+  private _triggerPositionChangeEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
     const position = this.components.slider.getTargetPosition(ev);
     if (this.positionChangeEventCallback) this.positionChangeEventCallback(position, pointIndex);
   }
@@ -53,11 +53,11 @@ class Controller {
   private _handlePointMousedown(index: number, ev: JQuery.MouseDownEvent): void {
     this.pointSelected = index;
     Controller.$document.on('mousemove.slider.checkTargetPosition', this._handleDocumentMousemove.bind(this));
-    this._triggerSelectEvent(ev, index);
+    this._triggerPositionChangeEvent(ev, index);
   }
 
   private _handleDocumentMousemove(ev: JQuery.MouseMoveEvent): void {
-    this._triggerSelectEvent(ev, this.pointSelected);
+    this._triggerPositionChangeEvent(ev, this.pointSelected);
   }
 
   private _handleDocumentMouseup(): void {

@@ -91,7 +91,7 @@ class ConfigPanel {
 
     const min = $slider.slider('min');
     const max = $slider.slider('max');
-    if (!min || !max) {
+    if (Number.isNaN(min) || Number.isNaN(max)) {
       $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
     } else {
       $scaleMin.val(min);
