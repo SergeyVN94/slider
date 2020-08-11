@@ -69,10 +69,6 @@ const convertNumberValues = (values: unknown, min: number): number[] => {
   return values.map((value) => parseInt(String(value), 10));
 };
 
-const hasOwnProperty = (obj: unknown, prop: string): boolean => (
-  Object.prototype.hasOwnProperty.call(obj, prop)
-);
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const convertConfig = (config: any): ISliderConfig => {
   if (config === null || typeof config !== 'object') {
@@ -140,13 +136,13 @@ const convertConfig = (config: any): ISliderConfig => {
 // eslint-disable-next-line @typescript-eslint/unbound-method
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
-  command: 'init' 
-  | 'step' 
-  | 'values' 
-  | 'show-tooltips' 
-  | 'view-name' 
-  | 'show-bg-line' 
-  | 'custom-scale' 
+  command: 'init'
+  | 'step'
+  | 'values'
+  | 'show-tooltips'
+  | 'view-name'
+  | 'show-bg-line'
+  | 'custom-scale'
   | 'min'
   | 'max',
   args: unknown = null,
@@ -294,6 +290,7 @@ $.fn.slider = function pluginMainFunction(
     if (isCommandMin && !Model.checkMinMax(minOrMax, config.max)) return this;
     if (!isCommandMin && !Model.checkMinMax(config.min, minOrMax)) return this;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     isCommandMin ? config.min = minOrMax : config.max = minOrMax;
 
     return this
