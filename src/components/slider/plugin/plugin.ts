@@ -69,8 +69,23 @@ const convertNumberValues = (values: unknown, min: number): number[] => {
   return values.map((value) => parseInt(String(value), 10));
 };
 
-const convertConfig = (config: unknown): ISliderConfig => {
-  if (!config || typeof config !== 'object') return DEFAULT_CONFIG;
+const hasOwnProperty = (obj: unknown, prop: string): boolean => (
+  Object.prototype.hasOwnProperty.call(obj, prop)
+);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const convertConfig = (config: any): ISliderConfig => {
+  if (config === null || typeof config !== 'object') {
+    return {
+      customScale: DEFAULT_CONFIG.customScale,
+      step: DEFAULT_CONFIG.step,
+      prettify: DEFAULT_CONFIG.prettify,
+      values: DEFAULT_CONFIG.values,
+      viewName: DEFAULT_CONFIG.viewName,
+      tooltips: DEFAULT_CONFIG.tooltips,
+      bgLine: DEFAULT_CONFIG.bgLine,
+    };
+  }
 
   const {
     customScale,
@@ -82,7 +97,7 @@ const convertConfig = (config: unknown): ISliderConfig => {
     bgLine = DEFAULT_CONFIG.bgLine,
     step = DEFAULT_CONFIG.step,
     viewName = DEFAULT_CONFIG.viewName,
-  } = config as ISliderConfig;
+  } = config;
 
   const newConfig: ISliderConfig = {};
 
