@@ -205,17 +205,19 @@ $.fn.slider = function pluginMainFunction(
   if (command === COMMANDS.STEP) {
     if (args === null) return config.step;
 
-    config.step = parseInt(String(args), 10);
-    if (Number.isNaN(config.step)) {
+    const newStep = parseInt(String(args), 10);
+    if (Number.isNaN(newStep)) {
       console.error(new TypeError('A number was expected, or a string from which to get a number.'));
       return this;
     }
 
     if (config.customScale) {
-      if (!Model.checkStepForCustomScale(config.step, config.customScale)) return this;
-    } else if (!Model.checkStepForMinMax(config.step, config.min, config.max)) {
+      if (!Model.checkStepForCustomScale(newStep, config.customScale)) return this;
+    } else if (!Model.checkStepForMinMax(newStep, config.min, config.max)) {
       return this;
     }
+
+    config.step = newStep;
 
     return this
       .data('config', config)
