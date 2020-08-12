@@ -78,7 +78,7 @@ module.exports = [
     resolve,
     entry: './components/slider/plugin/plugin.ts',
     output: {
-      path: `${__dirname}/dist/plugin`,
+      path: `${__dirname}/plugin`,
       filename: 'slider.js',
     },
     mode: 'production',
