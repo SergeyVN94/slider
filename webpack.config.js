@@ -6,8 +6,6 @@ const Webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
-const mode = isProduction ? 'production' : 'development';
-const devtool = isProduction ? 'nosources-source-map' : 'inline-source-map';
 const context = `${__dirname}/src`;
 const resolve = { extensions: ['.ts', '.js'] };
 const rules = [
@@ -28,16 +26,16 @@ const rules = [
 
 module.exports = [
   {
-    mode,
-    devtool,
     context,
     resolve,
+    mode: isProduction ? 'production' : 'development',
+    devtool: isProduction ? 'nosources-source-map' : 'inline-source-map',
     devServer: {
       contentBase: `${__dirname}/dist`,
       compress: true,
       port: 9000,
     },
-    entry: './index.ts',
+    entry: './demo/index.ts',
     output: {
       path: `${__dirname}/dist`,
       filename: 'index.js',
@@ -58,7 +56,7 @@ module.exports = [
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: 'index.pug',
+        template: './demo/index.pug',
         filename: 'index.html',
       }),
       new CopyPlugin([

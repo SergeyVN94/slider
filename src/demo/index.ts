@@ -1,11 +1,11 @@
-import initConfigPanel from './components/config-panel/initConfigPanel';
+import initConfigPanel from '../components/config-panel/initConfigPanel';
 
 const importAll = (resolve: __WebpackModuleApi.RequireContext): void => {
   resolve.keys().forEach(resolve);
 };
 
-importAll(require.context('./components', true, /.ts$/));
-importAll(require.context('./components', true, /.(sa|sc|c)ss$/));
+importAll(require.context('../components', true, /.ts$/));
+importAll(require.context('../components', true, /.(sa|sc|c)ss$/));
 require('./index.sass');
 
 ((fun: Function): void => {
@@ -30,7 +30,6 @@ require('./index.sass');
   initConfigPanel(
     $('#panel1'),
     $('#slider1').slider('init', {
-      values: ['Январь'],
       customScale: scale1,
     }),
   );
@@ -38,9 +37,8 @@ require('./index.sass');
   initConfigPanel(
     $('#panel2'),
     $('#slider2').slider('init', {
-      min: -1000,
-      max: 1000,
-      values: [-444, 777],
+      min: -10,
+      max: 10,
       prettify: (value: number) => `${value} -> ${value / 10}`,
     }),
   );
@@ -50,7 +48,6 @@ require('./index.sass');
     $('#slider3').slider('init', {
       viewName: 'vertical',
       values: [555],
-      max: 1000,
       prettify: (value: number) => `${value} $`,
     }),
   );
@@ -58,8 +55,6 @@ require('./index.sass');
   initConfigPanel(
     $('#panel4'),
     $('#slider4').slider('init', {
-      viewName: 'vertical',
-      values: ['Ю', 'М'],
       customScale: scale2,
       prettify: (value: string) => `${value} -> ${String(value).toLowerCase()}`,
     }),
