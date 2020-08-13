@@ -91,7 +91,7 @@ class ConfigPanel {
 
     const min = $slider.slider('min');
     const max = $slider.slider('max');
-    if (Number.isNaN(min) || Number.isNaN(max)) {
+    if (typeof min !== 'number' || typeof max !== 'number') {
       $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
     } else {
       $scaleMin.val(min);
@@ -103,7 +103,6 @@ class ConfigPanel {
 
   private _initEventListeners(): void {
     const {
-      $panel,
       $inputStep,
       $radioViewName,
       $checkboxBgLine,
