@@ -117,6 +117,10 @@ class ConfigPanel {
     $inputStep.on(
       'focusout.configPanel.updateStep',
       this._handleInputStepFocusout.bind(this),
+    ).on(
+      'keyup.configPanel.updateStep',
+      { handler: this._handleInputStepFocusout.bind(this) },
+      ConfigPanel._handleInputKeyup.bind(this),
     );
 
     $radioViewName.on(
@@ -137,27 +141,51 @@ class ConfigPanel {
     $inputPoints.on(
       'focusout.configPanel.changeNumberOfPoints',
       this._handleInputPointsFocusout.bind(this),
+    ).on(
+      'keyup.configPanel.changeNumberOfPoints',
+      { handler: this._handleInputPointsFocusout.bind(this) },
+      ConfigPanel._handleInputKeyup.bind(this),
     );
 
     $scaleMax.on(
       'focusout.configPanel.setScaleMax',
       this._handleMaxFocusout.bind(this),
+    ).on(
+      'keyup.configPanel.setScaleMax',
+      { handler: this._handleMaxFocusout.bind(this) },
+      ConfigPanel._handleInputKeyup.bind(this),
     );
 
     $scaleMin.on(
       'focusout.configPanel.setScaleMin',
       this._handleMinFocusout.bind(this),
+    ).on(
+      'keyup.configPanel.setScaleMin',
+      { handler: this._handleMinFocusout.bind(this) },
+      ConfigPanel._handleInputKeyup.bind(this),
     );
 
     $customValues.on(
       'focusout.configPanel.setCustomScale',
       this._handleCustomValuesFocusout.bind(this),
+    ).on(
+      'keyup.configPanel.setCustomScale',
+      { handler: this._handleCustomValuesFocusout.bind(this) },
+      ConfigPanel._handleInputKeyup.bind(this),
     );
 
     $slider.on(
       'thumb-move.configPanel.updateControlsValueOutContainer',
       this._handleSliderThumbMove.bind(this),
     );
+  }
+
+  private static _handleInputKeyup(ev: JQuery.KeyUpEvent): void {
+    // 13 - key code for 'enter'
+    if (ev.keyCode === 13) {
+      const { handler } = ev.data;
+      if (typeof handler === 'function') handler(ev);
+    }
   }
 
   private _handleCustomValuesFocusout(): void {
@@ -204,6 +232,10 @@ class ConfigPanel {
       $input.on(
         'focusout.configPanel.updateSliderValues',
         this._handleInputValueOutFocusout.bind(this),
+      ).on(
+        'keyup.configPanel.updateSliderValues',
+        { handler: this._handleInputValueOutFocusout.bind(this) },
+        ConfigPanel._handleInputKeyup.bind(this),
       );
     });
   }
