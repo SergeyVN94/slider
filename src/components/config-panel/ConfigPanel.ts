@@ -103,6 +103,7 @@ class ConfigPanel {
 
   private _initEventListeners(): void {
     const {
+      $panel,
       $inputStep,
       $radioViewName,
       $checkboxBgLine,
@@ -156,7 +157,7 @@ class ConfigPanel {
 
     $slider.on(
       'thumb-move.configPanel.updateControlsValueOutContainer',
-      this._handleSliderSelect.bind(this),
+      this._handleSliderThumbMove.bind(this),
     );
   }
 
@@ -223,7 +224,7 @@ class ConfigPanel {
     $slider.slider('values', currentValues);
   }
 
-  private _handleSliderSelect(): void {
+  private _handleSliderThumbMove(): void {
     const {
       inputsValueOut,
       $slider,
