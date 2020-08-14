@@ -10,14 +10,15 @@ https://sergeyvn94.github.io/slider/
 
 ## Подключение
 
-Скоприруйте папку `plugin` из `dist` в корень вашего сайта. В `index.html` добавте следующие строки:  
+Скоприруйте папку `plugin` в корень вашего сайта. В `index.html` добавте следующие строки:  
 ```
 <head>
   <link rel="stylesheet" href="plugin/slider.css">
 </head>
 <body>
   // контент страницы
-  <script type="text/javascript" src="plugin/slider.js"></script>
+  // здесь подключается jquery асинхронно
+  <script type="text/javascript" src="plugin/slider.js" defer></script>
 </body>
 ```
 
