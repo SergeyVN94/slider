@@ -48,6 +48,7 @@ require('./index.sass');
     $('#slider3').slider('init', {
       viewName: 'vertical',
       values: [555],
+      max: 1000,
       prettify: (value: number) => `${value} $`,
     }),
   );

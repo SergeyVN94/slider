@@ -17,6 +17,8 @@ class Model implements IModel, IModelStateManager {
 
   private config: IModelConfig;
 
+  public static readonly NO_ERROR = 0;
+
   constructor(config: {
     customScale?: string[];
     min?: number;
@@ -24,83 +26,97 @@ class Model implements IModel, IModelStateManager {
     values: number[] | string[];
     step: number;
   }) {
-    const {
-      customScale,
-      min,
-      max,
-      values,
-      step,
-    } = config;
-
     this.pointsSteps = [];
     this.updateEventCallbackList = [];
-    this.config = { step: DEFAULT_CONFIG.step };
-    let _values: string[] | number[];
+    this._initConfig(config);
 
-    if (customScale && Model.checkCustomScale(customScale)) {
-      this.scaleDriver = new CustomScaleDriver(customScale);
-      this.config.customScale = customScale;
-      this.step = Model.checkStepForCustomScale(step, customScale)
-        ? step
-        : DEFAULT_CONFIG.step;
+    const { values } = config;
+    let correctValues: string[] | number[];
 
-      _values = Model.checkValuesForCustomScale(values as string[], customScale)
-        ? values
-        : [customScale[0]];
+    if (this.config.customScale) {
+      this.scaleDriver = new CustomScaleDriver(this.config.customScale);
+
+      const errorCheckingValues = Model.checkValuesForCustomScale(
+        values as string[],
+        this.config.customScale,
+      );
+
+      if (errorCheckingValues === 0) {
+        correctValues = values;
+      } else {
+        console.error(errorCheckingValues);
+        console.warn('Set the starting value based on the scale');
+        correctValues = [this.config.customScale[0]];
+      }
     } else {
-      const _min = Math.min(min, max);
-      let _max = Math.max(min, max);
+      this.scaleDriver = new RangeScaleDriver(this.config.min, this.config.max);
 
-      if (_min === _max) _max = _min + DEFAULT_CONFIG.range;
+      const errorCheckingValues = Model.checkValuesForMinMax(
+        values as number[],
+        this.config.min,
+        this.config.max,
+      );
 
-      this.scaleDriver = new RangeScaleDriver(_min, _max);
-      this.config.min = _min;
-      this.config.max = _max;
-      this.step = Model.checkStepForMinMax(step, _min, _max)
-        ? step
-        : DEFAULT_CONFIG.step;
-
-      _values = Model.checkValuesForMinMax(values as number[], _min, _max)
-        ? values
-        : [_min];
+      if (errorCheckingValues === 0) {
+        correctValues = values;
+      } else {
+        console.error(errorCheckingValues);
+        console.warn('Set the starting value based on the scale');
+        correctValues = [this.config.min];
+      }
     }
 
+    this.step = this.config.step;
     this.maxStep = this.scaleDriver.getMaxStep();
     this._initLastStep();
-    this.values = _values;
+    this.values = correctValues;
 
     this.config.step = this.step;
   }
 
-  public static checkCustomScale(scale: string[]): boolean {
-    if (scale.length < 2) return false;
-    return true;
+  public static checkCustomScale(scale: string[]): 0 | Error {
+    if (scale.length < 2) return Error('The custom scale must have at least 2 values.');
+    return 0;
   }
 
-  public static checkMinMax(min: number, max: number): boolean {
-    if (min === max || max < min) return false;
-    return true;
+  public static checkMinMax(min: number, max: number): 0 | Error {
+    if (min === max) return Error('The minimum and maximum values ​​of the slider range must not be equal.');
+    if (max < min) return Error('The maximum value of the range must be greater than the minimum.');
+    return 0;
   }
 
-  public static checkStepForCustomScale(step: number, scale: string[]): boolean {
-    if (step < 1 || step > (scale.length - 1)) return false;
-    return true;
+  public static checkStepForCustomScale(step: number, scale: string[]): 0 | Error {
+    if (step < 1) return RangeError('Step must be greater than zero.');
+    if (step > (scale.length - 1)) return RangeError('Step exceeds the scale range.');
+    return 0;
   }
 
-  public static checkStepForMinMax(step: number, min: number, max: number): boolean {
-    if (step < 1) return false;
-    if (step > (max - min)) return false;
-    return true;
+  public static checkStepForMinMax(step: number, min: number, max: number): 0 | Error {
+    if (step < 1) return RangeError('Step must be greater than zero.');
+    if (step > (max - min)) return RangeError('Step exceeds the scale range.');
+    return 0;
   }
 
-  public static checkValuesForCustomScale(values: string[], scale: string[]): boolean {
-    if (values.length === 0) return false;
-    return values.every((value) => scale.includes(value));
+  public static checkValuesForCustomScale(values: string[], scale: string[]): 0 | Error {
+    if (values.length === 0) return Error('The values ​​array must not be empty');
+
+    for (let i = 0; i < values.length; i += 1) {
+      const value = values[i];
+      if (!scale.includes(value)) return Error(`The value "${value}" was not found on this scale.`);
+    }
+
+    return 0;
   }
 
-  public static checkValuesForMinMax(values: number[], min: number, max: number): boolean {
-    if (values.length === 0) return false;
-    return values.every((value) => (value >= min && value <= max));
+  public static checkValuesForMinMax(values: number[], min: number, max: number): 0 | Error {
+    if (values.length === 0) return Error('The values ​​array must not be empty');
+
+    for (let i = 0; i < values.length; i += 1) {
+      const value = values[i];
+      if (value < min || value > max) return RangeError(`The value "${value}" is outside the slider range.`);
+    }
+
+    return 0;
   }
 
   public getConfig(): IModelConfig {
@@ -160,6 +176,72 @@ class Model implements IModel, IModelStateManager {
     });
 
     return items;
+  }
+
+  private _initConfig(config: {
+    customScale?: string[];
+    min?: number;
+    max?: number;
+    values: number[] | string[];
+    step: number;
+  }): void {
+    const {
+      customScale,
+      min,
+      max,
+      step,
+    } = config;
+
+    this.config = { step: DEFAULT_CONFIG.step };
+
+    if (customScale) {
+      const errorCheckingCustomScale = Model.checkCustomScale(customScale);
+
+      if (errorCheckingCustomScale === Model.NO_ERROR) {
+        this.config.customScale = customScale;
+      } else {
+        console.error(errorCheckingCustomScale);
+        this.config.customScale = DEFAULT_CONFIG.customScale;
+        console.warn('Set a custom scale by default.');
+      }
+
+      const errorCheckingStep = Model.checkStepForCustomScale(step, this.config.customScale);
+
+      if (errorCheckingStep === Model.NO_ERROR) {
+        this.config.step = step;
+      } else {
+        console.error(errorCheckingStep);
+        this.config.step = DEFAULT_CONFIG.step;
+        console.warn('Default step set.');
+      }
+    } else {
+      const errorCheckingMinMax = Model.checkMinMax(min, max);
+
+      if (errorCheckingMinMax === 0) {
+        this.config.min = min;
+        this.config.max = max;
+      } else {
+        console.error(errorCheckingMinMax);
+
+        this.config.min = Math.min(min, max);
+        this.config.max = Math.max(min, max);
+
+        if (this.config.min === this.config.max) {
+          this.config.max += DEFAULT_CONFIG.range;
+          console.warn(`The maximum value of the slider is increased by ${DEFAULT_CONFIG.range}.`);
+        }
+      }
+
+      const errorCheckingStep = Model.checkStepForMinMax(step, this.config.min, this.config.max);
+
+      if (errorCheckingStep === Model.NO_ERROR) {
+        this.config.step = step;
+      } else {
+        console.error(errorCheckingStep);
+        this.config.step = DEFAULT_CONFIG.step;
+        console.warn('Default step set.');
+      }
+    }
   }
 
   private _triggerUpdateEvent(): void {

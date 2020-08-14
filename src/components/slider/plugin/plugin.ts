@@ -17,7 +17,12 @@ const COMMANDS = {
 };
 
 const convertCustomScale = (customScale: unknown): string[] => {
-  if (!Array.isArray(customScale)) return DEFAULT_CONFIG.customScale;
+  if (!Array.isArray(customScale)) {
+    console.error(Error('The custom scale must be an array.'));
+    console.warn('Set to custom scale by default');
+    return DEFAULT_CONFIG.customScale;
+  }
+
   return customScale.map((value) => String(value));
 };
 
@@ -27,16 +32,32 @@ const convertMinMax = (min: unknown, max: unknown): {
 } => {
   const minMax = { min: 0, max: 0 };
 
-  if (typeof min !== 'number') {
+  if (min === undefined) {
+    console.warn(`The minimum value is set by default "${DEFAULT_CONFIG.min}"`);
+    minMax.min = DEFAULT_CONFIG.min;
+  } else if (typeof min !== 'number') {
     minMax.min = parseInt(String(min), 10);
-    if (Number.isNaN(minMax.min)) minMax.min = DEFAULT_CONFIG.min;
+
+    if (Number.isNaN(minMax.min)) {
+      console.error(Error('The minimum must be a number or a string from which a number can be derived.'));
+      console.warn(`The minimum value is set by default "${DEFAULT_CONFIG.min}"`);
+      minMax.min = DEFAULT_CONFIG.min;
+    }
   } else {
     minMax.min = min;
   }
 
-  if (typeof max !== 'number') {
+  if (max === undefined) {
+    console.warn(`The maximum value is set at least + the default slider range (${DEFAULT_CONFIG.range}).`);
+    minMax.max = (minMax.min + DEFAULT_CONFIG.range);
+  } else if (typeof max !== 'number') {
     minMax.max = parseInt(String(max), 10);
-    if (Number.isNaN(minMax.max)) minMax.max = (minMax.min + DEFAULT_CONFIG.range);
+
+    if (Number.isNaN(minMax.max)) {
+      console.error(Error('The maximum must be a number or a string from which a number can be derived.'));
+      console.warn(`The maximum value is set at least + the default slider range (${DEFAULT_CONFIG.range}).`);
+      minMax.max = (minMax.min + DEFAULT_CONFIG.range);
+    }
   } else {
     minMax.max = max;
   }
@@ -45,8 +66,11 @@ const convertMinMax = (min: unknown, max: unknown): {
 };
 
 const convertStringValues = (values: unknown, customScale: string[]): string[] => {
+  if (values === undefined) return [customScale[0]];
+
   if (!Array.isArray(values)) {
     console.error(new Error('Values ​​must be an array.'));
+    console.warn(`The value set is "${customScale[0]}".`);
     return [customScale[0]];
   }
 
@@ -54,8 +78,11 @@ const convertStringValues = (values: unknown, customScale: string[]): string[] =
 };
 
 const convertNumberValues = (values: unknown, min: number): number[] => {
+  if (values === undefined) return [min];
+
   if (!Array.isArray(values)) {
     console.error(new Error('Values ​​must be an array.'));
+    console.warn(`The value set is "${min}".`);
     return [min];
   }
 
@@ -63,6 +90,7 @@ const convertNumberValues = (values: unknown, min: number): number[] => {
 
   if (!isPossibleToConvert) {
     console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
+    console.warn(`The value set is "${min}".`);
     return [min];
   }
 
@@ -114,6 +142,7 @@ const convertConfig = (config: any): ISliderConfig => {
     newConfig.viewName = viewName;
   } else {
     console.error(new TypeError('viewName must be "horizontal" or "vertical".'));
+    console.warn(`viewName is set by default "${DEFAULT_CONFIG.viewName}".`);
     newConfig.viewName = DEFAULT_CONFIG.viewName;
   }
 
@@ -121,11 +150,13 @@ const convertConfig = (config: any): ISliderConfig => {
   if (Number.isNaN(newConfig.step)) {
     newConfig.step = DEFAULT_CONFIG.step;
     console.error(new TypeError('The step must be a number.'));
+    console.warn(`Step is set by default "${DEFAULT_CONFIG.step}".`);
   }
 
   if (typeof prettify !== 'function') {
     newConfig.prettify = DEFAULT_CONFIG.prettify;
     console.error(new TypeError('prettify should be a function.'));
+    console.warn("'Prettify' is set by default.");
   } else {
     newConfig.prettify = prettify;
   }
@@ -170,7 +201,12 @@ $.fn.slider = function pluginMainFunction(
 
   if (command === COMMANDS.SHOW_TOOLTIPS) {
     if (args === null) return slider.areTooltipsVisible;
-    if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
+
+    if (typeof args !== 'boolean') {
+      console.error(new TypeError('Boolean expected.'));
+      console.warn('areTooltipsVisible cast to boolean.');
+    }
+
     slider.areTooltipsVisible = Boolean(args);
     config.tooltips = slider.areTooltipsVisible;
 
@@ -179,7 +215,12 @@ $.fn.slider = function pluginMainFunction(
 
   if (command === COMMANDS.SHOW_BG_LINE) {
     if (args === null) return slider.isBgLineVisible;
-    if (typeof args !== 'boolean') console.error(new TypeError('Boolean expected.'));
+
+    if (typeof args !== 'boolean') {
+      console.error(new TypeError('Boolean expected.'));
+      console.warn('isBgLineVisible cast to boolean.');
+    }
+
     slider.isBgLineVisible = Boolean(args);
     config.bgLine = slider.isBgLineVisible;
 
@@ -211,9 +252,12 @@ $.fn.slider = function pluginMainFunction(
       return this;
     }
 
-    if (config.customScale) {
-      if (!Model.checkStepForCustomScale(newStep, config.customScale)) return this;
-    } else if (!Model.checkStepForMinMax(newStep, config.min, config.max)) {
+    const errorCheckingStep = config.customScale
+      ? Model.checkStepForCustomScale(newStep, config.customScale)
+      : Model.checkStepForMinMax(newStep, config.min, config.max);
+
+    if (errorCheckingStep !== Model.NO_ERROR) {
+      console.error(errorCheckingStep);
       return this;
     }
 
@@ -232,20 +276,25 @@ $.fn.slider = function pluginMainFunction(
       return this;
     }
 
-    if (config.customScale) {
-      if (!Model.checkValuesForCustomScale(
-        args.map((value) => String(value)),
-        config.customScale,
-      )) return this;
-    } else {
+    if (!config.customScale) {
       const areValuesCorrect = args.every((value) => !Number.isNaN(parseInt(String(value), 10)));
 
       if (!areValuesCorrect) {
         console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
         return this;
       }
+    }
 
-      if (!Model.checkValuesForMinMax(args, config.min, config.max)) return this;
+    const errorCheckingValues = config.customScale
+      ? Model.checkValuesForCustomScale(
+        args.map((value) => String(value)),
+        config.customScale,
+      )
+      : Model.checkValuesForMinMax(args, config.min, config.max);
+
+    if (errorCheckingValues !== Model.NO_ERROR) {
+      console.error(errorCheckingValues);
+      return this;
     }
 
     if (args.length === slider.values.length) {
@@ -268,10 +317,15 @@ $.fn.slider = function pluginMainFunction(
       return this;
     }
 
-    const _customScale = args.map((value) => String(value));
+    const normalizedCustomScale = args.map((value) => String(value));
+    const errorCheckingCustomScale = Model.checkCustomScale(normalizedCustomScale);
 
-    if (!Model.checkCustomScale(_customScale)) return this;
-    config.customScale = _customScale;
+    if (errorCheckingCustomScale !== Model.NO_ERROR) {
+      console.error(errorCheckingCustomScale);
+      return this;
+    }
+
+    config.customScale = normalizedCustomScale;
 
     return this
       .data('config', config)
@@ -289,8 +343,14 @@ $.fn.slider = function pluginMainFunction(
       return this;
     }
 
-    if (isCommandMin && !Model.checkMinMax(minOrMax, config.max)) return this;
-    if (!isCommandMin && !Model.checkMinMax(config.min, minOrMax)) return this;
+    const errorCheckingMinMax = isCommandMin
+      ? Model.checkMinMax(minOrMax, config.max)
+      : Model.checkMinMax(config.min, minOrMax);
+
+    if (errorCheckingMinMax !== Model.NO_ERROR) {
+      console.error(errorCheckingMinMax);
+      return this;
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     isCommandMin ? config.min = minOrMax : config.max = minOrMax;
