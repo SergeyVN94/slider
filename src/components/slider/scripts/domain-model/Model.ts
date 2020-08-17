@@ -33,42 +33,34 @@ class Model implements IModel, IModelStateManager {
     const { values } = config;
     let correctValues: string[] | number[];
 
-    if (this.config.customScale) {
-      this.scaleDriver = new CustomScaleDriver(this.config.customScale);
+    this.scaleDriver = this.config.customScale
+      ? new CustomScaleDriver(this.config.customScale)
+      : new RangeScaleDriver(this.config.min, this.config.max);
 
-      const errorCheckingValues = Model.checkValuesForCustomScale(
+    const errorCheckingValues = this.config.customScale
+      ? Model.checkValuesForCustomScale(
         values as string[],
         this.config.customScale,
-      );
-
-      if (errorCheckingValues === 0) {
-        correctValues = values;
-      } else {
-        console.error(errorCheckingValues);
-        console.warn('Set the starting value based on the scale');
-        correctValues = [this.config.customScale[0]];
-      }
-    } else {
-      this.scaleDriver = new RangeScaleDriver(this.config.min, this.config.max);
-
-      const errorCheckingValues = Model.checkValuesForMinMax(
+      )
+      : Model.checkValuesForMinMax(
         values as number[],
         this.config.min,
         this.config.max,
       );
 
-      if (errorCheckingValues === 0) {
-        correctValues = values;
-      } else {
-        console.error(errorCheckingValues);
-        console.warn('Set the starting value based on the scale');
-        correctValues = [this.config.min];
-      }
+    if (errorCheckingValues === 0) {
+      correctValues = values;
+    } else {
+      console.error(errorCheckingValues);
+      console.warn('Set the starting value based on the scale');
+      correctValues = this.config.customScale
+        ? [this.config.customScale[0]]
+        : [this.config.min];
     }
 
     this.step = this.config.step;
     this.maxStep = this.scaleDriver.getMaxStep();
-    this._initLastStep();
+    this.lastStep = Model._calcLastStep(this.step, this.maxStep);
     this.values = correctValues;
 
     this.config.step = this.step;
@@ -250,9 +242,9 @@ class Model implements IModel, IModelStateManager {
     );
   }
 
-  private _initLastStep(): void {
-    this.lastStep = Math.round((this.maxStep / this.step)) * this.step;
-    if (this.lastStep > this.maxStep) this.lastStep = this.maxStep;
+  private static _calcLastStep(step: number, maxStep: number): number {
+    const lastStep = Math.round((maxStep / step)) * step;
+    return (lastStep > maxStep) ? maxStep : lastStep;
   }
 
   private _updatePointSteps(
