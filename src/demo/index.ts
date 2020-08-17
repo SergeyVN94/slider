@@ -47,8 +47,8 @@ require('./index.sass');
     $('#panel3'),
     $('#slider3').slider('init', {
       viewName: 'vertical',
-      values: [555],
-      max: 1000,
+      values: ['5'],
+      max: 10,
       prettify: (value: number) => `${value} $`,
     }),
   );
@@ -57,6 +57,7 @@ require('./index.sass');
     $('#panel4'),
     $('#slider4').slider('init', {
       customScale: scale2,
+      viewName: 'vertical',
       prettify: (value: string) => `${value} -> ${String(value).toLowerCase()}`,
     }),
   );
