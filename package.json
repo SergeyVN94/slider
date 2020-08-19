@@ -8,7 +8,7 @@
     "build": "NODE_ENV=production npx webpack",
     "eslint": "eslint --cache --ext .ts,.tsx src",
     "eslint-fix": "eslint --cache --ext .ts,.tsx src --fix",
-    "start:dev": "webpack-dev-server",
+    "start:dev": "webpack-dev-server --open",
     "deploy": "gh-pages -d dist"
   },
   "repository": {

@@ -33,14 +33,14 @@ const convertMinMax = (min: unknown, max: unknown): {
   const minMax = { min: 0, max: 0 };
 
   if (min === undefined) {
-    console.warn(`The minimum value is set by default "${DEFAULT_CONFIG.min}"`);
+    console.warn(`The min is set by default "${DEFAULT_CONFIG.min}"`);
     minMax.min = DEFAULT_CONFIG.min;
   } else if (typeof min !== 'number') {
     minMax.min = parseInt(String(min), 10);
 
     if (Number.isNaN(minMax.min)) {
-      console.error(Error('The minimum must be a number or a string from which a number can be derived.'));
-      console.warn(`The minimum value is set by default "${DEFAULT_CONFIG.min}"`);
+      console.error(Error('The min must be a number.'));
+      console.warn(`The min is set by default "${DEFAULT_CONFIG.min}"`);
       minMax.min = DEFAULT_CONFIG.min;
     }
   } else {
@@ -48,14 +48,14 @@ const convertMinMax = (min: unknown, max: unknown): {
   }
 
   if (max === undefined) {
-    console.warn(`The maximum value is set at least + the default slider range (${DEFAULT_CONFIG.range}).`);
+    console.warn(`The max is set at least + the default slider range (${DEFAULT_CONFIG.range}).`);
     minMax.max = (minMax.min + DEFAULT_CONFIG.range);
   } else if (typeof max !== 'number') {
     minMax.max = parseInt(String(max), 10);
 
     if (Number.isNaN(minMax.max)) {
-      console.error(Error('The maximum must be a number or a string from which a number can be derived.'));
-      console.warn(`The maximum value is set at least + the default slider range (${DEFAULT_CONFIG.range}).`);
+      console.error(Error('The max must be a number.'));
+      console.warn(`The max is set at least + the default slider range (${DEFAULT_CONFIG.range}).`);
       minMax.max = (minMax.min + DEFAULT_CONFIG.range);
     }
   } else {
@@ -89,7 +89,7 @@ const convertNumberValues = (values: unknown, min: number): number[] => {
   const isPossibleToConvert = values.every((value) => !Number.isNaN(parseInt(String(value), 10)));
 
   if (!isPossibleToConvert) {
-    console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
+    console.error(new Error('An array of numbers, or strings, is expected.'));
     console.warn(`The value set is "${min}".`);
     return [min];
   }
@@ -248,7 +248,7 @@ $.fn.slider = function pluginMainFunction(
 
     const newStep = parseInt(String(args), 10);
     if (Number.isNaN(newStep)) {
-      console.error(new TypeError('A number was expected, or a string from which to get a number.'));
+      console.error(new TypeError('A number was expected.'));
       return this;
     }
 
@@ -280,7 +280,7 @@ $.fn.slider = function pluginMainFunction(
       const areValuesCorrect = args.every((value) => !Number.isNaN(parseInt(String(value), 10)));
 
       if (!areValuesCorrect) {
-        console.error(new Error('An array of numbers, or strings, is expected, which can be converted to a number.'));
+        console.error(new Error('An array of numbers, or strings, is expected.'));
         return this;
       }
     }
@@ -313,7 +313,7 @@ $.fn.slider = function pluginMainFunction(
     if (args === null) return config.customScale;
 
     if (!Array.isArray(args)) {
-      console.error(new TypeError('The custom scale must be an array'));
+      console.error(new TypeError('The custom scale must be an array.'));
       return this;
     }
 
@@ -339,7 +339,7 @@ $.fn.slider = function pluginMainFunction(
 
     const minOrMax = parseInt(String(args), 10);
     if (Number.isNaN(minOrMax)) {
-      console.error(new Error('Args parameter must be number or convert to number.'));
+      console.error(new Error('Args parameter must be number.'));
       return this;
     }
 

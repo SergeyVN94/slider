@@ -72,7 +72,7 @@ class Model implements IModel, IModelStateManager {
   }
 
   public static checkMinMax(min: number, max: number): 0 | Error {
-    if (min === max) return Error('The minimum and maximum values ​​of the slider range must not be equal.');
+    if (min === max) return Error('The min and max should not be equal.');
     if (max < min) return Error('The maximum value of the range must be greater than the minimum.');
     return 0;
   }
