@@ -1,9 +1,10 @@
-'use strict';
-
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const Webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const context = `${__dirname}/src`;
@@ -22,82 +23,71 @@ const rules = [
     test: /\.node$/,
     use: 'node-loader',
   },
-];
-
-module.exports = [
   {
-    context,
-    resolve,
-    mode: isProduction ? 'production' : 'development',
-    devtool: isProduction ? 'nosources-source-map' : 'inline-source-map',
-    devServer: {
-      contentBase: `${__dirname}/dist`,
-      compress: true,
-      port: 9000,
-    },
-    entry: './demo/index.ts',
-    output: {
-      path: `${__dirname}/dist`,
-      filename: 'index.js',
-      publicPath: '/',
-    },
-    watchOptions: { aggregateTimeout: 100 },
-    module: {
-      rules: [
-        ...rules,
-        {
-          test: /\.(sa|sc|c)ss$/,
-          use: [
-            'style-loader',
-            'css-loader',
-            'sass-loader',
-          ],
-        },
-      ],
-    },
-    plugins: [
-      new HtmlWebpackPlugin({
-        template: './demo/index.pug',
-        filename: 'index.html',
-      }),
-      new CopyPlugin([
-        {
-          from: 'chunks/favicons',
-          to: '',
-        },
-      ]),
-      new Webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-      }),
+    test: /\.(sa|sc|c)ss$/,
+    use: [
+      MiniCssExtractPlugin.loader,
+      'css-loader',
+      'sass-loader',
     ],
   },
-  {
+];
+
+const optimization = {
+  minimizer: [
+    new OptimizeCssAssetsWebpackPlugin(),
+    new TerserWebpackPlugin(),
+  ],
+};
+
+const configs = [{
+  context,
+  resolve,
+  optimization: isProduction ? optimization : {},
+  mode: isProduction ? 'production' : 'development',
+  devtool: isProduction ? 'nosources-source-map' : 'inline-source-map',
+  devServer: {
+    contentBase: `${__dirname}/dist`,
+    compress: true,
+    port: 9000,
+  },
+  entry: './demo/index.ts',
+  output: {
+    path: `${__dirname}/dist`,
+    filename: 'index.js',
+  },
+  watchOptions: { aggregateTimeout: 100 },
+  module: { rules },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './demo/index.pug',
+      filename: 'index.html',
+    }),
+    new CopyPlugin([{ from: 'chunks/favicons', to: '' }]),
+    new Webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }),
+    new MiniCssExtractPlugin({ filename: 'index.css' }),
+    new CleanWebpackPlugin(),
+  ],
+}];
+
+if (isProduction) {
+  configs.push({
     context,
     resolve,
-    entry: './components/slider/plugin/plugin.ts',
+    optimization,
+    entry: './slider/plugin/plugin.ts',
     output: {
       path: `${__dirname}/plugin`,
       filename: 'slider.js',
     },
     mode: 'production',
     devtool: 'nosources-source-map',
-    module: {
-      rules: [
-        ...rules,
-        {
-          test: /\.(sa|sc|c)ss$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            {
-              loader: 'sass-loader',
-              options: { sourceMap: false },
-            },
-          ],
-        },
-      ],
-    },
-    plugins: [new MiniCssExtractPlugin({ filename: 'slider.css' })],
-  },
-];
+    module: { rules },
+    plugins: [
+      new MiniCssExtractPlugin({ filename: 'slider.css' }),
+      new CleanWebpackPlugin(),
+    ],
+  });
+}
+
+module.exports = configs;
