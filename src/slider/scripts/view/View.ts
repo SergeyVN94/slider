@@ -80,8 +80,8 @@ class View implements IView, IViewConfigManager {
     this.components.slider.areTooltipsVisible = state;
   }
 
-  public onThumbPositionChange(callback: HandlerThumbPositionChange): void {
-    this.controller.onThumbPositionChange(callback);
+  public onPointPositionChange(callback: HandlerPointPositionChange): void {
+    this.controller.onPointPositionChange(callback);
   }
 
   public update(pointPositions: number[], pointValues: number[] | string[]): void {
@@ -111,7 +111,7 @@ class View implements IView, IViewConfigManager {
       Tooltip.updateZIndexes(this.components.tooltips, this.components.points);
     });
 
-    if (areValuesUpdated) this.components.slider.triggerThumbMoveEvent(pointValues);
+    if (areValuesUpdated) this.components.slider.triggerPointMoveEvent(pointValues);
   }
 
   private _initSlider(viewName: ViewName, scaleItems: ScaleItem[]): IViewComponents {

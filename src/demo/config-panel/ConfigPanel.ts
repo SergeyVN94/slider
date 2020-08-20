@@ -175,8 +175,8 @@ class ConfigPanel {
     );
 
     $slider.on(
-      'thumb-move.configPanel.updateControlsValueOutContainer',
-      this._handleSliderThumbMove.bind(this),
+      'point-move.configPanel.updateControlsValueOutContainer',
+      this._handleSliderPointMove.bind(this),
     );
   }
 
@@ -255,7 +255,7 @@ class ConfigPanel {
     $slider.slider('values', currentValues);
   }
 
-  private _handleSliderThumbMove(): void {
+  private _handleSliderPointMove(): void {
     const {
       inputsValueOut,
       $slider,

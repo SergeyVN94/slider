@@ -1,11 +1,8 @@
-import initConfigPanel from '../components/config-panel/initConfigPanel';
+import '../slider/plugin/plugin';
+import initConfigPanel from './config-panel/initConfigPanel';
 
-const importAll = (resolve: __WebpackModuleApi.RequireContext): void => {
-  resolve.keys().forEach(resolve);
-};
-
-importAll(require.context('../components', true, /.ts$/));
-importAll(require.context('../components', true, /.(sa|sc|c)ss$/));
+require('../slider/slider.sass');
+require('./config-panel/config-panel.sass');
 require('./index.sass');
 
 ((fun: Function): void => {

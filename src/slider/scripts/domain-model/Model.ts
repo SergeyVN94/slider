@@ -78,13 +78,13 @@ class Model implements IModel, IModelStateManager {
   }
 
   public static checkStepForCustomScale(step: number, scale: string[]): 0 | Error {
-    if (step < 1) return RangeError('Step must be greater than zero.');
+    if (step < 1) return RangeError('Step must be greater than or equal to 1.');
     if (step > (scale.length - 1)) return RangeError('Step exceeds the scale range.');
     return 0;
   }
 
   public static checkStepForMinMax(step: number, min: number, max: number): 0 | Error {
-    if (step < 1) return RangeError('Step must be greater than zero.');
+    if (step < 1) return RangeError('Step must be greater than or equal to 1.');
     if (step > (max - min)) return RangeError('Step exceeds the scale range.');
     return 0;
   }

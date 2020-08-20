@@ -74,7 +74,7 @@ $('#slider').slider(command[, argument]);
 
 # Архитектура приложения
 #### Реализована архитектура MVP.  
-![alt text](/docs/uml.png)  
+![alt text](/docs/uml.jpg)  
 
 
 

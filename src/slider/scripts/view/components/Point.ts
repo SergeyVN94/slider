@@ -35,7 +35,7 @@ class Point {
 
   public onMousedown(callback: HandlePointMousedown): void {
     this.mousedownCallback = callback;
-    this.$point.on('mousedown', this._handlePointMousedown.bind(this));
+    this.$point.on('mousedown', this._handleMousedown.bind(this));
   }
 
   public setPosition(position: number): void {
@@ -68,7 +68,7 @@ class Point {
     );
   }
 
-  private _handlePointMousedown(ev: JQuery.MouseDownEvent): void {
+  private _handleMousedown(ev: JQuery.MouseDownEvent): void {
     ev.stopPropagation();
     this.mousedownCallback(this.index, ev);
   }

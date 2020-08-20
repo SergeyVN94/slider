@@ -12,7 +12,7 @@ class Controller {
 
   private static readonly $document = $(document);
 
-  private positionChangeEventCallback: HandlerThumbPositionChange;
+  private positionChangeEventCallback: HandlerPointPositionChange;
 
   private pointSelected: number;
 
@@ -25,18 +25,18 @@ class Controller {
     this._initEventListeners();
   }
 
-  public onThumbPositionChange(callback: HandlerThumbPositionChange): void {
+  public onPointPositionChange(callback: HandlerPointPositionChange): void {
     this.positionChangeEventCallback = callback;
   }
 
   private _initEventListeners(): void {
     const { slider, points } = this.components;
 
-    slider.onMousedown(this._handleSliderSelect.bind(this));
+    slider.onMousedown(this._handleSliderMousedown.bind(this));
     points.forEach((point) => point.onMousedown(this._handlePointMousedown.bind(this)));
     Controller.$document
       .off('mouseup.slider.removeEventListeners')
-      .on('mouseup.slider.removeEventListeners', this._handleDocumentMouseup.bind(this));
+      .on('mouseup.slider.removeEventListeners', this._handleMouseup.bind(this));
   }
 
   private _triggerPositionChangeEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
@@ -44,7 +44,7 @@ class Controller {
     if (this.positionChangeEventCallback) this.positionChangeEventCallback(position, pointIndex);
   }
 
-  private _handleSliderSelect(position: number): void {
+  private _handleSliderMousedown(position: number): void {
     if (this.positionChangeEventCallback) {
       this.positionChangeEventCallback(position, Controller.POINT_NOT_SELECTED);
     }
@@ -52,15 +52,15 @@ class Controller {
 
   private _handlePointMousedown(index: number, ev: JQuery.MouseDownEvent): void {
     this.pointSelected = index;
-    Controller.$document.on('mousemove.slider.checkTargetPosition', this._handleDocumentMousemove.bind(this));
+    Controller.$document.on('mousemove.slider.checkTargetPosition', this._handleMousemove.bind(this));
     this._triggerPositionChangeEvent(ev, index);
   }
 
-  private _handleDocumentMousemove(ev: JQuery.MouseMoveEvent): void {
+  private _handleMousemove(ev: JQuery.MouseMoveEvent): void {
     this._triggerPositionChangeEvent(ev, this.pointSelected);
   }
 
-  private _handleDocumentMouseup(): void {
+  private _handleMouseup(): void {
     Controller.$document.off('mousemove.slider.checkTargetPosition');
     this.pointSelected = Controller.POINT_NOT_SELECTED;
   }

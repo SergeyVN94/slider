@@ -18,7 +18,7 @@ class Slider {
       this._getTargetPosition = this._getTargetPositionForHorizontalView.bind(this);
     }
 
-    $slider.on('mousedown.slider.click', this._handleSliderMousedown.bind(this));
+    $slider.on('mousedown.slider.click', this._handleMousedown.bind(this));
   }
 
   public set areTooltipsVisible(state: boolean) {
@@ -37,8 +37,8 @@ class Slider {
     return !this.$slider.hasClass(CLASSES.WITHOUT_BG_LINE);
   }
 
-  public triggerThumbMoveEvent(values: string[] | number[]): void {
-    this.$slider.trigger('thumb-move', values);
+  public triggerPointMoveEvent(values: string[] | number[]): void {
+    this.$slider.trigger('point-move', values);
   }
 
   public getTargetPosition(ev: JQuery.MouseEventBase): number {
@@ -57,7 +57,7 @@ class Slider {
       .off('mousedown.slider.select');
   }
 
-  private _handleSliderMousedown(ev: JQuery.MouseEventBase): void {
+  private _handleMousedown(ev: JQuery.MouseEventBase): void {
     if (this._callbackMousedown) this._callbackMousedown(this.getTargetPosition(ev));
   }
 

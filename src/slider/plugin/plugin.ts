@@ -30,36 +30,21 @@ const convertMinMax = (min: unknown, max: unknown): {
   min: number;
   max: number;
 } => {
-  const minMax = { min: 0, max: 0 };
+  const minMax = {
+    min: parseInt(String(min), 10),
+    max: parseInt(String(max), 10),
+  };
 
-  if (min === undefined) {
-    console.warn(`The min is set by default "${DEFAULT_CONFIG.min}"`);
+  if (Number.isNaN(minMax.min)) {
+    if (min !== undefined) console.error(Error('The min must be a number.'));
+    console.warn(`The min is set by default ${DEFAULT_CONFIG.min}`);
     minMax.min = DEFAULT_CONFIG.min;
-  } else if (typeof min !== 'number') {
-    minMax.min = parseInt(String(min), 10);
-
-    if (Number.isNaN(minMax.min)) {
-      console.error(Error('The min must be a number.'));
-      console.warn(`The min is set by default "${DEFAULT_CONFIG.min}"`);
-      minMax.min = DEFAULT_CONFIG.min;
-    }
-  } else {
-    minMax.min = min;
   }
 
-  if (max === undefined) {
-    console.warn(`The max is set at least + the default slider range (${DEFAULT_CONFIG.range}).`);
+  if (Number.isNaN(minMax.max)) {
+    if (max !== undefined) console.error(Error('The max must be a number.'));
+    console.warn(`The max is set at least + the default slider range ${DEFAULT_CONFIG.range}.`);
     minMax.max = (minMax.min + DEFAULT_CONFIG.range);
-  } else if (typeof max !== 'number') {
-    minMax.max = parseInt(String(max), 10);
-
-    if (Number.isNaN(minMax.max)) {
-      console.error(Error('The max must be a number.'));
-      console.warn(`The max is set at least + the default slider range (${DEFAULT_CONFIG.range}).`);
-      minMax.max = (minMax.min + DEFAULT_CONFIG.range);
-    }
-  } else {
-    minMax.max = max;
   }
 
   return minMax;
@@ -89,7 +74,7 @@ const convertNumberValues = (values: unknown, min: number): number[] => {
   const isPossibleToConvert = values.every((value) => !Number.isNaN(parseInt(String(value), 10)));
 
   if (!isPossibleToConvert) {
-    console.error(new Error('An array of numbers, or strings, is expected.'));
+    console.error(new Error('An array of numbers is expected.'));
     console.warn(`The value set is "${min}".`);
     return [min];
   }
@@ -155,8 +140,8 @@ const convertConfig = (config: any): ISliderConfig => {
 
   if (typeof prettify !== 'function') {
     newConfig.prettify = DEFAULT_CONFIG.prettify;
-    console.error(new TypeError('prettify should be a function.'));
-    console.warn("'Prettify' is set by default.");
+    console.error(new TypeError('"prettify" should be a function.'));
+    console.warn('"prettify" is set by default.');
   } else {
     newConfig.prettify = prettify;
   }
@@ -231,7 +216,7 @@ $.fn.slider = function pluginMainFunction(
     if (args === null) return config.viewName;
 
     if (!['horizontal', 'vertical'].includes(String(args))) {
-      console.error(new TypeError('Expected values ​​of "horizontal" or "vertical".'));
+      console.error(new TypeError('Expected "horizontal" or "vertical".'));
       return this;
     }
 
