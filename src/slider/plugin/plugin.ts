@@ -241,7 +241,7 @@ $.fn.slider = function pluginMainFunction(
       ? Model.checkStepForCustomScale(newStep, config.customScale)
       : Model.checkStepForMinMax(newStep, config.min, config.max);
 
-    if (errorCheckingStep !== Model.NO_ERROR) {
+    if (errorCheckingStep) {
       console.error(errorCheckingStep);
       return this;
     }
@@ -277,7 +277,7 @@ $.fn.slider = function pluginMainFunction(
       )
       : Model.checkValuesForMinMax(args, config.min, config.max);
 
-    if (errorCheckingValues !== Model.NO_ERROR) {
+    if (errorCheckingValues) {
       console.error(errorCheckingValues);
       return this;
     }
@@ -305,7 +305,7 @@ $.fn.slider = function pluginMainFunction(
     const normalizedCustomScale = args.map((value) => String(value));
     const errorCheckingCustomScale = Model.checkCustomScale(normalizedCustomScale);
 
-    if (errorCheckingCustomScale !== Model.NO_ERROR) {
+    if (errorCheckingCustomScale) {
       console.error(errorCheckingCustomScale);
       return this;
     }
@@ -332,7 +332,7 @@ $.fn.slider = function pluginMainFunction(
       ? Model.checkMinMax(minOrMax, config.max)
       : Model.checkMinMax(config.min, minOrMax);
 
-    if (errorCheckingMinMax !== Model.NO_ERROR) {
+    if (errorCheckingMinMax) {
       console.error(errorCheckingMinMax);
       return this;
     }

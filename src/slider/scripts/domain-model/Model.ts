@@ -17,8 +17,6 @@ class Model implements IModel, IModelStateManager {
 
   private config: IModelConfig;
 
-  public static readonly NO_ERROR = 0;
-
   constructor(config: {
     customScale?: string[];
     min?: number;
@@ -48,14 +46,14 @@ class Model implements IModel, IModelStateManager {
         this.config.max,
       );
 
-    if (errorCheckingValues === 0) {
-      correctValues = values;
-    } else {
+    if (errorCheckingValues) {
       console.error(errorCheckingValues);
       console.warn('Set the starting value based on the scale');
       correctValues = this.config.customScale
         ? [this.config.customScale[0]]
         : [this.config.min];
+    } else {
+      correctValues = values;
     }
 
     this.step = this.config.step;
@@ -66,49 +64,49 @@ class Model implements IModel, IModelStateManager {
     this.config.step = this.step;
   }
 
-  public static checkCustomScale(scale: string[]): 0 | Error {
+  public static checkCustomScale(scale: string[]): Error | undefined {
     if (scale.length < 2) return Error('The custom scale must have at least 2 values.');
-    return 0;
+    return undefined;
   }
 
-  public static checkMinMax(min: number, max: number): 0 | Error {
+  public static checkMinMax(min: number, max: number): Error | undefined {
     if (min === max) return Error('The min and max should not be equal.');
     if (max < min) return Error('The maximum value of the range must be greater than the minimum.');
-    return 0;
+    return undefined;
   }
 
-  public static checkStepForCustomScale(step: number, scale: string[]): 0 | Error {
+  public static checkStepForCustomScale(step: number, scale: string[]): Error | undefined {
     if (step < 1) return RangeError('Step must be greater than or equal to 1.');
     if (step > (scale.length - 1)) return RangeError('Step exceeds the scale range.');
-    return 0;
+    return undefined;
   }
 
-  public static checkStepForMinMax(step: number, min: number, max: number): 0 | Error {
+  public static checkStepForMinMax(step: number, min: number, max: number): Error | undefined {
     if (step < 1) return RangeError('Step must be greater than or equal to 1.');
     if (step > (max - min)) return RangeError('Step exceeds the scale range.');
-    return 0;
+    return undefined;
   }
 
-  public static checkValuesForCustomScale(values: string[], scale: string[]): 0 | Error {
+  public static checkValuesForCustomScale(values: string[], scale: string[]): Error | undefined {
     if (values.length === 0) return Error('The values ​​array must not be empty');
 
-    for (let i = 0; i < values.length; i += 1) {
-      const value = values[i];
-      if (!scale.includes(value)) return Error(`The value "${value}" was not found on this scale.`);
-    }
-
-    return 0;
+    const incorrectValue = values.find((value) => !scale.includes(value));
+    return incorrectValue
+      ? RangeError(`The value "${incorrectValue}" was not found on this scale.`)
+      : undefined;
   }
 
-  public static checkValuesForMinMax(values: number[], min: number, max: number): 0 | Error {
+  public static checkValuesForMinMax(
+    values: number[],
+    min: number,
+    max: number,
+  ): Error | undefined {
     if (values.length === 0) return Error('The values ​​array must not be empty');
 
-    for (let i = 0; i < values.length; i += 1) {
-      const value = values[i];
-      if (value < min || value > max) return RangeError(`The value "${value}" is outside the slider range.`);
-    }
-
-    return 0;
+    const incorrectValue = values.find((value) => (value < min || value > max));
+    return incorrectValue
+      ? RangeError(`The value "${incorrectValue}" is outside the slider range.`)
+      : undefined;
   }
 
   public getConfig(): IModelConfig {
@@ -155,19 +153,13 @@ class Model implements IModel, IModelStateManager {
   }
 
   public getScaleItems(): ScaleItem[] {
-    const items: ScaleItem[] = [];
-
     const steps = new Set<number>();
     for (let i = 0; i <= this.maxStep; i += 1) steps.add(this._adjustStep(i));
 
-    steps.forEach((step) => {
-      items.push({
-        position: step / this.maxStep,
-        value: String(this.scaleDriver.stepToValue(step)),
-      });
-    });
-
-    return items;
+    return Array.from(steps).map((step) => ({
+      position: step / this.maxStep,
+      value: String(this.scaleDriver.stepToValue(step)),
+    }));
   }
 
   private _initConfig(config: {
@@ -189,30 +181,27 @@ class Model implements IModel, IModelStateManager {
     if (customScale) {
       const errorCheckingCustomScale = Model.checkCustomScale(customScale);
 
-      if (errorCheckingCustomScale === Model.NO_ERROR) {
-        this.config.customScale = customScale;
-      } else {
+      if (errorCheckingCustomScale) {
         console.error(errorCheckingCustomScale);
         this.config.customScale = DEFAULT_CONFIG.customScale;
         console.warn('Set a custom scale by default.');
+      } else {
+        this.config.customScale = customScale;
       }
 
       const errorCheckingStep = Model.checkStepForCustomScale(step, this.config.customScale);
 
-      if (errorCheckingStep === Model.NO_ERROR) {
-        this.config.step = step;
-      } else {
+      if (errorCheckingStep) {
         console.error(errorCheckingStep);
         this.config.step = DEFAULT_CONFIG.step;
         console.warn('Default step set.');
+      } else {
+        this.config.step = step;
       }
     } else {
       const errorCheckingMinMax = Model.checkMinMax(min, max);
 
-      if (errorCheckingMinMax === 0) {
-        this.config.min = min;
-        this.config.max = max;
-      } else {
+      if (errorCheckingMinMax) {
         console.error(errorCheckingMinMax);
 
         this.config.min = Math.min(min, max);
@@ -222,16 +211,19 @@ class Model implements IModel, IModelStateManager {
           this.config.max += DEFAULT_CONFIG.range;
           console.warn(`The maximum value of the slider is increased by ${DEFAULT_CONFIG.range}.`);
         }
+      } else {
+        this.config.min = min;
+        this.config.max = max;
       }
 
       const errorCheckingStep = Model.checkStepForMinMax(step, this.config.min, this.config.max);
 
-      if (errorCheckingStep === Model.NO_ERROR) {
-        this.config.step = step;
-      } else {
+      if (errorCheckingStep) {
         console.error(errorCheckingStep);
         this.config.step = DEFAULT_CONFIG.step;
         console.warn('Default step set.');
+      } else {
+        this.config.step = step;
       }
     }
   }
