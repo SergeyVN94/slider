@@ -46,15 +46,7 @@ class View implements IView, IViewConfigManager {
 
     this.$slider = $slider;
     this.prettify = prettify;
-
-    this.pointPositions = [];
-
-    if (pointsCount > 0) {
-      this.pointPositions = Array(pointsCount).fill(-1);
-    } else {
-      this.pointPositions.push(-1);
-      console.error(new Error('The number of points must be greater than zero'));
-    }
+    this.pointPositions = Array(pointsCount).fill(-1);
 
     Slider.resetSlider($slider);
     this.components = this._initSlider(viewName, scaleItems);

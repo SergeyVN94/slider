@@ -22,7 +22,7 @@ describe('[Model]', () => {
           it(`[targetPos: ${targetPos}, result: [${result.join()}]]`, () => {
             model.values = [0];
 
-            model.update(targetPos, -1);
+            model.update(targetPos);
 
             let areValuesCorrect = true;
             model.values.forEach((value, index) => {
@@ -53,7 +53,7 @@ describe('[Model]', () => {
           it(`[targetPos: ${targetPos}, result: [${result.join()}]]`, () => {
             model.values = [0];
 
-            model.update(targetPos, -1);
+            model.update(targetPos);
 
             let areValuesCorrect = true;
             model.values.forEach((value, index) => {
@@ -85,7 +85,7 @@ describe('[Model]', () => {
         it(`[targetPos: ${targetPos}, result: [${result.join()}]]`, () => {
           model.values = [-1000, 1000];
 
-          model.update(targetPos, -1);
+          model.update(targetPos);
 
           let areValuesCorrect = true;
           model.values.forEach((value, index) => {

@@ -113,8 +113,9 @@ class Model implements IModel, IModelStateManager {
     return this.config;
   }
 
-  public update(targetPosition: number, pointSelected: number): void {
-    this._updatePointSteps(targetPosition, pointSelected);
+  public update(targetPosition: number, pointIndex?: number): void {
+    if (typeof pointIndex === 'number') this._updatePointStep(targetPosition, pointIndex);
+    else this._updateStepOfNearestPoint(targetPosition);
     this._triggerUpdateEvent();
   }
 
@@ -237,14 +238,6 @@ class Model implements IModel, IModelStateManager {
   private static _calcLastStep(step: number, maxStep: number): number {
     const lastStep = Math.round((maxStep / step)) * step;
     return (lastStep > maxStep) ? maxStep : lastStep;
-  }
-
-  private _updatePointSteps(
-    targetPosition: number,
-    pointIndex: number,
-  ): void {
-    if (pointIndex === -1) this._updateStepOfNearestPoint(targetPosition);
-    else this._updatePointStep(targetPosition, pointIndex);
   }
 
   private _updatePointStep(targetPosition: number, pointIndex: number): boolean {

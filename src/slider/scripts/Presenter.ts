@@ -15,8 +15,8 @@ class Presenter {
     this.model.onUpdate(this._handleModelUpdate.bind(this));
   }
 
-  private _handlePointPositionChange(targetPosition: number, pointSelected: number): void {
-    this.model.update(targetPosition, pointSelected);
+  private _handlePointPositionChange(targetPosition: number, pointIndex?: number): void {
+    this.model.update(targetPosition, pointIndex);
   }
 
   private _handleModelUpdate(pointPositions: number[]): void {

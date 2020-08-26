@@ -11,7 +11,7 @@ interface IModelConfig {
 interface IModel {
   readonly values: string[] | number[];
   getPointPositions(): number[];
-  update(targetPosition: number, pointIndex: number): void;
+  update(targetPosition: number, pointIndex?: number): void;
   onUpdate(callback: HandlerModelUpdate): void;
   getScaleItems(): ScaleItem[];
 }
