@@ -10,7 +10,7 @@ interface IModelConfig {
 
 interface IModel {
   readonly values: string[] | number[];
-  getPointPositions(): number[];
+  getPointsPositions(): number[];
   update(targetPosition: number, pointIndex?: number): void;
   onUpdate(callback: HandlerModelUpdate): void;
   getScaleItems(): ScaleItem[];

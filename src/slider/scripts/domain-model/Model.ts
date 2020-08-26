@@ -124,7 +124,7 @@ class Model implements IModel, IModelStateManager {
     this._triggerUpdateEvent();
   }
 
-  public getPointPositions(): number[] {
+  public getPointsPositions(): number[] {
     return this.pointsSteps.map((pointStep) => pointStep / this.maxStep);
   }
 
@@ -231,7 +231,7 @@ class Model implements IModel, IModelStateManager {
 
   private _triggerUpdateEvent(): void {
     this.updateEventCallbackList.forEach(
-      (callback) => callback(this.getPointPositions()),
+      (callback) => callback(this.getPointsPositions()),
     );
   }
 
