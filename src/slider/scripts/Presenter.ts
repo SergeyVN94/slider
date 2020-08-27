@@ -19,8 +19,8 @@ class Presenter {
     this.model.update(targetPosition, pointIndex);
   }
 
-  private _handleModelUpdate(pointPositions: number[]): void {
-    this.view.update(pointPositions, this.model.values);
+  private _handleModelUpdate(pointsPositions: number[]): void {
+    this.view.update(pointsPositions, this.model.values);
   }
 }
 

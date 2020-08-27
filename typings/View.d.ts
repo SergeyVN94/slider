@@ -10,5 +10,5 @@ interface IViewConfigManager {
 
 interface IView {
   onPointPositionChange(callback: HandlerPointPositionChange): void;
-  update(pointPositions: number[], pointValues: number[] | string[]): void;
+  update(pointsPositions: number[], pointValues: number[] | string[]): void;
 }

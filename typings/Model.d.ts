@@ -1,4 +1,4 @@
-type HandlerModelUpdate = (pointPositions: number[]) => void;
+type HandlerModelUpdate = (pointsPositions: number[]) => void;
 type ScaleItem = {position: number; value: string};
 
 interface IModelConfig {
