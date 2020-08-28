@@ -2,4 +2,3 @@ node_modules
 .vscode
 .eslintcache
 dist
-package-lock.json
