@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import Tooltip from '../slider/scripts/view/components/Tooltip';
 import CLASSES from '../slider/scripts/view/classes';
 import Slider from '../slider/scripts/view/components/Slider';

@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import CustomScaleDriver from '../slider/scripts/domain-model/scale-drivers/CustomScaleDriver';
 
 describe('[CustomScaleDriver]', () => {

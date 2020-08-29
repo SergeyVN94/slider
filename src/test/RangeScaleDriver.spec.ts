@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import RangeScaleDriver from '../slider/scripts/domain-model/scale-drivers/RangeScaleDriver';
 
 describe('[RangeScaleDriver]', () => {

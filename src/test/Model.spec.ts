@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import Model from '../slider/scripts/domain-model/Model';
 
 describe('[Model]', () => {

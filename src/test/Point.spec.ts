@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import Point from '../slider/scripts/view/components/Point';
 import Slider from '../slider/scripts/view/components/Slider';
 import CLASSES from '../slider/scripts/view/classes';

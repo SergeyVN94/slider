@@ -1,9 +1,8 @@
 import '../slider/plugin/plugin';
+import '../slider/slider.sass';
 import initConfigPanel from './config-panel/initConfigPanel';
-
-require('../slider/slider.sass');
-require('./config-panel/config-panel.sass');
-require('./index.sass');
+import './config-panel/config-panel.sass';
+import './index.sass';
 
 ((fun: Function): void => {
   jQuery(fun(jQuery));
