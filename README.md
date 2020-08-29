@@ -1,12 +1,20 @@
 # slider - виджет для сайта, оформленный в JQuery плагин.
 
+## Совместимая версия JQuery - 3.4.1
+
 ## Демо
 https://sergeyvn94.github.io/slider/
 
+## Команды npm
+* `test` - запуск тестов с помощью "karma".
+* `build` - сборка проекта для продакшн.
+* `eslint` - проверка линтером на наличие ошибок.
+* `eslint-fix` - поиск и исправление ошибок линтером.
+* `start:dev` - запуск сервера для разработки (если браузер не подключился автоматически, перейти по адресу http://localhost:9000).
+* `deploy` - запушить демостраницу из dist в gh-pages.
+
 ## Установка
-`git clone https://github.com/SergeyVN94/slider.git && cd slider && npm i && npm run-script build` - Установка и сборка.
- 
-`npm run-script test` - Запуск тестов с помощью KarmaJS и PhantomJS.  
+`git clone https://github.com/SergeyVN94/slider.git` - Установка и сборка.
 
 ## Подключение
 
