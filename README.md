@@ -14,7 +14,7 @@ https://sergeyvn94.github.io/slider/
 * `deploy` - запушить демостраницу из dist в gh-pages.
 
 ## Установка
-`git clone https://github.com/SergeyVN94/slider.git` - Установка и сборка.
+`git clone https://github.com/SergeyVN94/slider.git` - установка.
 
 ## Подключение
 
