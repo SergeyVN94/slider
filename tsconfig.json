@@ -1,18 +1,18 @@
 {
-    "compilerOptions": {
-        "rootDir": "./",
-        "outDir": "./dist/",
-        "sourceMap": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "allowSyntheticDefaultImports": true,
-        "removeComments": true,
-        "target": "es5",
-        "module": "commonjs",
-        "jsx": "react",
-        "allowJs": true,
-        "moduleResolution": "node"
-    },
-    "exclude": ["node_modules"]
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node"
+  },
+  "exclude": ["node_modules"]
 }
