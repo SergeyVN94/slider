@@ -1,13 +1,13 @@
-const webpackConfig = require('./webpack.config')[0];
 const Webpack = require('webpack');
 process.env.CHROME_BIN = require('puppeteer').executablePath();
+const webpackConfig = require('./webpack.config')[0];
 
 module.exports = (config) => {
   config.set({
     frameworks: ['mocha', 'chai', 'sinon'],
-    files: ['src/test/*.spec.ts'],
+    files: ['src/**/*.spec.ts'],
     preprocessors: {
-      'src/test/*.spec.ts': ['webpack', 'sourcemap'],
+      'src/**/*.spec.ts': ['webpack', 'sourcemap'],
     },
     webpack: {
       module: {
@@ -46,9 +46,7 @@ module.exports = (config) => {
         }),
       ],
     },
-    mime: {
-      'text/x-typescript': ['ts', 'tsx'],
-    },
+    mime: { 'text/x-typescript': ['ts', 'tsx'] },
     reporters: ['progress'],
     port: 9876,
     colors: true,

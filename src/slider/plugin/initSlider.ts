@@ -1,4 +1,4 @@
-import Model from './domain-model/Model';
+import Model from './model/Model';
 import View from './view/View';
 import Slider from './Slider';
 import Presenter from './Presenter';

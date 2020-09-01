@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import CustomScaleDriver from '../slider/scripts/domain-model/scale-drivers/CustomScaleDriver';
+import CustomScaleDriver from './CustomScaleDriver';
 
 describe('[CustomScaleDriver]', () => {
   describe('[getMaxStep]', () => {

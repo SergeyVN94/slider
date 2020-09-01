@@ -63,7 +63,7 @@ const configs = [{
       template: './demo/index.pug',
       filename: 'index.html',
     }),
-    new CopyPlugin([{ from: 'chunks/favicons', to: '' }]),
+    new CopyPlugin([{ from: 'assets/favicons', to: 'favicons/' }]),
     new Webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }),
     new MiniCssExtractPlugin({ filename: 'index.css' }),
     new CleanWebpackPlugin(),

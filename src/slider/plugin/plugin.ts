@@ -1,8 +1,9 @@
-import initSlider from '../scripts/initSlider';
-import Slider from '../scripts/Slider';
 import '../slider.sass';
-import DEFAULT_CONFIG from '../scripts/defaultConfig';
-import Model from '../scripts/domain-model/Model';
+
+import Model from './model/Model';
+import initSlider from './initSlider';
+import Slider from './Slider';
+import DEFAULT_CONFIG from './defaultConfig';
 
 const COMMANDS = {
   INIT: 'init',

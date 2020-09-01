@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
-import Tooltip from '../slider/scripts/view/components/Tooltip';
-import CLASSES from '../slider/scripts/view/classes';
-import Slider from '../slider/scripts/view/components/Slider';
+import '../../../slider.sass';
+import CLASSES from '../classes';
 
-require('../slider/slider.sass');
+import Tooltip from './Tooltip';
+import Slider from './Slider';
 
 const $body = $(document.body).css('padding', '50px');
 

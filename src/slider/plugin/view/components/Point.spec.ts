@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
-import Point from '../slider/scripts/view/components/Point';
-import Slider from '../slider/scripts/view/components/Slider';
-import CLASSES from '../slider/scripts/view/classes';
+import '../../../slider.sass';
+import CLASSES from '../classes';
 
-require('../slider/slider.sass');
+import Point from './Point';
+import Slider from './Slider';
 
 const $body = $(document.body).css('padding', '50px');
 

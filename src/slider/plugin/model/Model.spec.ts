@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import Model from '../slider/scripts/domain-model/Model';
+import Model from './Model';
 
 describe('[Model]', () => {
   describe('[update]', () => {

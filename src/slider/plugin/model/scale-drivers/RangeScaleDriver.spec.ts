@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import RangeScaleDriver from '../slider/scripts/domain-model/scale-drivers/RangeScaleDriver';
+import RangeScaleDriver from './RangeScaleDriver';
 
 describe('[RangeScaleDriver]', () => {
   describe('[getMaxStep]', () => {
