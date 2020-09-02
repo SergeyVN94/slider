@@ -1,13 +1,10 @@
 class RangeScaleDriver implements IScaleDriver {
   private readonly min: number;
 
-  private readonly max: number;
-
   private readonly maxStep: number;
 
   constructor(min: number, max: number) {
     this.min = min;
-    this.max = max;
     this.maxStep = max - min;
   }
 
