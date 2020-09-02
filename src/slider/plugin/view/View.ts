@@ -49,7 +49,7 @@ class View implements IView, IViewConfigManager {
     this.pointsPositions = Array(pointsCount).fill(-1);
 
     Slider.resetSlider($slider);
-    this.components = this._initSlider(viewName, scaleItems);
+    this.components = this.initSlider(viewName, scaleItems);
     this.controller = new Controller(this.components);
 
     this.areTooltipsVisible = tooltips;
@@ -106,7 +106,7 @@ class View implements IView, IViewConfigManager {
     if (areValuesUpdated) this.components.slider.triggerPointMoveEvent(pointValues);
   }
 
-  private _initSlider(viewName: ViewName, scaleItems: ScaleItem[]): IViewComponents {
+  private initSlider(viewName: ViewName, scaleItems: ScaleItem[]): IViewComponents {
     const points: Point[] = [];
     const tooltips: Tooltip[] = [];
 
@@ -126,11 +126,11 @@ class View implements IView, IViewConfigManager {
       points,
       tooltips,
       slider: new Slider(this.$slider, viewName),
-      scaleItems: this._drawScale(viewName, scaleItems),
+      scaleItems: this.drawScale(viewName, scaleItems),
     };
   }
 
-  private _drawScale(viewName: ViewName, scaleItems: ScaleItem[]): JQuery[] {
+  private drawScale(viewName: ViewName, scaleItems: ScaleItem[]): JQuery[] {
     const items: JQuery[] = [];
 
     scaleItems.forEach(({ position, value }) => {

@@ -15,7 +15,7 @@ class Tooltip {
 
   public static updateZIndexes(tooltips: Tooltip[], points: Point[]): void {
     points.forEach((point, index) => {
-      tooltips[index]._setZIndex(point.zIndex);
+      tooltips[index].setZIndex(point.zIndex);
     });
   }
 
@@ -25,7 +25,7 @@ class Tooltip {
     else this.$tooltip.css('top', `${100 - (position * 100)}%`);
   }
 
-  private _setZIndex(zIndex: number): void {
+  private setZIndex(zIndex: number): void {
     this.$tooltip.css('z-index', zIndex);
   }
 }

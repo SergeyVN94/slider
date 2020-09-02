@@ -26,7 +26,7 @@ class Model implements IModel, IModelStateManager {
   }) {
     this.pointsSteps = [];
     this.updateEventCallbackList = [];
-    this._initConfig(config);
+    this.initConfig(config);
 
     const { values } = config;
     let correctValues: string[] | number[];
@@ -114,14 +114,14 @@ class Model implements IModel, IModelStateManager {
   }
 
   public update(targetPosition: number, pointIndex?: number): void {
-    if (typeof pointIndex === 'number') this._updatePointStep(targetPosition, pointIndex);
-    else this._updateStepOfNearestPoint(targetPosition);
-    this._triggerUpdateEvent();
+    if (typeof pointIndex === 'number') this.updatePointStep(targetPosition, pointIndex);
+    else this.updateStepOfNearestPoint(targetPosition);
+    this.triggerUpdateEvent();
   }
 
   public onUpdate(callback: HandlerModelUpdate): void {
     this.updateEventCallbackList.push(callback);
-    this._triggerUpdateEvent();
+    this.triggerUpdateEvent();
   }
 
   public getPointsPositions(): number[] {
@@ -144,18 +144,18 @@ class Model implements IModel, IModelStateManager {
         if (areValuesCorrect) areValuesCorrect = false;
         console.error(new Error(`The value '${value}' cannot be set for this scale.`));
       } else {
-        steps.push(this._adjustStep(step));
+        steps.push(this.adjustStep(step));
       }
     });
 
     if (areValuesCorrect) this.pointsSteps = steps.sort((numA, numB) => (numA > numB ? 1 : -1));
 
-    this._triggerUpdateEvent();
+    this.triggerUpdateEvent();
   }
 
   public getScaleItems(): ScaleItem[] {
     const steps = new Set<number>();
-    for (let i = 0; i <= this.maxStep; i += 1) steps.add(this._adjustStep(i));
+    for (let i = 0; i <= this.maxStep; i += 1) steps.add(this.adjustStep(i));
 
     return Array.from(steps).map((step) => ({
       position: step / this.maxStep,
@@ -163,7 +163,7 @@ class Model implements IModel, IModelStateManager {
     }));
   }
 
-  private _initConfig(config: {
+  private initConfig(config: {
     customScale?: string[];
     min?: number;
     max?: number;
@@ -229,7 +229,7 @@ class Model implements IModel, IModelStateManager {
     }
   }
 
-  private _triggerUpdateEvent(): void {
+  private triggerUpdateEvent(): void {
     this.updateEventCallbackList.forEach(
       (callback) => callback(this.getPointsPositions()),
     );
@@ -240,20 +240,20 @@ class Model implements IModel, IModelStateManager {
     return (lastStep > maxStep) ? maxStep : lastStep;
   }
 
-  private _updatePointStep(targetPosition: number, pointIndex: number): boolean {
+  private updatePointStep(targetPosition: number, pointIndex: number): boolean {
     const targetStep = Math.round(targetPosition * this.maxStep);
     const currentPointStep = this.pointsSteps[pointIndex];
 
     if (targetStep === currentPointStep) return true;
 
     if (this.pointsSteps.length === 1) {
-      this.pointsSteps[0] = this._adjustStep(targetStep);
+      this.pointsSteps[0] = this.adjustStep(targetStep);
       return true;
     }
 
     if (targetStep > currentPointStep) {
       if (pointIndex === this.pointsSteps.length - 1) {
-        this.pointsSteps[pointIndex] = this._adjustStep(targetStep);
+        this.pointsSteps[pointIndex] = this.adjustStep(targetStep);
         return true;
       }
 
@@ -264,12 +264,12 @@ class Model implements IModel, IModelStateManager {
         return true;
       }
 
-      this.pointsSteps[pointIndex] = this._adjustStep(targetStep);
+      this.pointsSteps[pointIndex] = this.adjustStep(targetStep);
       return true;
     }
 
     if (pointIndex === 0) {
-      this.pointsSteps[pointIndex] = this._adjustStep(targetStep);
+      this.pointsSteps[pointIndex] = this.adjustStep(targetStep);
       return true;
     }
 
@@ -280,15 +280,15 @@ class Model implements IModel, IModelStateManager {
       return true;
     }
 
-    this.pointsSteps[pointIndex] = this._adjustStep(targetStep);
+    this.pointsSteps[pointIndex] = this.adjustStep(targetStep);
     return true;
   }
 
-  private _updateStepOfNearestPoint(targetPosition: number): boolean {
+  private updateStepOfNearestPoint(targetPosition: number): boolean {
     const targetStep = Math.round(targetPosition * this.maxStep);
 
     if (this.pointsSteps.length === 1) {
-      this.pointsSteps[0] = this._adjustStep(targetStep);
+      this.pointsSteps[0] = this.adjustStep(targetStep);
       return true;
     }
 
@@ -308,7 +308,7 @@ class Model implements IModel, IModelStateManager {
 
     if (nearestPoints.length === 1) {
       const index = this.pointsSteps.indexOf(nearestPoints[0]);
-      this.pointsSteps[index] = this._adjustStep(targetStep);
+      this.pointsSteps[index] = this.adjustStep(targetStep);
       return true;
     }
 
@@ -318,12 +318,12 @@ class Model implements IModel, IModelStateManager {
     if (areAllPointsInOnePosition) {
       if (targetStep > tmpStep) {
         const index = this.pointsSteps.lastIndexOf(nearestPoints[0]);
-        this.pointsSteps[index] = this._adjustStep(targetStep);
+        this.pointsSteps[index] = this.adjustStep(targetStep);
       }
 
       if (targetStep < tmpStep) {
         const index = this.pointsSteps.indexOf(nearestPoints[0]);
-        this.pointsSteps[index] = this._adjustStep(targetStep);
+        this.pointsSteps[index] = this.adjustStep(targetStep);
       }
 
       return true;
@@ -331,14 +331,14 @@ class Model implements IModel, IModelStateManager {
 
     if (!areAllPointsInOnePosition) {
       const index = this.pointsSteps.lastIndexOf(tmpStep);
-      this.pointsSteps[index] = this._adjustStep(targetStep);
+      this.pointsSteps[index] = this.adjustStep(targetStep);
       return true;
     }
 
     return true;
   }
 
-  private _adjustStep(step: number): number {
+  private adjustStep(step: number): number {
     if (step < this.lastStep) {
       const targetStep = Math.round((step / this.step)) * this.step;
 

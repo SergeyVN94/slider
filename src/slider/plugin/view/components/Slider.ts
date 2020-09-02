@@ -1,24 +1,26 @@
+import { boundMethod } from 'autobind-decorator';
+
 import CLASSES from '../classes';
 
 class Slider {
+  public getTargetPosition: (ev: JQuery.MouseEventBase) => number;
+
   private readonly $slider: JQuery;
 
-  private _getTargetPosition: (ev: JQuery.MouseEventBase) => number;
-
-  private _callbackMousedown: (position: number) => void;
+  private callbackMousedown: (position: number) => void;
 
   constructor($slider: JQuery, viewName: ViewName) {
     this.$slider = $slider;
-    this._callbackMousedown = null;
+    this.callbackMousedown = null;
 
     if (viewName === 'vertical') {
       this.$slider.addClass('slider_view-name_vertical');
-      this._getTargetPosition = this._getTargetPositionForVerticalView.bind(this);
+      this.getTargetPosition = this.getTargetPositionForVerticalView;
     } else {
-      this._getTargetPosition = this._getTargetPositionForHorizontalView.bind(this);
+      this.getTargetPosition = this.getTargetPositionForHorizontalView;
     }
 
-    $slider.on('mousedown.slider.click', this._handleMousedown.bind(this));
+    $slider.on('mousedown.slider.click', this.handleMousedown);
   }
 
   public set areTooltipsVisible(state: boolean) {
@@ -41,12 +43,8 @@ class Slider {
     this.$slider.trigger('point-move', values);
   }
 
-  public getTargetPosition(ev: JQuery.MouseEventBase): number {
-    return this._getTargetPosition(ev);
-  }
-
   public onMousedown(callback: (position: number) => void): void {
-    this._callbackMousedown = callback;
+    this.callbackMousedown = callback;
   }
 
   public static resetSlider($slider: JQuery): void {
@@ -57,11 +55,13 @@ class Slider {
       .off('mousedown.slider.select');
   }
 
-  private _handleMousedown(ev: JQuery.MouseEventBase): void {
-    if (this._callbackMousedown) this._callbackMousedown(this.getTargetPosition(ev));
+  @boundMethod
+  private handleMousedown(ev: JQuery.MouseEventBase): void {
+    if (this.callbackMousedown) this.callbackMousedown(this.getTargetPosition(ev));
   }
 
-  private _getTargetPositionForHorizontalView(ev: JQuery.MouseEventBase): number {
+  @boundMethod
+  private getTargetPositionForHorizontalView(ev: JQuery.MouseEventBase): number {
     const absolutePosition = ev.pageX;
     const offset = this.$slider.offset().left;
     const position = (absolutePosition - offset) / this.$slider.outerWidth();
@@ -72,7 +72,8 @@ class Slider {
     return position;
   }
 
-  private _getTargetPositionForVerticalView(ev: JQuery.MouseEventBase): number {
+  @boundMethod
+  private getTargetPositionForVerticalView(ev: JQuery.MouseEventBase): number {
     const absolutePosition = ev.pageY;
     const offset = this.$slider.offset().top;
     let position = (absolutePosition - offset) / this.$slider.outerHeight();

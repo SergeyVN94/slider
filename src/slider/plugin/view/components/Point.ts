@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 import CLASSES from '../classes';
 
 class Point {
@@ -26,7 +28,7 @@ class Point {
       const movedPoint = points[selectedPoint];
 
       points.forEach((point, index) => {
-        if (selectedPoint !== index && movedPoint._checkCollision(point)) {
+        if (selectedPoint !== index && movedPoint.checkCollision(point)) {
           if (movedPoint.zIndex <= point.zIndex) movedPoint.zIndex = point.zIndex + 1;
         }
       });
@@ -35,7 +37,7 @@ class Point {
 
   public onMousedown(callback: HandlePointMousedown): void {
     this.mousedownCallback = callback;
-    this.$point.on('mousedown', this._handleMousedown.bind(this));
+    this.$point.on('mousedown', this.handleMousedown);
   }
 
   public setPosition(position: number): void {
@@ -51,24 +53,25 @@ class Point {
     this.$point.css('z-index', index);
   }
 
-  private _checkCollision(point: Point): boolean {
+  private checkCollision(point: Point): boolean {
     const pointSize = (
       this.viewName === 'horizontal' ? this.$point.outerWidth() : this.$point.outerHeight()
     );
 
-    const position = this._getPosition();
-    const anotherPosition = point._getPosition();
+    const position = this.getPosition();
+    const anotherPosition = point.getPosition();
 
     return Math.abs(position - anotherPosition) < pointSize;
   }
 
-  private _getPosition(): number {
+  private getPosition(): number {
     return parseFloat(
       this.$point.css(this.viewName === 'horizontal' ? 'left' : 'top'),
     );
   }
 
-  private _handleMousedown(ev: JQuery.MouseDownEvent): void {
+  @boundMethod
+  private handleMousedown(ev: JQuery.MouseDownEvent): void {
     ev.stopPropagation();
     this.mousedownCallback(this.index, ev);
   }

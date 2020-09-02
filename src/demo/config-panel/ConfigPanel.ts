@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 import CLASSES from './classes';
 
 const createControlValueOut = (index: number, value: string | number): JQuery => {
@@ -34,8 +36,8 @@ class ConfigPanel {
 
   constructor($panel: JQuery, $slider: JQuery) {
     this.domElements = ConfigPanel._getDomElements($panel, $slider);
-    this._initDomElements();
-    this._initEventListeners();
+    this.initDomElements();
+    this.initEventListeners();
   }
 
   private static _getDomElements($panel: JQuery, $slider: JQuery): IConfigPanelDomElements {
@@ -55,7 +57,7 @@ class ConfigPanel {
     };
   }
 
-  private _initDomElements(): void {
+  private initDomElements(): void {
     const {
       $slider,
       $inputStep,
@@ -98,10 +100,10 @@ class ConfigPanel {
       $scaleMax.val(max);
     }
 
-    this._recreateControlsValueOut();
+    this.recreateControlsValueOut();
   }
 
-  private _initEventListeners(): void {
+  private initEventListeners(): void {
     const {
       $inputStep,
       $radioViewName,
@@ -116,70 +118,71 @@ class ConfigPanel {
 
     $inputStep.on(
       'focusout.configPanel.updateStep',
-      this._handleInputStepFocusout.bind(this),
+      this.handleInputStepFocusout,
     ).on(
       'keyup.configPanel.updateStep',
-      { handler: this._handleInputStepFocusout.bind(this) },
-      ConfigPanel._handleInputKeyup.bind(this),
+      { handler: this.handleInputStepFocusout },
+      ConfigPanel._handleInputKeyup,
     );
 
     $radioViewName.on(
       'input.configPanel.changeViewName',
-      this._handleRadioViewNameInput.bind(this),
+      this.handleRadioViewNameInput,
     );
 
     $checkboxBgLine.on(
       'input.configPanel.bgLineToggle',
-      this._handleCheckboxBgLineInput.bind(this),
+      this.handleCheckboxBgLineInput,
     );
 
     $checkboxTooltip.on(
       'input.configPanel.tooltips',
-      this._handleCheckboxTooltipInput.bind(this),
+      this.handleCheckboxTooltipInput,
     );
 
     $inputPoints.on(
       'focusout.configPanel.changeNumberOfPoints',
-      this._handleInputPointsFocusout.bind(this),
+      this.handleInputPointsFocusout,
     ).on(
       'keyup.configPanel.changeNumberOfPoints',
-      { handler: this._handleInputPointsFocusout.bind(this) },
-      ConfigPanel._handleInputKeyup.bind(this),
+      { handler: this.handleInputPointsFocusout },
+      ConfigPanel._handleInputKeyup,
     );
 
     $scaleMax.on(
       'focusout.configPanel.setScaleMax',
-      this._handleMaxFocusout.bind(this),
+      this.handleMaxFocusout,
     ).on(
       'keyup.configPanel.setScaleMax',
-      { handler: this._handleMaxFocusout.bind(this) },
-      ConfigPanel._handleInputKeyup.bind(this),
+      { handler: this.handleMaxFocusout },
+      ConfigPanel._handleInputKeyup,
     );
 
     $scaleMin.on(
       'focusout.configPanel.setScaleMin',
-      this._handleMinFocusout.bind(this),
+      this.handleMinFocusout,
     ).on(
       'keyup.configPanel.setScaleMin',
-      { handler: this._handleMinFocusout.bind(this) },
-      ConfigPanel._handleInputKeyup.bind(this),
+      { handler: this.handleMinFocusout },
+      ConfigPanel._handleInputKeyup,
     );
 
     $customValues.on(
       'focusout.configPanel.setCustomScale',
-      this._handleCustomValuesFocusout.bind(this),
+      this.handleCustomValuesFocusout,
     ).on(
       'keyup.configPanel.setCustomScale',
-      { handler: this._handleCustomValuesFocusout.bind(this) },
-      ConfigPanel._handleInputKeyup.bind(this),
+      { handler: this.handleCustomValuesFocusout },
+      ConfigPanel._handleInputKeyup,
     );
 
     $slider.on(
       'point-move.configPanel.updateControlsValueOutContainer',
-      this._handleSliderPointMove.bind(this),
+      this.handleSliderPointMove,
     );
   }
 
+  @boundMethod
   private static _handleInputKeyup(ev: JQuery.KeyUpEvent): void {
     // 13 - key code for 'enter'
     if (ev.keyCode === 13) {
@@ -188,7 +191,8 @@ class ConfigPanel {
     }
   }
 
-  private _handleCustomValuesFocusout(): void {
+  @boundMethod
+  private handleCustomValuesFocusout(): void {
     const { $slider, $customValues } = this.domElements;
 
     const values = $customValues.val().toString();
@@ -198,7 +202,8 @@ class ConfigPanel {
     $customValues.val($slider.slider('custom-scale').toString());
   }
 
-  private _handleMaxFocusout(): void {
+  @boundMethod
+  private handleMaxFocusout(): void {
     const { $slider, $scaleMax } = this.domElements;
     const newMax = parseInt($scaleMax.val().toString(), 10);
 
@@ -206,7 +211,8 @@ class ConfigPanel {
     $scaleMax.val($slider.slider('max'));
   }
 
-  private _handleMinFocusout(): void {
+  @boundMethod
+  private handleMinFocusout(): void {
     const { $slider, $scaleMin } = this.domElements;
     const newMin = parseInt($scaleMin.val().toString(), 10);
 
@@ -214,7 +220,7 @@ class ConfigPanel {
     $scaleMin.val($slider.slider('min'));
   }
 
-  private _recreateControlsValueOut(): void {
+  private recreateControlsValueOut(): void {
     const {
       $slider,
       inputsValueOut,
@@ -231,16 +237,17 @@ class ConfigPanel {
       inputsValueOut.push($input);
       $input.on(
         'focusout.configPanel.updateSliderValues',
-        this._handleInputValueOutFocusout.bind(this),
+        this.handleInputValueOutFocusout,
       ).on(
         'keyup.configPanel.updateSliderValues',
-        { handler: this._handleInputValueOutFocusout.bind(this) },
-        ConfigPanel._handleInputKeyup.bind(this),
+        { handler: this.handleInputValueOutFocusout },
+        ConfigPanel._handleInputKeyup,
       );
     });
   }
 
-  private _handleInputValueOutFocusout(ev: JQuery.EventBase): void {
+  @boundMethod
+  private handleInputValueOutFocusout(ev: JQuery.EventBase): void {
     const { $slider } = this.domElements;
     const $input = $(ev.currentTarget);
     const currentValues = $slider.slider('values');
@@ -255,7 +262,8 @@ class ConfigPanel {
     $slider.slider('values', currentValues);
   }
 
-  private _handleSliderPointMove(): void {
+  @boundMethod
+  private handleSliderPointMove(): void {
     const {
       inputsValueOut,
       $slider,
@@ -263,12 +271,13 @@ class ConfigPanel {
 
     const values = $slider.slider('values');
 
-    if (inputsValueOut.length !== values.length) this._recreateControlsValueOut();
+    if (inputsValueOut.length !== values.length) this.recreateControlsValueOut();
 
     values.forEach((value: string | number, index: number) => inputsValueOut[index].val(value));
   }
 
-  private _handleInputPointsFocusout(): boolean {
+  @boundMethod
+  private handleInputPointsFocusout(): boolean {
     const {
       $inputPoints,
       $slider,
@@ -284,7 +293,7 @@ class ConfigPanel {
 
     if (points < pointsNow) {
       $slider.slider('values', currentValues.slice(0, points));
-      this._recreateControlsValueOut();
+      this.recreateControlsValueOut();
       return true;
     }
 
@@ -295,12 +304,13 @@ class ConfigPanel {
     }
 
     $slider.slider('values', currentValues);
-    this._recreateControlsValueOut();
+    this.recreateControlsValueOut();
 
     return true;
   }
 
-  private _handleCheckboxTooltipInput(): void {
+  @boundMethod
+  private handleCheckboxTooltipInput(): void {
     const {
       $slider,
       $checkboxTooltip,
@@ -310,7 +320,8 @@ class ConfigPanel {
     $slider.slider('show-tooltips', areTooltipsVisible);
   }
 
-  private _handleCheckboxBgLineInput(): void {
+  @boundMethod
+  private handleCheckboxBgLineInput(): void {
     const {
       $slider,
       $checkboxBgLine,
@@ -320,7 +331,8 @@ class ConfigPanel {
     $slider.slider('show-bg-line', isBgLineVisible);
   }
 
-  private _handleInputStepFocusout(): void {
+  @boundMethod
+  private handleInputStepFocusout(): void {
     const {
       $slider,
       $inputStep,
@@ -330,7 +342,8 @@ class ConfigPanel {
     $inputStep.val($slider.slider('step'));
   }
 
-  private _handleRadioViewNameInput(ev: JQuery.EventBase): void {
+  @boundMethod
+  private handleRadioViewNameInput(ev: JQuery.EventBase): void {
     const viewName = ev.currentTarget.getAttribute('value');
     this.domElements.$slider.slider('view-name', viewName);
   }

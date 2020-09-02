@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 class Presenter {
   readonly view: IView;
 
@@ -7,19 +9,21 @@ class Presenter {
     this.view = view;
     this.model = model;
 
-    this._initEventListeners();
+    this.initEventListeners();
   }
 
-  private _initEventListeners(): void {
-    this.view.onPointPositionChange(this._handlePointPositionChange.bind(this));
-    this.model.onUpdate(this._handleModelUpdate.bind(this));
+  private initEventListeners(): void {
+    this.view.onPointPositionChange(this.handlePointPositionChange);
+    this.model.onUpdate(this.handleModelUpdate);
   }
 
-  private _handlePointPositionChange(targetPosition: number, pointIndex?: number): void {
+  @boundMethod
+  private handlePointPositionChange(targetPosition: number, pointIndex?: number): void {
     this.model.update(targetPosition, pointIndex);
   }
 
-  private _handleModelUpdate(pointsPositions: number[]): void {
+  @boundMethod
+  private handleModelUpdate(pointsPositions: number[]): void {
     this.view.update(pointsPositions, this.model.values);
   }
 }
