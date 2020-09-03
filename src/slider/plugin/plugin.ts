@@ -216,12 +216,12 @@ $.fn.slider = function pluginMainFunction(
   if (command === COMMANDS.VIEW_NAME) {
     if (args === null) return config.viewName;
 
-    if (!['horizontal', 'vertical'].includes(String(args))) {
+    if (args !== 'horizontal' && args !== 'vertical') {
       console.error(new TypeError('Expected "horizontal" or "vertical".'));
       return this;
     }
 
-    config.viewName = args as ViewName;
+    config.viewName = args;
     config.values = slider.values;
 
     return this
@@ -338,8 +338,7 @@ $.fn.slider = function pluginMainFunction(
       return this;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    isCommandMin ? config.min = minOrMax : config.max = minOrMax;
+    config[isCommandMin ? 'min' : 'max'] = minOrMax;
 
     return this
       .data('slider', initSlider(this, config))
