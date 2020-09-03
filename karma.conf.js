@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const Webpack = require('webpack');
-process.env.CHROME_BIN = require('puppeteer').executablePath();
-const webpackConfig = require('./webpack.config')[0];
+const executablePath = require('puppeteer').executablePath();
+
+const webpackConfig = require('./webpack.config.js').default.default[0];
+
+process.env.CHROME_BIN = executablePath;
 
 module.exports = (config) => {
   config.set({
