@@ -2,11 +2,12 @@ import { boundMethod } from 'autobind-decorator';
 
 import Slider from './components/Slider';
 import Point from './components/Point';
+import Scale from './components/Scale';
 
 interface IComponents {
   slider: Slider;
   points: Point[];
-  scaleItems: JQuery[];
+  scale: Scale;
 }
 
 class Controller {
@@ -30,9 +31,10 @@ class Controller {
   }
 
   private initEventListeners(): void {
-    const { slider, points } = this.components;
+    const { slider, points, scale } = this.components;
 
     slider.onMousedown(this.handleSliderMousedown);
+    scale.onMousedown(this.handleScaleMousedown);
     points.forEach((point) => point.onMousedown(this.handlePointMousedown));
     Controller.$document
       .off('mouseup.slider.removeEventListeners')
@@ -42,6 +44,13 @@ class Controller {
   private triggerPositionChangeEvent(ev: JQuery.MouseEventBase, pointIndex: number): void {
     const position = this.components.slider.getTargetPosition(ev);
     if (this.positionChangeEventCallback) this.positionChangeEventCallback(position, pointIndex);
+  }
+
+  @boundMethod
+  private handleScaleMousedown(position: number): void {
+    if (this.positionChangeEventCallback) {
+      this.positionChangeEventCallback(position);
+    }
   }
 
   @boundMethod

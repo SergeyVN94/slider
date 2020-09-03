@@ -4,14 +4,14 @@ import Slider from './components/Slider';
 import Point from './components/Point';
 import Tooltip from './components/Tooltip';
 import BgLine from './components/BgLine';
-import CLASSES from './classes';
+import Scale from './components/Scale';
 
 interface IViewComponents {
   slider: Slider;
   points: Point[];
   tooltips: Tooltip[];
   bgLine: BgLine;
-  scaleItems: JQuery[];
+  scale: Scale;
 }
 
 class View implements IView, IViewConfigManager {
@@ -121,32 +121,16 @@ class View implements IView, IViewConfigManager {
     if (this.pointsPositions.length === 1) bgLine.update(this.pointsPositions[0]);
     else bgLine.update(this.pointsPositions[this.pointsPositions.length - 1], this.pointsPositions[0]);
 
+    const scale = new Scale(this.$slider);
+    scale.draw(viewName, scaleItems);
+
     return {
       bgLine,
       points,
       tooltips,
+      scale,
       slider: new Slider(this.$slider, viewName),
-      scaleItems: this.drawScale(viewName, scaleItems),
     };
-  }
-
-  private drawScale(viewName: ViewName, scaleItems: ScaleItem[]): JQuery[] {
-    const items: JQuery[] = [];
-
-    scaleItems.forEach(({ position, value }) => {
-      const $item = $('<div/>', {
-        class: `${CLASSES.SCALE_ITEM} js-${CLASSES.SCALE_ITEM}`,
-        'data-position': position,
-        text: value,
-      });
-
-      this.$slider.append($item);
-      items.push($item);
-
-      $item.css(viewName === 'horizontal' ? 'left' : 'bottom', `${(position * 100)}%`);
-    });
-
-    return items;
   }
 }
 
