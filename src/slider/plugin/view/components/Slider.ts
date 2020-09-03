@@ -20,7 +20,9 @@ class Slider {
       this.getTargetPosition = this.getTargetPositionForHorizontalView;
     }
 
-    $slider.on('mousedown.slider.click', this.handleMousedown);
+    $slider
+      .off('mousedown.slider.click')
+      .on('mousedown.slider.click', this.handleMousedown);
   }
 
   public set areTooltipsVisible(state: boolean) {
