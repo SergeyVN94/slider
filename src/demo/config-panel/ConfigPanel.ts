@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { boundMethod } from 'autobind-decorator';
 
 import CLASSES from './classes';
@@ -259,7 +260,15 @@ class ConfigPanel {
       currentValues[inputIndex] = $input.val().toString();
     }
 
-    $slider.slider('values', currentValues);
+    $slider
+      .slider('values', currentValues)
+      .slider('values')
+      .forEach(
+        (
+          value: string | number,
+          index: number,
+        ) => this.domElements.inputsValueOut[index].val(value),
+      );
   }
 
   @boundMethod

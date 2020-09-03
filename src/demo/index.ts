@@ -35,6 +35,7 @@ import './index.sass';
     $('#slider2').slider('init', {
       min: -10,
       max: 10,
+      values: [-5, 5],
       prettify: (value: number) => `${value} -> ${value / 10}`,
     }),
   );
@@ -53,6 +54,7 @@ import './index.sass';
     $('#panel4'),
     $('#slider4').slider('init', {
       customScale: scale2,
+      values: ['А', 'Я'],
       viewName: 'vertical',
       prettify: (value: string) => `${value} -> ${String(value).toLowerCase()}`,
     }),
