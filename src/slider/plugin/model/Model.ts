@@ -2,30 +2,36 @@ import DEFAULT_CONFIG from '../defaultConfig';
 import CustomScaleDriver from './scale-drivers/CustomScaleDriver';
 import RangeScaleDriver from './scale-drivers/RangeScaleDriver';
 
+interface IConfig {
+  customScale?: string[];
+  min?: number;
+  max?: number;
+  values: number[] | string[];
+  step: number;
+}
+
 class Model implements IModel, IModelStateManager {
   private readonly updateEventCallbackList: HandlerModelUpdate[];
 
   private pointsSteps: number[];
 
-  private readonly maxStep: number;
+  private maxStep: number;
 
-  private readonly step: number;
+  private step: number;
 
-  private readonly scaleDriver: IScaleDriver;
+  private scaleDriver: IScaleDriver;
 
   private lastStep: number;
 
   private config: IModelConfig;
 
-  constructor(config: {
-    customScale?: string[];
-    min?: number;
-    max?: number;
-    values: number[] | string[];
-    step: number;
-  }) {
-    this.pointsSteps = [];
+  constructor(config: IConfig) {
     this.updateEventCallbackList = [];
+    this.init(config);
+  }
+
+  private init(config: IConfig): void {
+    this.pointsSteps = [];
     this.initConfig(config);
 
     const { values } = config;
@@ -250,6 +256,8 @@ class Model implements IModel, IModelStateManager {
       console.warn('Default step set.');
     }
   }
+
+
 
   private triggerUpdateEvent(): void {
     this.updateEventCallbackList.forEach(
