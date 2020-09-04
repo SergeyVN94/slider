@@ -278,7 +278,7 @@ class Model implements IModel, IModelStateManager {
 
     // т.к на одной позиции может быть несколько точек, используется Set
     const stepsOfNearestPoints = Array.from(new Set(this.pointsSteps.filter(
-      (step, index) => (distancesToPoints[index] === minDistance)
+      (_, index) => (distancesToPoints[index] === minDistance)
     )));
     
     const stepOfNearestPoint = Math.min(...stepsOfNearestPoints);
