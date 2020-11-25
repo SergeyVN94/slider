@@ -52,7 +52,7 @@ const configs = [{
     compress: true,
     port: 9000,
   },
-  entry: './demo/index.ts',
+  entry: './demo/index.js',
   output: {
     path: `${__dirname}/dist`,
     filename: 'index.js',

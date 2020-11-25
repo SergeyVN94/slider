@@ -1,4 +1,16 @@
-const DEFAULT_CONFIG = {
+import { NormalizedConfig } from './types';
+
+export const DEFAULT_PLUGIN_CONFIG: NormalizedConfig = {
+  min: 0,
+  max: 100,
+  step: 1,
+  values: [0, 20, 42],
+  bgLine: true,
+  tooltips: true,
+  viewName: 'horizontal',
+};
+
+export const CONFIG = {
   customScale: [
     'Январь',
     'Февраль',
@@ -13,16 +25,6 @@ const DEFAULT_CONFIG = {
     'Ноябрь',
     'Декабрь',
   ],
-  min: 0,
-  max: 100,
+  viewName: 'vertical',
   range: 100,
-  step: 1,
-  values: ['Январь'],
-  pointsCount: 1,
-  viewName: 'horizontal' as ViewName,
-  bgLine: true,
-  tooltips: true,
-  prettify: (value: string | number): string => String(value),
 };
-
-export default DEFAULT_CONFIG;

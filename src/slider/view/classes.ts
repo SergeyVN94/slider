@@ -1,4 +1,4 @@
-const enum CLASSES {
+enum CLASSES {
   SLIDER = 'slider',
   TOOLTIP = 'slider__tooltip',
   BG_LINE = 'slider__bg-line',

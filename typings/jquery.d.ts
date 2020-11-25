@@ -4,33 +4,52 @@ interface JQuery {
     this: JQuery,
     command: 'init',
     config?: {
-      customScale?: string[];
       min?: number;
       max?: number;
+      values?: number[];
       step?: number;
+      viewName?: 'horizontal' | 'vertical';
       tooltips?: boolean;
       bgLine?: boolean;
-      values?: string[] | number[];
-      viewName?: 'horizontal' | 'vertical';
-      prettify?: (value: string | number) => string;
+      prettify?: (value: number) => string;
     }
   ): JQuery;
 
-  slider(this: JQuery, command: 'step'): number;
-  slider(this: JQuery, command: 'step', step: number): JQuery;
+  slider(
+    this: JQuery,
+    command: 'init',
+    config?: {
+      customScale?: string[];
+      values?: string[];
+      step?: number;
+      viewName?: 'horizontal' | 'vertical';
+      tooltips?: boolean;
+      bgLine?: boolean;
+      prettify?: (value: string) => string;
+    }
+  ): JQuery;
 
-  slider(this: JQuery, command: 'values'): string[] | number[];
-  slider(this: JQuery, command: 'values', values: string[] | number[]): JQuery;
+  // slider(this: JQuery, command: 'config'): {
+  //   values?: string[] | number[];
+  //   customScale?: string[];
+  //   min?: number;
+  //   max?: number;
+  //   viewName?: 'horizontal' | 'vertical';
+  //   tooltips?: boolean;
+  //   step?: number;
+  //   prettify?: (value: string | number) => string;
+  //   bgLine?: boolean;
+  // };
 
-  slider(this: JQuery, command: 'show-tooltips' | 'show-bg-line'): boolean;
-  slider(this: JQuery, command: 'show-tooltips' | 'show-bg-line', isShow: boolean): JQuery;
-
-  slider(this: JQuery, command: 'view-name'): 'horizontal' | 'vertical';
-  slider(this: JQuery, command: 'view-name', name: 'horizontal' | 'vertical'): JQuery;
-
-  slider(this: JQuery, command: 'custom-scale'): string[];
-  slider(this: JQuery, command: 'custom-scale', scale: string[]): JQuery;
-
-  slider(this: JQuery, command: 'min' | 'max'): number;
-  slider(this: JQuery, command: 'min' | 'max', minOrMax: number): JQuery;
+  // slider(this: JQuery, command: 'config', config: {
+  //   values?: string[] | number[];
+  //   customScale?: string[];
+  //   min?: number;
+  //   max?: number;
+  //   viewName?: 'horizontal' | 'vertical';
+  //   tooltips?: boolean;
+  //   step?: number;
+  //   prettify?: (value: string | number) => string;
+  //   bgLine?: boolean;
+  // }): JQuery;
 }
