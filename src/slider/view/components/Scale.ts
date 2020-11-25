@@ -1,51 +1,52 @@
-// import { boundMethod } from 'autobind-decorator';
+import CLASSES from '../classes';
+import { PointState, ViewName, VIEW_VERTICAL } from '../types';
 
-// import CLASSES from '../classes';
+type MousedownCallback = (position: number) => void;
 
-// type MousedownCallback = (position: number) => void;
+class Scale {
+  private readonly items: HTMLElement[];
 
-// class Scale {
-//   private readonly $slider: JQuery;
+  private mousedownCallback: MousedownCallback;
 
-//   private mousedownCallback: MousedownCallback;
+  private viewName: ViewName;
 
-//   constructor($slider: JQuery) {
-//     this.$slider = $slider;
-//     this.mousedownCallback = null;
-//     this.$slider
-//       .off('mousedown.slider.clickOnScale')
-//       .on('mousedown.slider.clickOnScale', this.handleMousedown);
-//   }
+  constructor(scaleItems: PointState[], viewName: ViewName) {
+    this.items = [];
+    this.viewName = viewName;
+    this.mousedownCallback = null;
+    this.init(scaleItems);
+  }
 
-//   public onMousedown(callback: MousedownCallback): void {
-//     this.mousedownCallback = callback;
-//   }
+  public onMousedown(callback: MousedownCallback): void {
+    this.mousedownCallback = callback;
+  }
 
-//   public draw(viewName: ViewName, scaleItems: ScaleItem[]): void {
-//     scaleItems.forEach(({ position, value }) => {
-//       const $item = $('<div/>', {
-//         class: `${CLASSES.SCALE_ITEM} js-${CLASSES.SCALE_ITEM}`,
-//         'data-position': position,
-//         text: value,
-//       });
+  public draw(slider: HTMLElement): void {
+    this.items.forEach((item) => slider.appendChild(item));
+  }
 
-//       this.$slider.append($item);
-//       $item.css(viewName === 'horizontal' ? 'left' : 'bottom', `${(position * 100)}%`);
-//     });
-//   }
+  private init(scaleItems: PointState[]): void {
+    scaleItems.forEach(({ position, value }) => {
+      const item = document.createElement('div');
+      item.classList.add(CLASSES.SCALE_ITEM);
+      item.dataset.position = position.toString();
+      item.style[this.viewName === VIEW_VERTICAL ? 'bottom' : 'left'] = `${(position * 100)}%`;
+      item.textContent = value.toString();
+      this.items.push(item);
+    });
+  }
 
-//   @boundMethod
-//   private handleMousedown(ev: JQuery.MouseDownEvent): void {
-//     if (this.mousedownCallback) {
-//       const $target = $(ev.target);
-//       const position = parseFloat(String($target.data('position')));
+  // private handleMousedown(ev: JQuery.MouseDownEvent): void {
+  //   if (this.mousedownCallback) {
+  //     const $target = $(ev.target);
+  //     const position = parseFloat(String($target.data('position')));
 
-//       if ($target.hasClass(CLASSES.SCALE_ITEM) && !Number.isNaN(position)) {
-//         ev.stopPropagation(); // что бы не отрабатывал обработчик класса Slider
-//         this.mousedownCallback(position);
-//       }
-//     }
-//   }
-// }
+  //     if ($target.hasClass(CLASSES.SCALE_ITEM) && !Number.isNaN(position)) {
+  //       ev.stopPropagation(); // что бы не отрабатывал обработчик класса Slider
+  //       this.mousedownCallback(position);
+  //     }
+  //   }
+  // }
+}
 
-// export default Scale;
+export default Scale;

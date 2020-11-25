@@ -34,7 +34,7 @@ abstract class AbstractModel {
     this.range = this.max - this.min;
     this.step = step;
     this.validateModelFields();
-    this.lastStep = AbstractModel.calcLastStep(this.step, this.max);
+    this.lastStep = this.calcLastStep();
   }
 
   protected validateModelFields(): void {
@@ -56,7 +56,8 @@ abstract class AbstractModel {
     const targetStep = Math.round(targetPosition * this.range);
 
     if (typeof pointIndex !== 'number') {
-      this.pointsSteps[this.findNearestPoint(targetPosition)] = this.adjustStep(targetStep);
+      const index = this.findNearestPoint(targetPosition);
+      this.pointsSteps[index] = this.adjustStep(targetStep);
       this.triggerUpdateEvent();
       return true;
     }
@@ -111,15 +112,25 @@ abstract class AbstractModel {
     }));
   }
 
+  public getScale(): PointState[] {
+    const steps = new Set<number>();
+    for (let i = 0; i <= this.range; i += 1) steps.add(this.adjustStep(i));
+
+    return Array.from(steps).map((step) => ({
+      position: step / this.range,
+      value: this.stepToValue(step),
+    }));
+  }
+
   protected triggerUpdateEvent(): void {
     this.updateEventCallbackList.forEach(
       (callback) => callback(this.getPointsStates()),
     );
   }
 
-  protected static calcLastStep(step: number, range: number): number {
-    const lastStep = Math.round((range / step)) * step;
-    return (lastStep > range) ? range : lastStep;
+  protected calcLastStep(): number {
+    const lastStep = Math.round((this.range / this.step)) * this.step;
+    return (lastStep > this.range) ? this.range : lastStep;
   }
 
   protected findNearestPoint(targetPosition: number): number {

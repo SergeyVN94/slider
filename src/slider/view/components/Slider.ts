@@ -20,21 +20,22 @@ class Slider {
 
   public getTargetPosition(ev: MouseEvent): number {
     const isVerticalView = this.viewName === VIEW_VERTICAL;
-
-    const absolutePosition = isVerticalView
-      ? ev.pageY
-      : ev.pageX;
-
+    const absolutePosition = isVerticalView ? ev.clientY : ev.clientX;
     const offset = this.slider.getBoundingClientRect();
 
     const position = isVerticalView
-      ? (absolutePosition - offset.y) / this.slider.clientHeight
-      : (absolutePosition - offset.x) / this.slider.clientWidth;
+      ? (absolutePosition - offset.top) / this.slider.clientHeight
+      : (absolutePosition - offset.left) / this.slider.clientWidth;
+
+    if (isVerticalView) {
+      if (position > 1) return 0;
+      if (position < 0) return 1;
+      return 1 - position;
+    }
 
     if (position > 1) return 1;
     if (position < 0) return 0;
-
-    return (isVerticalView ? 1 - position : position);
+    return position;
   }
 
   public onMousedown(callback: HandleSliderMousedown): void {

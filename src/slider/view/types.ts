@@ -1,6 +1,7 @@
 import { PointState } from '../model/types';
 import BgLine from './components/BgLine';
 import Point from './components/Point';
+import Scale from './components/Scale';
 import Slider from './components/Slider';
 import Tooltip from './components/Tooltip';
 
@@ -21,7 +22,7 @@ export type ViewConfig = {
   bgLine?: boolean;
   viewName?: ViewName;
   prettify?: (value: number | string) => string;
-  scaleItems?: [];
+  scaleItems: PointState[];
 };
 
 export interface IViewComponents {
@@ -29,7 +30,7 @@ export interface IViewComponents {
   points: Point[];
   tooltips: Tooltip[];
   bgLine: BgLine;
-  // scale: Scale;
+  scale: Scale;
 }
 
 export interface IView {

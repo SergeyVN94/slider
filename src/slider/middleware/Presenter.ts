@@ -21,11 +21,13 @@ class Presenter {
   }
 
   private handlePointPositionChange(targetPosition: number, pointIndex?: number): void {
+    console.log('View', targetPosition, pointIndex);
+
     this.model.update(targetPosition, pointIndex);
   }
 
   private handleModelUpdate(pointsStates: PointState[]): void {
-    console.log(pointsStates);
+    console.log('Model', pointsStates);
 
     this.view.update(pointsStates);
   }

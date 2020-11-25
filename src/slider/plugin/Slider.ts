@@ -36,7 +36,11 @@ class Slider {
       ...normalizedConfig,
        container,
        pointsCount: this.model.values.length,
+       scaleItems: this.model.getScale(),
     });
+
+    console.log(this.model.getScale());
+    
 
     new Presenter(this.view, this.model);
   }

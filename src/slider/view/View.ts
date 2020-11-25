@@ -3,9 +3,8 @@ import Slider from './components/Slider';
 import Point from './components/Point';
 import Tooltip from './components/Tooltip';
 import BgLine from './components/BgLine';
-// import Scale from './components/Scale';
+import Scale from './components/Scale';
 import {
-  // HandlerPointPositionChange,
   IView,
   IViewComponents,
   PrettifyFunc,
@@ -84,7 +83,7 @@ class View implements IView {
       points,
       tooltips,
       bgLine: new BgLine(viewName),
-      // scale: new Scale(scaleItems),
+      scale: new Scale(scaleItems, viewName),
     };
   }
 
@@ -94,11 +93,13 @@ class View implements IView {
       points,
       tooltips,
       bgLine,
+      scale,
     } = this.components;
 
     points.forEach((point) => point.draw(slider.getElement()));
     tooltips.forEach((tooltip) => tooltip.draw(slider.getElement()));
     bgLine.draw(slider.getElement());
+    scale.draw(slider.getElement());
 
     container.appendChild(slider.getElement());
   }
