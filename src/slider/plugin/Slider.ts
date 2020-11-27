@@ -39,9 +39,6 @@ class Slider {
        scaleItems: this.model.getScale(),
     });
 
-    console.log(this.model.getScale());
-    
-
     new Presenter(this.view, this.model);
   }
 

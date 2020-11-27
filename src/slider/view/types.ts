@@ -9,7 +9,6 @@ export type ViewName = 'horizontal' | 'vertical';
 export type PrettifyFunc = (value: number | string) => string;
 export type HandlerPointPositionChange = (targetPosition: number, pointIndex?: number) => void;
 export type HandlePointMousedown = (index: number, ev: MouseEvent) => void;
-export type HandlePointMouseup = HandlePointMousedown;
 export type HandleSliderMousedown = (position: number) => void;
 
 export const VIEW_VERTICAL = 'vertical';

@@ -1,4 +1,4 @@
-import { HandlePointMousedown, HandlePointMouseup, ViewName } from '../types';
+import { HandlePointMousedown, ViewName, VIEW_VERTICAL } from '../types';
 import CLASSES from '../classes';
 
 class Point {
@@ -7,8 +7,6 @@ class Point {
   private readonly index: number;
 
   private mousedownCallback: HandlePointMousedown;
-
-  private mouseupCallback: HandlePointMousedown;
 
   private readonly viewName: ViewName;
 
@@ -30,51 +28,52 @@ class Point {
 
   private init(): void {
     this.point.classList.add(CLASSES.POINT);
-    this.point.dataset.index = this.index.toString();
+    this.point.style.zIndex = '20';
 
-    this.point.addEventListener('mousedown', this.handleMousedown.bind(this));
+    this.handleMousedown = this.handleMousedown.bind(this);
+    this.point.addEventListener('mousedown', this.handleMousedown);
   }
 
-  // public static handleCollisions(points: Point[], selectedPoint: number): void {
-  //   if (points.length) {
-  //     const movedPoint = points[selectedPoint];
+  public static handleCollisions(points: Point[], movedPointIndex: number): void {
+    const movedPoint = points[movedPointIndex];
 
-  //     points.forEach((point, index) => {
-  //       if (selectedPoint !== index && movedPoint.checkCollision(point)) {
-  //         if (movedPoint.zIndex <= point.zIndex) movedPoint.zIndex = point.zIndex + 1;
-  //       }
-  //     });
-  //   }
-  // }
+    points.forEach((point, index) => {
+      if (movedPointIndex !== index && movedPoint.checkCollision(point)) {
+        if (movedPoint.zIndex <= point.zIndex) movedPoint.zIndex = point.zIndex + 1;
+      }
+    });
+  }
 
   public onMousedown(callback: HandlePointMousedown): void {
     this.mousedownCallback = callback;
   }
 
-  // public get zIndex(): number {
-  //   return parseInt(this.$point.css('z-index') || '0', 10);
-  // }
+  public get zIndex(): number {
+    return parseInt(this.point.style.zIndex, 10);
+  }
 
-  // public set zIndex(index: number) {
-  //   this.$point.css('z-index', index);
-  // }
+  public set zIndex(value: number) {
+    this.point.style.zIndex = value.toString();
+  }
 
-  // private checkCollision(point: Point): boolean {
-  //   const pointSize = (
-  //     this.viewName === 'horizontal' ? this.$point.outerWidth() : this.$point.outerHeight()
-  //   );
+  private checkCollision(point: Point): boolean {
+    const pointSize = this.viewName === VIEW_VERTICAL
+      ? this.point.offsetHeight
+      : this.point.offsetWidth;
 
-  //   const position = this.getPosition();
-  //   const anotherPosition = point.getPosition();
+    const position = this.getPosition();
+    const anotherPointPosition = point.getPosition();
 
-  //   return Math.abs(position - anotherPosition) < pointSize;
-  // }
+    return Math.abs(position - anotherPointPosition) < pointSize;
+  }
 
-  // private getPosition(): number {
-  //   return parseFloat(
-  //     this.$point.css(this.viewName === 'horizontal' ? 'left' : 'top'),
-  //   );
-  // }
+  private getPosition(): number {
+    if (this.viewName === VIEW_VERTICAL) {
+      return (this.point.offsetHeight / 2) + this.point.offsetTop;
+    }
+
+    return (this.point.offsetWidth / 2) + this.point.offsetLeft;
+  }
 
   private handleMousedown(ev: MouseEvent): void {
     ev.stopPropagation();

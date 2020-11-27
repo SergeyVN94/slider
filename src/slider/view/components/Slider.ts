@@ -43,9 +43,11 @@ class Slider {
   }
 
   private init(): void {
+    this.handleMousedown = this.handleMousedown.bind(this);
+
     this.slider.classList.add(CLASSES.SLIDER);
     if (this.viewName === VIEW_VERTICAL) this.slider.classList.add(CLASSES.VIEW_NAME_VERTICAL);
-    this.slider.addEventListener('mousedown', this.handleMousedown.bind(this));
+    this.slider.addEventListener('mousedown', this.handleMousedown);
   }
 
   private handleMousedown(ev: MouseEvent): void {

@@ -23,6 +23,10 @@ class Tooltip {
     slider.appendChild(this.tooltip);
   }
 
+  public setZIndex(index: string | number): void {
+    this.tooltip.style.zIndex = index.toString();
+  }
+
   private init(): void {
     this.tooltip.classList.add(CLASSES.TOOLTIP);
   }

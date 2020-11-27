@@ -24,6 +24,8 @@ class View implements IView {
 
   private readonly container: HTMLElement;
 
+  private pointsStatesCache: PointState[];
+
   constructor(config: ViewConfig) {
     const {
       container,
@@ -55,10 +57,23 @@ class View implements IView {
       tooltips[index].update(state.position, this.prettify(state.value));
     });
 
+    if (this.pointsStatesCache) {
+      const movedPointIndex = pointsStates.findIndex(({ position }, index) => (
+        position !== this.pointsStatesCache[index].position
+      ));
+
+      if (movedPointIndex !== -1) {
+        Point.handleCollisions(points, movedPointIndex);
+        points.forEach((point, index) => tooltips[index].setZIndex(point.zIndex));
+      }
+    }
+
     bgLine.update(
       pointsStates.slice(-1).pop().position,
       pointsStates.length > 1 ? pointsStates[0].position : 0,
     );
+
+    this.pointsStatesCache = pointsStates;
   }
 
   private static createComponents(

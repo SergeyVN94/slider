@@ -16,8 +16,11 @@ class Presenter {
   }
 
   private initEventListeners(): void {
-    this.view.onPointPositionChange(this.handlePointPositionChange.bind(this));
-    this.model.onUpdate(this.handleModelUpdate.bind(this));
+    this.handlePointPositionChange = this.handlePointPositionChange.bind(this);
+    this.handleModelUpdate = this.handleModelUpdate.bind(this);
+
+    this.view.onPointPositionChange(this.handlePointPositionChange);
+    this.model.onUpdate(this.handleModelUpdate);
   }
 
   private handlePointPositionChange(targetPosition: number, pointIndex?: number): void {

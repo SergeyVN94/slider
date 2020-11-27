@@ -13,7 +13,6 @@ class Scale {
   constructor(scaleItems: PointState[], viewName: ViewName) {
     this.items = [];
     this.viewName = viewName;
-    this.mousedownCallback = null;
     this.init(scaleItems);
   }
 
@@ -23,6 +22,15 @@ class Scale {
 
   public draw(slider: HTMLElement): void {
     this.items.forEach((item) => slider.appendChild(item));
+    this.initEventListeners();
+  }
+
+  private initEventListeners(): void {
+    this.handleMousedown = this.handleMousedown.bind(this);
+
+    if (this.items.length) {
+      this.items[0].parentElement.addEventListener('mousedown', this.handleMousedown);
+    }
   }
 
   private init(scaleItems: PointState[]): void {
@@ -36,17 +44,18 @@ class Scale {
     });
   }
 
-  // private handleMousedown(ev: JQuery.MouseDownEvent): void {
-  //   if (this.mousedownCallback) {
-  //     const $target = $(ev.target);
-  //     const position = parseFloat(String($target.data('position')));
+  private handleMousedown(ev: MouseEvent): void {
+    if (this.mousedownCallback) {
+      const target = ev.target as HTMLElement;
+      const isValidTarget = target.classList && target.classList.contains(CLASSES.SCALE_ITEM);
 
-  //     if ($target.hasClass(CLASSES.SCALE_ITEM) && !Number.isNaN(position)) {
-  //       ev.stopPropagation(); // что бы не отрабатывал обработчик класса Slider
-  //       this.mousedownCallback(position);
-  //     }
-  //   }
-  // }
+      if (isValidTarget) {
+        ev.preventDefault();
+        const position = parseFloat(target.dataset.position);
+        this.mousedownCallback(position);
+      }
+    }
+  }
 }
 
 export default Scale;
