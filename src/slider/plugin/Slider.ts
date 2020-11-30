@@ -1,19 +1,19 @@
 import Model from '../model/Model';
+import ModelStringsScale from '../model/ModelStringsScale';
 import View from '../view/View';
 import Presenter from '../middleware/Presenter';
-import { SliderConfig, NormalizedConfig } from './types';
+import { VIEW_HORIZONTAL, VIEW_VERTICAL } from '../view/types';
+import { SliderPluginConfig, SliderConfig } from './types';
 import { DEFAULT_PLUGIN_CONFIG, CONFIG } from './config';
 
 import './slider.sass';
-import ModelStringsScale from '../model/ModelStringsScale';
-import { VIEW_HORIZONTAL, VIEW_VERTICAL } from '../view/types';
 
 class Slider {
   private model: Model | ModelStringsScale;
 
   private view: View;
 
-  constructor(container: HTMLElement, config?: SliderConfig) {
+  constructor(container: HTMLElement, config?: SliderPluginConfig) {
     try {
       this.init(container, config);
     } catch (error) {
@@ -21,28 +21,41 @@ class Slider {
     }
   }
 
+  public getConfig(): SliderConfig {
+    return {
+      ...this.model.getConfig(),
+      ...this.view.getConfig(),
+    };
+  }
+
+  // public setConfig(config: SliderPluginConfig): void {
+  //   try {
+  //     this.currentConfig = Slider.normalizeConfig(config);
+
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
   private init(container: HTMLElement, config: unknown): void {
     const normalizedConfig = Slider.normalizeConfig(config);
 
-    if ('min' in normalizedConfig) {
-      this.model = new Model({ ...normalizedConfig });
-      this.model.values = normalizedConfig.values;
-    } else {
-      this.model = new ModelStringsScale({ ...normalizedConfig });
-      this.model.values = normalizedConfig.values;
-    }
+    if ('min' in normalizedConfig) this.model = new Model({ ...normalizedConfig });
+    else this.model = new ModelStringsScale({ ...normalizedConfig });
+
+    const modelConfig = this.model.getConfig();
 
     this.view = new View({
       ...normalizedConfig,
-       container,
-       pointsCount: this.model.values.length,
-       scaleItems: this.model.getScale(),
+      container,
+      pointsCount: modelConfig.values.length,
+      scaleItems: modelConfig.scaleItems,
     });
 
     new Presenter(this.view, this.model);
   }
 
-  private static normalizeConfig(config: any): NormalizedConfig {
+  private static normalizeConfig(config: any): SliderConfig {
     if (Object.prototype.toString.call(config) !== '[object Object]') return DEFAULT_PLUGIN_CONFIG;
 
     const normalizedConfig: any = { ...config };
@@ -100,7 +113,6 @@ class Slider {
   private static normalizeNumber(value: unknown): number {
     return parseInt(String(value), 10);
   }
-
 }
 
 export default Slider;

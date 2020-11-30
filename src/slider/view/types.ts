@@ -14,7 +14,7 @@ export type HandleSliderMousedown = (position: number) => void;
 export const VIEW_VERTICAL = 'vertical';
 export const VIEW_HORIZONTAL = 'horizontal';
 
-export type ViewConfig = {
+export type ViewInitialConfig = {
   container: HTMLElement;
   pointsCount: number;
   tooltips?: boolean;
@@ -22,6 +22,12 @@ export type ViewConfig = {
   viewName?: ViewName;
   prettify?: (value: number | string) => string;
   scaleItems: PointState[];
+};
+
+export type ViewConfig = {
+  tooltips: boolean;
+  bgLine: boolean;
+  viewName: ViewName;
 };
 
 export interface IViewComponents {
@@ -35,6 +41,7 @@ export interface IViewComponents {
 export interface IView {
   onPointPositionChange(callback: HandlerPointPositionChange): void;
   update(pointsStates: PointState[]): void;
+  getConfig(): ViewConfig;
 }
 
 export { PointState };

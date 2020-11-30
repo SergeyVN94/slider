@@ -1,11 +1,30 @@
+import { PointState } from '../view/types';
 import AbstractModel from './AbstractModel';
+import { ModelConfig } from './types';
 
 class Model extends AbstractModel {
-  public get values(): number[] {
-    return this.pointsSteps.map((step) => step + this.min);
+  constructor(config: ModelConfig) {
+    super(config);
+    this.setValues(config.values);
   }
 
-  public set values(values: number[]) {
+  public getConfig(): ModelConfig & {
+    scaleItems: PointState[];
+  } {
+    return {
+      step: this.step,
+      max: this.max,
+      min: this.min,
+      values: this.pointsSteps.map((step) => this.stepToValue(step)),
+      scaleItems: this.getScale(),
+    };
+  }
+
+  // public set config(config: ModelConfig) {
+  //   this.min = config.min;
+  // }
+
+  private setValues(values: number[]): void {
     try {
       this.pointsSteps = values.map((value) => {
         const step = value - this.min;

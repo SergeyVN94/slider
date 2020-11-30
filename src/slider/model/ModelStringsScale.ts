@@ -1,11 +1,11 @@
 import AbstractModel from './AbstractModel';
-import { ModelConfigWithStringsScale } from './types';
+import { ModelConfigWithStringsScale, PointState } from './types';
 
 class ModelStringsScale extends AbstractModel {
   private readonly customScale: string[];
 
   constructor(config: ModelConfigWithStringsScale) {
-    const { customScale, step } = config;
+    const { customScale, step, values } = config;
 
     super({
       min: 0,
@@ -14,13 +14,31 @@ class ModelStringsScale extends AbstractModel {
     });
 
     this.customScale = customScale;
+    this.values = values;
   }
 
-  public get values(): string[] {
-    return this.pointsSteps.map((step) => this.customScale[step]);
+  public getConfig(): ModelConfigWithStringsScale & {
+    scaleItems: PointState[];
+  } {
+    return {
+      step: this.step,
+      customScale: [...this.customScale],
+      values: this.values,
+      scaleItems: this.getScale(),
+    };
   }
 
-  public set values(values: string[]) {
+  // public set config(config: ModelConfigWithStringsScale) {
+  //   if (config.customScale && config.customScale.length !== this.max) {
+  //     this.max = config.customScale.length;
+  //   }
+  // }
+
+  private get values(): string[] {
+    return this.pointsSteps.map((step) => this.stepToValue(step));
+  }
+
+  private set values(values: string[]) {
     try {
       this.pointsSteps = values.map((value: string): number => {
         const step = this.customScale.indexOf(value);

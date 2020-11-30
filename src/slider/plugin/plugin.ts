@@ -1,11 +1,11 @@
-import { Command, COMMANDS, SliderConfig } from './types';
+import { Command, COMMANDS, SliderPluginConfig } from './types';
 import Slider from './Slider';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 $.fn.slider = function pluginMainFunction(
   this: JQuery,
   command: Command,
-  config?: SliderConfig,
+  config?: SliderPluginConfig,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   const slider: Slider = this.data('slider-plugin');
@@ -20,10 +20,11 @@ $.fn.slider = function pluginMainFunction(
     return this;
   }
 
-  // if (command === COMMANDS.CONFIG) {
-  //   if (!config) return slider.config;
-  //   slider.config = config;
-  // }
+  if (command === COMMANDS.CONFIG) {
+    if (!config) return slider.getConfig();
+    // slider.setConfig(config);
+    return this;
+  }
 
   console.error(new Error(`Unknown command "${command}"`));
   return this;

@@ -13,6 +13,7 @@ import {
   PointState,
   HandlerPointPositionChange,
   VIEW_HORIZONTAL,
+  ViewInitialConfig,
 } from './types';
 
 class View implements IView {
@@ -26,7 +27,13 @@ class View implements IView {
 
   private pointsStatesCache: PointState[];
 
-  constructor(config: ViewConfig) {
+  private areTooltipsVisible: boolean;
+
+  private isBgLineVisible: boolean;
+
+  private viewName: ViewName;
+
+  constructor(config: ViewInitialConfig) {
     const {
       container,
       scaleItems = [],
@@ -38,11 +45,23 @@ class View implements IView {
     } = config;
 
     this.container = container;
+    this.areTooltipsVisible = tooltips;
+    this.isBgLineVisible = bgLine;
+    this.viewName = viewName;
+
     this.prettify = prettify;
     this.components = View.createComponents(viewName, scaleItems, pointsCount);
     this.container.innerHTML = '';
     this.draw(container);
     this.controller = new Controller(this.components);
+  }
+
+  public getConfig(): ViewConfig {
+    return {
+      tooltips: this.areTooltipsVisible,
+      bgLine: this.isBgLineVisible,
+      viewName: this.viewName,
+    };
   }
 
   public onPointPositionChange(callback: HandlerPointPositionChange): void {

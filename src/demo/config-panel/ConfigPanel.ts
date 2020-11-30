@@ -1,363 +1,193 @@
-// /* eslint-disable @typescript-eslint/unbound-method */
-// import { boundMethod } from 'autobind-decorator';
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { ViewName } from 'src/slider/view/types';
+import CLASSES from './classes';
 
-// import CLASSES from './classes';
+import './config-panel.sass';
 
-// import './config-panel.sass';
+type Components = {
+  $checkboxesAndRadio: JQuery;
+  $textInputs: JQuery;
+  $containerForInputsValues: JQuery;
+  $buttonAddingPoint: JQuery;
+  inputsValues: JQuery[];
+};
 
-// const createControlValueOut = (index: number, value: string | number): JQuery => {
-//   const $control = $('<label/>').addClass('config-panel__control');
-//   const $controlText = $('<span/>')
-//     .addClass('config-panel__control-text')
-//     .text(`Ползунок ${index}`);
-//   const $controlInput = $('<input/>')
-//     .addClass('config-panel__input config-panel__input_type_value-out')
-//     .prop('autocomplete', 'off')
-//     .data('index', index)
-//     .val(value);
+class ConfigPanel {
+  private components: Components;
 
-//   return $control.append($controlText, $controlInput);
-// };
+  private $slider: JQuery;
 
-// interface IConfigPanelDomElements {
-//   $panel: JQuery;
-//   $slider: JQuery;
-//   $inputStep: JQuery;
-//   $radioViewName: JQuery;
-//   $checkboxBgLine: JQuery;
-//   $checkboxTooltip: JQuery;
-//   $inputPoints: JQuery;
-//   $controlsValueOutContainer: JQuery;
-//   inputsValueOut: JQuery[];
-//   $scaleMax: JQuery;
-//   $scaleMin: JQuery;
-//   $customValues: JQuery;
-// }
+  constructor($panel: JQuery, $slider: JQuery) {
+    this.$slider = $slider;
+    this.createComponents($panel);
+    this.initEventListeners();
+    this.updateInputs();
+  }
 
-// class ConfigPanel {
-//   private readonly domElements: IConfigPanelDomElements;
+  private createComponents($panel: JQuery): void {
+    this.components = {
+      $checkboxesAndRadio: $panel.find('[type="radio"], [type="checkbox"]'),
+      $textInputs: $panel.find('[type="text"], [type="number"], textarea'),
+      $containerForInputsValues: $panel.find(`.${CLASSES.VALUES_INPUTS_CONTAINER}`),
+      $buttonAddingPoint: $panel.find('[name="add-point"]'),
+      inputsValues: [],
+    };
 
-//   constructor($panel: JQuery, $slider: JQuery) {
-//     this.domElements = ConfigPanel._getDomElements($panel, $slider);
-//     this.initDomElements();
-//     this.initEventListeners();
-//   }
+    const sliderConfig = this.$slider.slider('config');
 
-//   private static _getDomElements($panel: JQuery, $slider: JQuery): IConfigPanelDomElements {
-//     return {
-//       $panel,
-//       $slider,
-//       $inputStep: $panel.find(`.${CLASSES.INPUT_STEP}`),
-//       $radioViewName: $panel.find(`.${CLASSES.RADIO_VIEW_NAME}`),
-//       $checkboxBgLine: $panel.find(`.${CLASSES.CHECKBOX_BG_LINE}`),
-//       $checkboxTooltip: $panel.find(`.${CLASSES.CHECKBOX_TOOLTIP}`),
-//       $inputPoints: $panel.find(`.${CLASSES.INPUT_POINTS}`),
-//       $controlsValueOutContainer: $panel.find(`.${CLASSES.CONTROLS_VALUE_OUT}`),
-//       inputsValueOut: [],
-//       $scaleMax: $panel.find(`.${CLASSES.SCALE_MAX}`),
-//       $scaleMin: $panel.find(`.${CLASSES.SCALE_MIN}`),
-//       $customValues: $panel.find(`.${CLASSES.INPUT_CUSTOM_VALUES}`),
-//     };
-//   }
+    if ('min' in sliderConfig) {
+      this.components.$textInputs.each((_, element) => {
+        const $input = $(element);
+        if ($input.attr('name') === 'custom-scale') $input.parents(`.${CLASSES.ROW}`).remove();
+      });
+    } else {
+      this.components.$textInputs.each((_, element) => {
+        const $input = $(element);
+        if ($input.attr('name') === 'min') $input.parents('fieldset').remove();
+      });
+    }
+  }
 
-//   private initDomElements(): void {
-//     const {
-//       $slider,
-//       $inputStep,
-//       $radioViewName,
-//       $checkboxBgLine,
-//       $checkboxTooltip,
-//       $inputPoints,
-//       $scaleMax,
-//       $scaleMin,
-//       $customValues,
-//     } = this.domElements;
+  private initEventListeners(): void {
+    this.handleButtonRemoveClick = this.handleButtonRemoveClick.bind(this);
+    this.handleInputBlur = this.handleInputBlur.bind(this);
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+    this.handleInputKeypress = this.handleInputKeypress.bind(this);
+    this.handleButtonAddingPointClick = this.handleButtonAddingPointClick.bind(this);
+    this.handleSliderChange = this.handleSliderChange.bind(this);
 
-//     const step = $slider.slider('step');
-//     $inputStep.val(step);
+    const { $textInputs, $checkboxesAndRadio, $buttonAddingPoint } = this.components;
 
-//     const viewName = $slider.slider('view-name');
-//     $radioViewName.each((index, element) => {
-//       if (element.getAttribute('value') === viewName) element.setAttribute('checked', 'true');
-//     });
+    $textInputs
+      .on('blur', this.handleInputBlur)
+      .on('keypress', this.handleInputKeypress);
+    $checkboxesAndRadio.on('change', this.handleCheckboxChange);
+    $buttonAddingPoint.on('click', this.handleButtonAddingPointClick);
+    this.$slider.on('change', this.handleSliderChange);
+  }
 
-//     const isBgLineVisible = $slider.slider('show-bg-line');
-//     $checkboxBgLine.prop('checked', isBgLineVisible);
+  private updateInputs(): void {
+    const sliderConfig = this.$slider.slider('config');
+    const { $textInputs, $checkboxesAndRadio, inputsValues } = this.components;
 
-//     const areTooltipsVisible = $slider.slider('show-tooltips');
-//     $checkboxTooltip.prop('checked', areTooltipsVisible);
+    $textInputs.each((_, element) => {
+      const $input = $(element);
+      const name = $input.attr('name');
 
-//     const pointsCount = $slider.slider('values').length;
-//     $inputPoints.val(pointsCount);
+      if (name === 'step') $input.val(sliderConfig.step);
 
-//     const customScale = $slider.slider('custom-scale');
-//     if (customScale) $customValues.val(customScale.join(','));
-//     else $customValues.parents(`.${CLASSES.PANEL_ROW}`).remove();
+      if ('min' in sliderConfig) {
+        if (name === 'min') $input.val(sliderConfig.min);
+        if (name === 'max') $input.val(sliderConfig.max);
+      } else if (name === 'custom-scale') {
+        $input.val(sliderConfig.customScale.join(','));
+      }
+    });
 
-//     const min = $slider.slider('min');
-//     const max = $slider.slider('max');
-//     if (typeof min !== 'number' || typeof max !== 'number') {
-//       $scaleMax.parents(`.${CLASSES.PANEL_ROW}`).remove();
-//     } else {
-//       $scaleMin.val(min);
-//       $scaleMax.val(max);
-//     }
+    $checkboxesAndRadio.each((_, element) => {
+      const $input = $(element);
+      const name = $input.attr('name');
 
-//     this.recreateControlsValueOut();
-//   }
+      if (name === 'tooltips') $input.prop('checked', sliderConfig.tooltips);
+      if (name === 'bg-line') $input.prop('checked', sliderConfig.bgLine);
+      if (name === 'view-name') {
+        $input.prop('checked', sliderConfig.viewName === $input.val());
+      }
+    });
 
-//   private initEventListeners(): void {
-//     const {
-//       $inputStep,
-//       $radioViewName,
-//       $checkboxBgLine,
-//       $checkboxTooltip,
-//       $inputPoints,
-//       $slider,
-//       $scaleMax,
-//       $scaleMin,
-//       $customValues,
-//     } = this.domElements;
+    if (sliderConfig.values.length !== inputsValues.length) {
+      this.createValuesInputs();
+    } else {
+      sliderConfig.values.forEach((value: string | number, index: number) => {
+        inputsValues[index].val(value);
+      });
+    }
+  }
 
-//     $inputStep.on(
-//       'focusout.configPanel.updateStep',
-//       this.handleInputStepFocusout,
-//     ).on(
-//       'keyup.configPanel.updateStep',
-//       { handler: this.handleInputStepFocusout },
-//       ConfigPanel._handleInputKeyup,
-//     );
+  private createValuesInputs(): void {
+    this.components.$containerForInputsValues.html('');
+    this.components.inputsValues = [];
 
-//     $radioViewName.on(
-//       'input.configPanel.changeViewName',
-//       this.handleRadioViewNameInput,
-//     );
+    this.$slider.slider('config').values.forEach((value: string | number, index: number) => {
+      const $textField = $(`<li class="${CLASSES.ROW}">
+        <label class="${CLASSES.LABEL}">
+          <span class="${CLASSES.LABEL_TEXT}">Ползунок ${index}</span>
+          <input class="${CLASSES.INPUT}" name="point-value" data-id=${index} value=${value} />
+          <button class="${CLASSES.BUTTON}" type="button" data-index="${index}">x</button>
+        </label>
+      </li>`);
 
-//     $checkboxBgLine.on(
-//       'input.configPanel.bgLineToggle',
-//       this.handleCheckboxBgLineInput,
-//     );
+      const $input = $textField.find('input');
+      $input
+        .on('blur', this.handleInputBlur)
+        .parent()
+        .find(`.${CLASSES.BUTTON}`)
+        .on('click', this.handleButtonRemoveClick);
 
-//     $checkboxTooltip.on(
-//       'input.configPanel.tooltips',
-//       this.handleCheckboxTooltipInput,
-//     );
+      this.components.inputsValues.push($input);
+      this.components.$containerForInputsValues.append($textField);
+    });
+  }
 
-//     $inputPoints.on(
-//       'focusout.configPanel.changeNumberOfPoints',
-//       this.handleInputPointsFocusout,
-//     ).on(
-//       'keyup.configPanel.changeNumberOfPoints',
-//       { handler: this.handleInputPointsFocusout },
-//       ConfigPanel._handleInputKeyup,
-//     );
+  private handleInputKeypress(ev: JQuery.KeyPressEvent): void {
+    const $input = $(ev.target);
+    if (ev.key === 'Enter') this.updateSlider($input);
+  }
 
-//     $scaleMax.on(
-//       'focusout.configPanel.setScaleMax',
-//       this.handleMaxFocusout,
-//     ).on(
-//       'keyup.configPanel.setScaleMax',
-//       { handler: this.handleMaxFocusout },
-//       ConfigPanel._handleInputKeyup,
-//     );
+  private handleCheckboxChange(ev: JQuery.ChangeEvent): void {
+    this.updateSlider($(ev.target));
+  }
 
-//     $scaleMin.on(
-//       'focusout.configPanel.setScaleMin',
-//       this.handleMinFocusout,
-//     ).on(
-//       'keyup.configPanel.setScaleMin',
-//       { handler: this.handleMinFocusout },
-//       ConfigPanel._handleInputKeyup,
-//     );
+  private handleInputBlur(ev: JQuery.BlurEvent): void {
+    this.updateSlider($(ev.target));
+  }
 
-//     $customValues.on(
-//       'focusout.configPanel.setCustomScale',
-//       this.handleCustomValuesFocusout,
-//     ).on(
-//       'keyup.configPanel.setCustomScale',
-//       { handler: this.handleCustomValuesFocusout },
-//       ConfigPanel._handleInputKeyup,
-//     );
+  private handleButtonRemoveClick(ev: JQuery.ClickEvent): void {
+    const index = parseInt(String(ev.target.dataset.index), 10);
 
-//     $slider.on(
-//       'point-move.configPanel.updateControlsValueOutContainer',
-//       this.handleSliderPointMove,
-//     );
-//   }
+    if (!Number.isNaN(index)) {
+      const values = [...this.$slider.slider('config').values].splice(index, 1);
+      this.$slider.slider('config', { values: values as string[] });
+    }
+  }
 
-//   @boundMethod
-//   private static _handleInputKeyup(ev: JQuery.KeyUpEvent): void {
-//     // 13 - key code for 'enter'
-//     if (ev.keyCode === 13) {
-//       const { handler } = ev.data;
-//       if (typeof handler === 'function') handler(ev);
-//     }
-//   }
+  private handleSliderChange(_: JQuery.EventBase, values: string[] | number[]): void {
+    if (values.length !== this.components.inputsValues.length) {
+      this.createValuesInputs();
+    } else {
+      values.forEach((value: string | number, index: number) => {
+        this.components.inputsValues[index].val(value);
+      });
+    }
+  }
 
-//   @boundMethod
-//   private handleCustomValuesFocusout(): void {
-//     const { $slider, $customValues } = this.domElements;
+  private handleButtonAddingPointClick(): void {
+    const currentValues = this.$slider.slider('config').values;
+    const values = [...currentValues, currentValues[currentValues.length - 1]];
+    this.$slider.slider('config', { values: values as string[] });
+  }
 
-//     const values = $customValues.val().toString();
-//     const customScale = values.split(',');
+  private updateSlider($input: JQuery): void {
+    const name = $input.attr('name');
+    const value = $input.val();
+    const checked = $input.prop('checked');
+    const index = parseInt(String($input.data('index')), 10);
 
-//     $slider.slider('custom-scale', customScale);
-//     $customValues.val($slider.slider('custom-scale').toString());
-//   }
+    if (name === 'tooltips') this.$slider.slider('config', { tooltips: checked });
+    if (name === 'bg-line') this.$slider.slider('config', { bgLine: checked });
+    if (name === 'view-name') this.$slider.slider('config', { viewName: value as ViewName });
+    if (name === 'min') this.$slider.slider('config', { min: value as number });
+    if (name === 'max') this.$slider.slider('config', { max: value as number });
+    if (name === 'custom-scale') this.$slider.slider('config', { customScale: value as string[] });
 
-//   @boundMethod
-//   private handleMaxFocusout(): void {
-//     const { $slider, $scaleMax } = this.domElements;
-//     const newMax = parseInt($scaleMax.val().toString(), 10);
+    if (name === 'point-value' && !Number.isNaN(index)) {
+      const values = [...this.$slider.slider('config').values];
+      values[index] = value.toString();
+      this.$slider.slider('config', { values: values as string[] });
+    }
 
-//     if (!Number.isNaN(newMax)) $slider.slider('max', newMax);
-//     $scaleMax.val($slider.slider('max'));
-//   }
+    this.updateInputs();
+  }
+}
 
-//   @boundMethod
-//   private handleMinFocusout(): void {
-//     const { $slider, $scaleMin } = this.domElements;
-//     const newMin = parseInt($scaleMin.val().toString(), 10);
-
-//     if (!Number.isNaN(newMin)) $slider.slider('min', newMin);
-//     $scaleMin.val($slider.slider('min'));
-//   }
-
-//   private recreateControlsValueOut(): void {
-//     const {
-//       $slider,
-//       inputsValueOut,
-//       $controlsValueOutContainer,
-//     } = this.domElements;
-
-//     $controlsValueOutContainer.html('');
-//     inputsValueOut.length = 0;
-
-//     $slider.slider('values').forEach((value: string | number, index: number) => {
-//       const $controlValueOut = createControlValueOut(index, value);
-//       $controlsValueOutContainer.append($controlValueOut);
-//       const $input = $controlValueOut.find('input');
-//       inputsValueOut.push($input);
-//       $input.on(
-//         'focusout.configPanel.updateSliderValues',
-//         this.handleInputValueOutFocusout,
-//       ).on(
-//         'keyup.configPanel.updateSliderValues',
-//         { handler: this.handleInputValueOutFocusout },
-//         ConfigPanel._handleInputKeyup,
-//       );
-//     });
-//   }
-
-//   @boundMethod
-//   private handleInputValueOutFocusout(ev: JQuery.EventBase): void {
-//     const { $slider } = this.domElements;
-//     const $input = $(ev.currentTarget);
-//     const currentValues = $slider.slider('values');
-//     const inputIndex = parseInt($input.data('index').toString(), 10);
-
-//     if (typeof currentValues[0] === 'number') {
-//       currentValues[inputIndex] = parseInt($input.val().toString(), 10);
-//     } else {
-//       currentValues[inputIndex] = $input.val().toString();
-//     }
-
-//     $slider
-//       .slider('values', currentValues)
-//       .slider('values')
-//       .forEach(
-//         (
-//           value: string | number,
-//           index: number,
-//         ) => this.domElements.inputsValueOut[index].val(value),
-//       );
-//   }
-
-//   @boundMethod
-//   private handleSliderPointMove(): void {
-//     const {
-//       inputsValueOut,
-//       $slider,
-//     } = this.domElements;
-
-//     const values = $slider.slider('values');
-
-//     if (inputsValueOut.length !== values.length) this.recreateControlsValueOut();
-
-//     values.forEach((value: string | number, index: number) => inputsValueOut[index].val(value));
-//   }
-
-//   @boundMethod
-//   private handleInputPointsFocusout(): boolean {
-//     const {
-//       $inputPoints,
-//       $slider,
-//     } = this.domElements;
-
-//     const points = parseInt($inputPoints.val().toString(), 10);
-//     if (points < 1) return false;
-
-//     const currentValues = $slider.slider('values');
-//     const pointsNow = currentValues.length;
-
-//     if (pointsNow === points) return true;
-
-//     if (points < pointsNow) {
-//       $slider.slider('values', currentValues.slice(0, points));
-//       this.recreateControlsValueOut();
-//       return true;
-//     }
-
-//     const lastValue = currentValues[currentValues.length - 1];
-//     while (currentValues.length < points) {
-//       if (typeof lastValue === 'number') (currentValues as number[]).push(lastValue);
-//       else (currentValues as string[]).push(lastValue);
-//     }
-
-//     $slider.slider('values', currentValues);
-//     this.recreateControlsValueOut();
-
-//     return true;
-//   }
-
-//   @boundMethod
-//   private handleCheckboxTooltipInput(): void {
-//     const {
-//       $slider,
-//       $checkboxTooltip,
-//     } = this.domElements;
-
-//     const areTooltipsVisible = Boolean($checkboxTooltip.prop('checked'));
-//     $slider.slider('show-tooltips', areTooltipsVisible);
-//   }
-
-//   @boundMethod
-//   private handleCheckboxBgLineInput(): void {
-//     const {
-//       $slider,
-//       $checkboxBgLine,
-//     } = this.domElements;
-
-//     const isBgLineVisible = Boolean($checkboxBgLine.prop('checked'));
-//     $slider.slider('show-bg-line', isBgLineVisible);
-//   }
-
-//   @boundMethod
-//   private handleInputStepFocusout(): void {
-//     const {
-//       $slider,
-//       $inputStep,
-//     } = this.domElements;
-
-//     $slider.slider('step', parseInt($inputStep.val().toString(), 10));
-//     $inputStep.val($slider.slider('step'));
-//   }
-
-//   @boundMethod
-//   private handleRadioViewNameInput(ev: JQuery.EventBase): void {
-//     const viewName = ev.currentTarget.getAttribute('value');
-//     this.domElements.$slider.slider('view-name', viewName);
-//   }
-// }
-
-// export default ConfigPanel;
+export default ConfigPanel;

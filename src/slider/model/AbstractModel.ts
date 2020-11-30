@@ -1,6 +1,6 @@
 import {
   HandlerModelUpdate,
-  ModelConfig,
+  AbstractModelConfig,
   PointState,
 } from './types';
 
@@ -20,7 +20,7 @@ abstract class AbstractModel {
   // Последний целый шаг. Например min = 0, max = 10, step = 3. Тогда последний шаг - 9.
   protected lastStep: number;
 
-  constructor(config: ModelConfig) {
+  constructor(config: AbstractModelConfig) {
     const {
       max,
       min,
@@ -105,14 +105,14 @@ abstract class AbstractModel {
     this.triggerUpdateEvent();
   }
 
-  public getPointsStates(): PointState[] {
+  protected getPointsStates(): PointState[] {
     return this.pointsSteps.map((step) => ({
       position: step / this.range,
       value: this.stepToValue(step),
     }));
   }
 
-  public getScale(): PointState[] {
+  protected getScale(): PointState[] {
     const steps = new Set<number>();
     for (let i = 0; i <= this.range; i += 1) steps.add(this.adjustStep(i));
 

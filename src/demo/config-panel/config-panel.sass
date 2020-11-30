@@ -1,15 +1,10 @@
-$default-border: #3a2a7459
-$border-light: #3a2a7426
-$hover: #3a2a74bf
-$focus: #3a2a74bf
-
 .config-panel
   padding: 20px 15px
   display: flex
   flex-direction: column
   box-sizing: border-box
   border: 1px solid #c7e7a3
-  box-shadow: 0px 0px 5px #6d9669
+  box-shadow: 0 0 5px #6d9669
   border-radius: 6px
   font-family: Arial, Helvetica, sans-serif
   font-size: 14px
@@ -20,7 +15,7 @@ $focus: #3a2a74bf
     flex-wrap: nowrap
 
     &:not(:last-child)
-      border-bottom: 1px solid $border-light
+      border-bottom: 1px solid #3a2a7426
       margin-bottom: 10px
       padding-bottom: 10px
 
@@ -42,7 +37,7 @@ $focus: #3a2a74bf
       margin-right: 10px
 
       &_right
-        margin: 0px 0px 0px 10px
+        margin: 0 0 0 10px
 
     &-title
       margin-bottom: 10px
@@ -51,11 +46,11 @@ $focus: #3a2a74bf
     padding: 8px 13px
     font-size: 14px
     border-radius: 4px
-    border: 1px solid $default-border
+    border: 1px solid #3a2a7459
 
     &:focus
-      border-color: $focus
+      border-color: #3a2a74bf
       outline: none
 
     &:hover
-      box-shadow: 0px 0px 5px $hover
+      box-shadow: 0 0 5px #3a2a74bf

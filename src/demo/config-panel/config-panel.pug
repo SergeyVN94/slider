@@ -1,69 +1,67 @@
 mixin config-panel(id = "")
-  .config-panel(id=id)
+  form.config-panel(id=id)
+
+    fieldset.config-panel__flags
+      legend.config-panel__flags-title Флаги
+      label.config-panel__control
+        span.config-panel__control-text Показать подсказки
+        input.config-panel__input.js-config-panel__input(
+          type="checkbox"
+          name="tooltips"
+          autocomplete="off"
+        )
+      label.config-panel__control
+        span.config-panel__control-text Показать фоновую линию
+        input.config-panel__input.js-config-panel__input(
+          type="checkbox"
+          name="bg-line"
+          autocomplete="off"
+        )
+
+    fieldset.config-panel__view-name
+      legend.config-panel__view-name-title Вид слайдера
+      label.config-panel__control
+        span.config-panel__control-text Горизонтальный
+        input.config-panel__input.js-config-panel__input(
+          type="radio"
+          name="view-name"
+          value="horizontal"
+          autocomplete="off"
+        )
+      label.config-panel__control
+        span.config-panel__control-text Вертикальный
+        input.config-panel__input.js-config-panel__input(
+          type="radio"
+          name="view-name"
+          value="vertical"
+          autocomplete="off"
+        )
+
+    fieldset.config-panel__column
+      legend Шкала
+      label.config-panel__control
+        span.config-panel__control-text Минимум
+        input.config-panel__input.js-config-panel__input(type="number" name="min")
+      label.config-panel__control
+        span.config-panel__control-text Максимум
+        input.config-panel__input.js-config-panel__input(type="number" name="max")
+    
     .config-panel__row
       label.config-panel__control
         span.config-panel__control-text Шаг
-        input.config-panel__input.config-panel__input_type_step.js-config-panel__input_type_step(
+        input.config-panel__input.js-config-panel__input(
           type="number",
+          name="step"
           min=1,
           autocomplete="off"
         )
-    .config-panel__row
-      .config-panel__column
-        h4.config-panel__control-title Вид
-        -const inputName = `${id}-view`;
-        label.config-panel__control
-          input.config-panel__view-name.js-config-panel__view-name(
-            type="radio",
-            name=inputName,
-            value="horizontal",
-            autocomplete="off"
-          )
-          span.config-panel__control-text.config-panel__control-text_right Горизонтальный
-        label.config-panel__control
-          input.config-panel__view-name.js-config-panel__view-name(
-            type="radio",
-            name=inputName,
-            value="vertical",
-            autocomplete="off"
-          )
-          span.config-panel__control-text.config-panel__control-text_right Вертикальный
-    .config-panel__row
-      .config-panel__column
-        label.config-panel__control
-          input.config-panel__tooltip.js-config-panel__tooltip(
-            type="checkbox",
-            name="tooltips",
-            autocomplete="off"
-          ) 
-          span.config-panel__control-text.config-panel__control-text_right Показать подсказки
-        label.config-panel__control
-          input.config-panel__bg-line.js-config-panel__bg-line(
-            type="checkbox",
-            name="bg-line",
-            autocomplete="off"
-          ) 
-          span.config-panel__control-text.config-panel__control-text_right Показать фоновую линию
-    .config-panel__row
-      .config-panel__column
-        label.config-panel__control
-          span.config-panel__control-text Минимум шкалы
-          input.config-panel__input.config-panel__scale-min.js-config-panel__scale-min(type="number")
-        label.config-panel__control
-          span.config-panel__control-text Максимум шкалы
-          input.config-panel__input.config-panel__scale-max.js-config-panel__scale-max(type="number")
+    
     .config-panel__row
       .config-panel__column
         label.config-panel__control
           span.config-panel__control-text Кастомные значения
-        input.config-panel__input.config-panel__custom-values.js-config-panel__custom-values(type="text")
-    .config-panel__row
-      label.config-panel__control 
-        span.config-panel__control-text Количество ползунков
-        input.config-panel__input.config-panel__input_type_points.js-config-panel__input_type_points(
-          type="number",
-          min=1,
-          autocomplete="off"
-        )
-    .config-panel__row
-      .config-panel__column.config-panel__column_type_container.js-config-panel__column_type_container
+        textarea.config-panel__input.js-config-panel__input(name="custom-scale" cols="30", rows="10")
+
+    .config-panel__column
+      ul.config-panel__values-inputs.js-config-panel__values-inputs
+      button.config-panel__button(type="button" name="add-point") Добавить кругляш на слайдер

@@ -1,9 +1,7 @@
-// import ConfigPanel from './ConfigPanel';
-
-import './config-panel.sass';
+import ConfigPanel from './ConfigPanel';
 
 const initConfigPanel = ($panel: JQuery, $slider: JQuery): void => {
-  // new ConfigPanel($panel, $slider);
+  new ConfigPanel($panel, $slider);
 };
 
 export default initConfigPanel;

@@ -30,16 +30,6 @@ class Tooltip {
   private init(): void {
     this.tooltip.classList.add(CLASSES.TOOLTIP);
   }
-
-  // public static updateZIndexes(tooltips: Tooltip[], points: Point[]): void {
-  //   points.forEach((point, index) => {
-  //     tooltips[index].setZIndex(point.zIndex);
-  //   });
-  // }
-
-  // private setZIndex(zIndex: number): void {
-  //   this.$tooltip.css('z-index', zIndex);
-  // }
 }
 
 export default Tooltip;

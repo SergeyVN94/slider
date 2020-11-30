@@ -29,27 +29,30 @@ interface JQuery {
     }
   ): JQuery;
 
-  // slider(this: JQuery, command: 'config'): {
-  //   values?: string[] | number[];
-  //   customScale?: string[];
-  //   min?: number;
-  //   max?: number;
-  //   viewName?: 'horizontal' | 'vertical';
-  //   tooltips?: boolean;
-  //   step?: number;
-  //   prettify?: (value: string | number) => string;
-  //   bgLine?: boolean;
-  // };
+  slider(this: JQuery, command: 'config'): ({
+    viewName: 'horizontal' | 'vertical';
+    tooltips: boolean;
+    bgLine: boolean;
+    step: number;
+  } & (
+    {
+      values: string[];
+      customScale: string[];
+    } | {
+      min: number;
+      max: number;
+      values: number[];
+    }
+  ));
 
-  // slider(this: JQuery, command: 'config', config: {
-  //   values?: string[] | number[];
-  //   customScale?: string[];
-  //   min?: number;
-  //   max?: number;
-  //   viewName?: 'horizontal' | 'vertical';
-  //   tooltips?: boolean;
-  //   step?: number;
-  //   prettify?: (value: string | number) => string;
-  //   bgLine?: boolean;
-  // }): JQuery;
+  slider(this: JQuery, command: 'config', config: {
+    values?: string[] | number[];
+    customScale?: string[];
+    min?: number;
+    max?: number;
+    viewName?: 'horizontal' | 'vertical';
+    tooltips?: boolean;
+    step?: number;
+    bgLine?: boolean;
+  }): JQuery;
 }

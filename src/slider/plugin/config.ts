@@ -1,6 +1,6 @@
-import { NormalizedConfig } from './types';
+import { SliderConfig } from './types';
 
-export const DEFAULT_PLUGIN_CONFIG: NormalizedConfig = {
+export const DEFAULT_PLUGIN_CONFIG: SliderConfig = {
   min: 0,
   max: 100,
   step: 1,

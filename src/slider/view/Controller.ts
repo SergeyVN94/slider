@@ -40,9 +40,7 @@ class Controller {
   }
 
   private handleScaleMousedown(position: number): void {
-    if (this.positionChangeEventCallback) {
-      this.positionChangeEventCallback(position);
-    }
+    if (this.positionChangeEventCallback) this.positionChangeEventCallback(position);
   }
 
   private handleSliderMousedown(position: number): void {

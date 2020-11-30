@@ -7,7 +7,7 @@ export const COMMANDS = {
   CONFIG: 'config',
 };
 
-export type SliderConfig = {
+export type SliderPluginConfig = {
   step?: number;
   viewName?: ViewName;
   tooltips?: boolean;
@@ -19,12 +19,11 @@ export type SliderConfig = {
   prettify?: (value: number | string) => string;
 }
 
-export type NormalizedConfig = ({
+export type SliderConfig = ({
   viewName: ViewName;
   tooltips: boolean;
   step: number;
   bgLine: boolean;
-  prettify?: PrettifyFunc;
 }) & ({
   values: string[];
   customScale: string[];
